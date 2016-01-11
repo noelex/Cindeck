@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="Cindeck.Controls.SkillTimeline"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cindeck.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="ScoreBonusColorBrush" Color="#F39087"/>
+            <SolidColorBrush x:Key="ComboBonusColorBrush" Color="#FFC469"/>
+            <SolidColorBrush x:Key="JudgeEnhancementColorBrush" Color="#3EA4CF"/>
+            <SolidColorBrush x:Key="ComboContinuationColorBrush" Color="#CD96CD"/>
+            <SolidColorBrush x:Key="RevivalColorBrush" Color="#32CC4D"/>
+            <SolidColorBrush x:Key="DamageGuardColorBrush" Color="#51A6F5"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0">
+            <Label Content="スコアボーナス" Foreground="White" Background="{StaticResource ScoreBonusColorBrush}"></Label>
+            <Label Margin="5,0,0,0" Content="コンボボーナス" Foreground="White" Background="{StaticResource ComboBonusColorBrush}"></Label>
+            <Label Margin="5,0,0,0" Content="判定強化" Foreground="White" Background="{StaticResource JudgeEnhancementColorBrush}"></Label>
+            <Label Margin="5,0,0,0" Content="コンボ継続" Foreground="White" Background="{StaticResource ComboContinuationColorBrush}"></Label>
+            <Label Margin="5,0,0,0" Content="ライフ回復" Foreground="White" Background="{StaticResource RevivalColorBrush}"></Label>
+            <Label Margin="5,0,0,0" Content="ダメージガード" Foreground="White" Background="{StaticResource DamageGuardColorBrush}"></Label>
+        </StackPanel>
+        <Grid Margin="0,10,0,0" Grid.Row="1" Background="#AADDFF">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Canvas  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="Slot1Canvas"/>
+                <Label x:Name="Slot1Label" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="Black"
+                       VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Canvas  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="Slot2Canvas"/>
+                <Label x:Name="Slot2Label" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Foreground="Black"
+                       VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Canvas  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="Slot3Canvas"/>
+                <Label x:Name="Slot3Label" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Foreground="Black"
+                       VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Canvas  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="Slot4Canvas"/>
+                <Label x:Name="Slot4Label" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Foreground="Black"
+                       VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            </Grid>
+            <Grid Grid.Row="4">
+                <Canvas  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="Slot5Canvas"/>
+                <Label x:Name="Slot5Label" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Foreground="Black"
+                       VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

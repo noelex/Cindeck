@@ -1,0 +1,29 @@
+﻿<Window x:Class="Cindeck.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Cindeck.Views"
+        xmlns:vm="clr-namespace:Cindeck.ViewModels"
+        mc:Ignorable="d"
+        Title="Cindeck 0.1" Height="720" Width="1280">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10">
+            <TabItem Header="アイドル一覧" x:Name="ImplementedIdolView">
+                <local:ImplementedIdolView DataContext="{Binding Path=ImplementedIdol}"/>
+            </TabItem>
+            <TabItem Header="所持アイドル">
+                <local:OwnedIdolView DataContext="{Binding Path=OwnedIdol}"/>
+            </TabItem>
+            <TabItem Header="ユニット編成">
+                <local:UnitView DataContext="{Binding Path=Units}"/>
+            </TabItem>
+            <TabItem Header="シミュレーション">
+                <Grid Background="#FFFFFFFF"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="Cindeck.Views.ImplementedIdolView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cindeck.Views"
+             xmlns:c="clr-namespace:Cindeck.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="341*"/>
+            <RowDefinition Height="43*"/>
+        </Grid.RowDefinitions>
+
+        <c:SelectedItemBindableDataGrid ItemsSource="{Binding Idols}" Sorting="SelectedItemBindableDataGrid_Sorting" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Margin="10,10,0,0" VerticalAlignment="Stretch" Grid.Row="0">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}"/>
+                </Style>
+            </DataGrid.RowStyle>
+            <c:SelectedItemBindableDataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="所持に追加" Command="{Binding AddToOwnedCommand}"  />
+                </ContextMenu>
+            </c:SelectedItemBindableDataGrid.ContextMenu>
+            <c:SelectedItemBindableDataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="IID" Binding="{Binding Path=Iid, StringFormat=x8}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="レア度" Binding="{Binding Path=Rarity, Converter={StaticResource  RarityConverter}}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="名前" SortMemberPath="Name">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource LabeledNameConverter}">
+                            <Binding Path="Label"/>
+                            <Binding Path="Name"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="タイプ" Binding="{Binding Path=Category, Converter={StaticResource IdolCategoryConverter}}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="ライフ" Binding="{Binding Path=Life}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="全アピール" Binding="{Binding Path=TotalAppeal}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="ボーカルアピール" Binding="{Binding Path=Vocal}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="ダンスアピール" Binding="{Binding Path=Dance}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="ビジュアルアピール" Binding="{Binding Path=Visual}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="センター効果" Binding="{Binding Path=CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="特技" Binding="{Binding Path=Skill, Converter={StaticResource SkillConverter}}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="実装" Binding="{Binding Path=ImplementationDate, StringFormat=yyyy/MM/dd}"/>
+            </c:SelectedItemBindableDataGrid.Columns>
+        </c:SelectedItemBindableDataGrid>
+        <Button x:Name="btnLoadIdols" Command="{Binding Path=ReloadDataCommand}" Content="Wikiから取り込む" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="112" Grid.Row="1" Height="20">
+        </Button>
+    </Grid>
+</UserControl>

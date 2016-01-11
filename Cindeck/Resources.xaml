@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Cindeck"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <local:RarityConverter x:Key="RarityConverter" />
+    <local:CenterEffectConverter x:Key="CenterEffectConverter" />
+    <local:IdolCategoryConverter x:Key="IdolCategoryConverter" />
+    <local:SkillConverter x:Key="SkillConverter" />
+    <local:TotalAppealConverter x:Key="TotalAppealConverter"/>
+    <local:LabeledNameConverter x:Key="LabeledNameConverter"/>
+    <local:UnitSlotConverter x:Key="UnitSlotConverter"/>
+    <local:IdolTypeToColorConverter x:Key="IdolTypeToColorConverter"/>
+
+    <SolidColorBrush Color="#FFC469" x:Key="PassionImageColor"/>
+    <SolidColorBrush Color="Pink" x:Key="CuteImageColor"/>
+    <SolidColorBrush Color="LightBlue" x:Key="CoolImageColor"/>
+    
+    <x:Array Type="sys:Int32" x:Key="SkillLevels">
+        <sys:Int32>1</sys:Int32>
+        <sys:Int32>2</sys:Int32>
+        <sys:Int32>3</sys:Int32>
+        <sys:Int32>4</sys:Int32>
+        <sys:Int32>5</sys:Int32>
+        <sys:Int32>6</sys:Int32>
+        <sys:Int32>7</sys:Int32>
+        <sys:Int32>8</sys:Int32>
+        <sys:Int32>9</sys:Int32>
+        <sys:Int32>10</sys:Int32>
+    </x:Array>
+
+</ResourceDictionary>

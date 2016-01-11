@@ -56,7 +56,7 @@
     <Compile Include="CenterEffect.cs" />
     <Compile Include="FileDocumentSource.cs" />
     <Compile Include="GamerChWikiIdolSource.cs" />
-    <Compile Include="HoldingIdol.cs" />
+    <Compile Include="OwnedIdol.cs" />
     <Compile Include="ICenterEffect.cs" />
     <Compile Include="IDocumentSource.cs" />
     <Compile Include="Idol.cs" />

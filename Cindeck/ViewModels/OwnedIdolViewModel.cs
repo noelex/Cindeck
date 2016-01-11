@@ -65,8 +65,7 @@ namespace Cindeck
             }
             foreach (var x in SelectedIdols.Cast<OwnedIdol>().ToArray())
             {
-                m_config.OwnedIdols.Remove(x);
-                m_uvm.RemoveIdolFromUnits(x);
+                DeleteOwnedIdol(x);
             }
             m_config.Save();
         }
@@ -82,6 +81,12 @@ namespace Cindeck
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public void DeleteOwnedIdol(OwnedIdol idol)
+        {
+            m_config.OwnedIdols.Remove(idol);
+            m_uvm.RemoveIdolFromUnits(idol);
         }
 
         public void Dispose()

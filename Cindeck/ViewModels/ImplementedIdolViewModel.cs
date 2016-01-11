@@ -18,12 +18,15 @@ namespace Cindeck.ViewModels
     {
         private AppConfig m_config;
         private bool m_isLoading;
+        private OwnedIdolViewModel m_ovm;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ImplementedIdolViewModel(AppConfig config)
+        public ImplementedIdolViewModel(AppConfig config, OwnedIdolViewModel ovm)
         {
             m_config = config;
+            m_ovm = ovm;
+
             Idols = new ListCollectionView(m_config.ImplementedIdols);
             
             foreach(var option in m_config.ImplementedIdolSortOptions)
@@ -60,12 +63,37 @@ namespace Cindeck.ViewModels
                 m_isLoading = true;
                 ReloadDataCommand.RaiseCanExecuteChanged();
                 var result = await new GamerChWikiIdolSource(new WebDocumentSource("http://imascg-slstage-wiki.gamerch.com/%E3%82%AB%E3%83%BC%E3%83%89%E5%85%A8%E3%82%AB%E3%83%A9%E3%83%A0%E4%B8%80%E8%A6%A7")).GetIdols();
+                var idolsNotFound = new List<OwnedIdol>();
+                foreach(var item in m_config.OwnedIdols)
+                {
+                    if(!result.Any(x=>x.Iid==item.Iid))
+                    {
+                        idolsNotFound.Add(item);
+                    }
+                }
+                if (idolsNotFound.Count>0)
+                {
+                    var res = MessageBox.Show("取り込んだデータから一部所持済みのアイドルのデータが見つかりませんでした。見つからなかったアイドルを所持アイドルから削除して、取り込みを続行しますか？", "確認", MessageBoxButton.YesNo);
+                    if (MessageBoxResult.No == res)
+                    {
+                        return;
+                    }
+                }
                 m_config.ImplementedIdols.Clear();
                 foreach (var item in result)
                 {
                     m_config.ImplementedIdols.Add(item);
                 }
+                foreach(var item in idolsNotFound)
+                {
+                    m_ovm.DeleteOwnedIdol(item);
+                }
+                foreach (var item in m_config.OwnedIdols)
+                {
+                    item.UpdateReference(result.First(x=>x.Iid==item.Iid));
+                }
                 m_config.Save();
+                MessageBox.Show("取り込みが完了しました。");
             }
             catch (Exception ex)
             {

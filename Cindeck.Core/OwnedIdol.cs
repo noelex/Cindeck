@@ -143,5 +143,14 @@ namespace Cindeck.Core
                 return Idol.Vocal;
             }
         }
+
+        public void UpdateReference(Idol idol)
+        {
+            if(idol.Iid!=Idol.Iid)
+            {
+                throw new Exception("Cannot update reference to an idol with difference IID.");
+            }
+            Idol = idol;
+        }
     }
 }

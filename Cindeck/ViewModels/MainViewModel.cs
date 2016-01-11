@@ -18,7 +18,7 @@ namespace Cindeck.ViewModels
             m_config = AppConfig.Load();
             Units = new UnitViewModel(m_config);
             OwnedIdol = new OwnedIdolViewModel(m_config,Units);
-            ImplementedIdol = new ImplementedIdolViewModel(m_config);
+            ImplementedIdol = new ImplementedIdolViewModel(m_config, OwnedIdol);
             
         }
 

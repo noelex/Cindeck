@@ -21,6 +21,10 @@ namespace Cindeck.Core
 
         private static readonly Dictionary<IdolCategory, string> m_idolCats = new Dictionary<IdolCategory, string> {
             { IdolCategory.Cute,"キュート"},{ IdolCategory.Cool,"クール"} ,{ IdolCategory.Passion,"パッション"}, { IdolCategory.All, "全員"} };
+
+        private static readonly Dictionary<IdolCategory, string> m_songCats = new Dictionary<IdolCategory, string> {
+            { IdolCategory.Cute,"キュート"},{ IdolCategory.Cool,"クール"} ,{ IdolCategory.Passion,"パッション"}, { IdolCategory.All, "全タイプ"} };
+
         private static readonly Dictionary<IdolCategory, string> m_idolCatsFull = new Dictionary<IdolCategory, string> {
             { IdolCategory.Cute,"キュートアイドル"},{ IdolCategory.Cool,"クールアイドル"} ,{ IdolCategory.Passion,"パッションアイドル"}, { IdolCategory.All, "全員"} };
 
@@ -36,6 +40,14 @@ namespace Cindeck.Core
             { Rarity.SRPlus,"SR+"},
             { Rarity.SSR,"SSR"},
             { Rarity.SSRPlus,"SSR+"}};
+
+        private static readonly Dictionary<SongDifficulty,string> m_songDifficulties = new Dictionary<SongDifficulty, string> {
+            { SongDifficulty.Debut,"DEBUT"},
+            { SongDifficulty.Regular,"REGULAR"},
+            { SongDifficulty.Pro,"PRO"},
+            { SongDifficulty.Master,"MASTER" },
+            { SongDifficulty.MasterPlus,"MASTER+" }
+        };
 
         private static readonly Dictionary<string, SkillTriggerProbability> m_stringToPos = new Dictionary<string, SkillTriggerProbability> {
             { "低確率",SkillTriggerProbability.Low},
@@ -76,6 +88,20 @@ namespace Cindeck.Core
             { "SR+", Rarity.SRPlus},
             { "SSR", Rarity.SSR},
             { "SSR+", Rarity.SSRPlus}};
+
+        private static readonly Dictionary<string, IdolCategory> m_stringToSongType = new Dictionary<string, IdolCategory> {
+            { "All", IdolCategory.All},
+            { "Co", IdolCategory.Cool},
+            { "Cu", IdolCategory.Cute},
+            { "Pa", IdolCategory.Passion }};
+
+        private static readonly Dictionary<string, SongDifficulty> m_stringToDifficulty = new Dictionary<string, SongDifficulty> {
+            { "DEB", SongDifficulty.Debut},
+            { "REG", SongDifficulty.Regular},
+            { "PRO", SongDifficulty.Pro},
+            { "MAS", SongDifficulty.Master },
+            { "MAS+", SongDifficulty.MasterPlus }
+        };
 
         private static Dictionary<SkillTriggerProbability, double> ProbabilityInitialValues = new Dictionary<SkillTriggerProbability, double>
         {
@@ -140,6 +166,16 @@ namespace Cindeck.Core
             return m_rarities[cat];
         }
 
+        public static string ToSongTypeLocalizedString(this IdolCategory t)
+        {
+            return m_songCats[t];
+        }
+
+        public static string ToLocalizedString(this SongDifficulty diff)
+        {
+            return m_songDifficulties[diff];
+        }
+
         public static string ToLocalizedString(this NoteJudgement judgement, bool descending=true)
         {
             var res = new List<string>();
@@ -182,6 +218,16 @@ namespace Cindeck.Core
         public static Rarity ToRarity(this string s)
         {
             return m_stringToRarity[s.Replace('＋', '+')];
+        }
+
+        public static IdolCategory ToSongType(this string s)
+        {
+            return m_stringToSongType[s];
+        }
+
+        public static SongDifficulty ToSongDifficulty(this string s)
+        {
+            return m_stringToDifficulty[s];
         }
 
         public static NoteJudgement ToJudgement(this string s)

@@ -54,6 +54,7 @@
     <Compile Include="AppConfigTests.cs" />
     <Compile Include="CenterEffectTests.cs" />
     <Compile Include="GamerChWikiIdolSourceTests.cs" />
+    <Compile Include="GamerChWikiSongSourceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkillTests.cs" />
   </ItemGroup>
@@ -64,6 +65,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="test-song-data-page.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="test-wiki-data-page.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

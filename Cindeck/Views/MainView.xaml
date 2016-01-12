@@ -22,7 +22,7 @@
                 <local:UnitView DataContext="{Binding Path=Units}"/>
             </TabItem>
             <TabItem Header="シミュレーション">
-                <Grid Background="#FFFFFFFF"/>
+                <local:SimulationView DataContext="{Binding Path=Simulation}"/>
             </TabItem>
         </TabControl>
     </Grid>

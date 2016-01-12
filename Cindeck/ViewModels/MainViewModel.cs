@@ -19,7 +19,7 @@ namespace Cindeck.ViewModels
             Units = new UnitViewModel(m_config);
             OwnedIdol = new OwnedIdolViewModel(m_config,Units);
             ImplementedIdol = new ImplementedIdolViewModel(m_config, OwnedIdol);
-            
+            Simulation = new SimulationViewModel(m_config);
         }
 
         public OwnedIdolViewModel OwnedIdol
@@ -39,6 +39,13 @@ namespace Cindeck.ViewModels
             get;
             private set;
         }
+
+        public SimulationViewModel Simulation
+        {
+            get;
+            private set;
+        }
+
 
         public void Dispose()
         {

@@ -88,6 +88,13 @@ namespace Cindeck.Core
             set;
         }
 
+        [DataMember(Order = 8)]
+        public List<Song> Songs
+        {
+            get;
+            set;
+        }
+
         public int GetNextLid()
         {
             return NextOid++;

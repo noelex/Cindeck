@@ -65,6 +65,18 @@ namespace Cindeck.Core
             }
         }
 
+        public IEnumerable<OwnedIdol> Slots
+        {
+            get
+            {
+                yield return Slot1;
+                yield return Slot2;
+                yield return Slot3;
+                yield return Slot4;
+                yield return Slot5;
+            }
+        }
+
         public int Vocal
         {
             get

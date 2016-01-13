@@ -98,6 +98,42 @@
                     <Label Content="合計アピール"  FontWeight="Bold" />
                     <Label Content="{Binding Simulator.TotalAppeal}"/>
                 </StackPanel>
+                <Button HorizontalAlignment="Left" Content="実行" Command="{Binding StartSimulationCommand}" Width="200"/>
+                <Label Content="※結果はALL PERFECTのスコアで、ノーツの密度の変化は計算に入れていません"/>
+                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
+                    <Label Content="スコア(平均)"  FontWeight="Bold" />
+                    <Label>
+                        <TextBlock>
+                        <Run Text="{Binding AverageScore}"></Run>
+                        <Run>(1ノートあたり</Run>
+                         <Run Text="{Binding AverageScorePerNote}"></Run>
+                        <Run>)</Run>
+                        </TextBlock>
+                    </Label>
+                </StackPanel>
+
+                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
+                    <Label Content="スコア(最大)"  FontWeight="Bold" />
+                    <Label>
+                        <TextBlock>
+                        <Run Text="{Binding MaxScore}"></Run>
+                        <Run>(1ノートあたり</Run>
+                         <Run Text="{Binding MaxScorePerNote}"></Run>
+                        <Run>)</Run>
+                        </TextBlock>
+                    </Label>
+                </StackPanel>
+                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
+                    <Label Content="スコア(最小)"  FontWeight="Bold" />
+                    <Label>
+                        <TextBlock TextAlignment="Center">
+                        <Run Text="{Binding MinScore}"></Run>
+                        <Run>(1ノートあたり</Run>
+                        <Run Text="{Binding MinScorePerNote}"></Run>
+                        <Run>)</Run>
+                        </TextBlock>
+                    </Label>
+                </StackPanel>
             </StackPanel>
         </DockPanel>
 

@@ -29,6 +29,7 @@ namespace Cindeck.ViewModels
 
             Songs = config.Songs;
             LoadSongsCommand = new AwaitableDelegateCommand(LoadSongs, () => !m_isLoading);
+
             Simulator = new Simulator(config);
 
             GrooveBursts = new List<Tuple<AppealType?, string>>
@@ -45,6 +46,8 @@ namespace Cindeck.ViewModels
                Tuple.Create(IdolCategory.Cool, "Co 30%"),
                Tuple.Create(IdolCategory.Passion, "Pa 30%")
             };
+
+            StartSimulationCommand = new AwaitableDelegateCommand(StartSimulation);
 
             Simulator.Song = Songs.FirstOrDefault();
             Simulator.Unit = Units.FirstOrDefault();
@@ -94,6 +97,48 @@ namespace Cindeck.ViewModels
             private set;
         }
 
+        public IAsyncCommand StartSimulationCommand
+        {
+            get;
+            private set;
+        }
+
+        public int MaxScore
+        {
+            get;
+            set;
+        }
+
+        public int MinScore
+        {
+            get;
+            set;
+        }
+
+        public int AverageScore
+        {
+            get;
+            set;
+        }
+
+        public int MaxScorePerNote
+        {
+            get;
+            set;
+        }
+
+        public int MinScorePerNote
+        {
+            get;
+            set;
+        }
+
+        public int AverageScorePerNote
+        {
+            get;
+            set;
+        }
+
         private async Task LoadSongs()
         {
             try
@@ -111,6 +156,27 @@ namespace Cindeck.ViewModels
             }
             m_isLoading = false;
             LoadSongsCommand.RaiseCanExecuteChanged();
+        }
+
+        private async Task StartSimulation()
+        {
+            if(Simulator.SongData==null)
+            {
+                return;
+            }
+            List<int> results = new List<int>();
+            for(int i=0;i<100;i++)
+            {
+                results.Add(await Simulator.StartSimulation());
+            }
+            MaxScore = results.Max();
+            MaxScorePerNote = MaxScore / Simulator.SongData.Notes;
+
+            MinScore = results.Min();
+            MinScorePerNote = MinScore / Simulator.SongData.Notes;
+
+            AverageScore = (int)results.Average();
+            AverageScorePerNote = AverageScore / Simulator.SongData.Notes;
         }
 
         public int? GuestIid

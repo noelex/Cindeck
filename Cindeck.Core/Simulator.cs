@@ -9,8 +9,23 @@ using System.Threading.Tasks;
 namespace Cindeck.Core
 {
     [ImplementPropertyChanged]
-    public class Simulator:INotifyPropertyChanged
+    public class Simulator : INotifyPropertyChanged
     {
+        private const double TimeScale = 10;
+        private static readonly Dictionary<int, double> LevelCoefficients = new Dictionary<int, double>
+        {
+            // DEBUT
+            { 5, 1 }, { 6, 1.025 }, { 7, 1.05 }, { 8, 1.075 }, { 9, 1.1 },
+            // REGULAR
+            { 10, 1.2 }, { 11, 1.225 }, { 12, 1.25 }, { 13, 1.275 }, { 14, 1.3 },
+            // PRO
+            { 15, 1.4 }, { 16, 1.425 }, { 17, 1.45 }, { 18, 1.475 }, { 19, 1.5 },
+            // MASTER
+            { 20, 1.6 }, { 21, 1.65 }, { 22, 1.7 }, { 23, 1.75 },{ 24, 1.8 }, {25,1.85 }, { 26, 1.9 }, { 27, 1.95 }, { 28, 2 },
+            // MASTER+
+            { 29, 2.1 }
+        };
+
         private AppConfig m_config;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -76,7 +91,7 @@ namespace Cindeck.Core
             get
             {
                 return SupportMemberAppeal +
-                    CalculateAppeal(Unit.GetValueOrDefault(x=>x.Slot1)) +
+                    CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot1)) +
                     CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot2)) +
                     CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot3)) +
                     CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot4)) +
@@ -113,7 +128,7 @@ namespace Cindeck.Core
         {
             var lst = new List<OwnedIdol>();
 
-            if (Song == null || !EnableSupportMembers||Unit==null)
+            if (Song == null || !EnableSupportMembers || Unit == null)
             {
                 return lst;
             }
@@ -126,7 +141,7 @@ namespace Cindeck.Core
                 {
                     break;
                 }
-                if(!Unit.OccupiedByUnit(item))
+                if (!Unit.OccupiedByUnit(item))
                 {
                     lst.Add(item);
                 }
@@ -140,7 +155,7 @@ namespace Cindeck.Core
                     {
                         break;
                     }
-                    if (!lst.Contains(item)&& !Unit.OccupiedByUnit(item))
+                    if (!lst.Contains(item) && !Unit.OccupiedByUnit(item))
                     {
                         lst.Add(item);
                     }
@@ -150,7 +165,144 @@ namespace Cindeck.Core
             return lst;
         }
 
-        private int CalculateAppeal(AppealType targetAppeal, IIdol idol, bool isSupportMember,bool encore=false)
+        private class TriggeredSkill
+        {
+            public double Rate
+            {
+                get;
+                set;
+            }
+
+            public double Until
+            {
+                get;
+                set;
+            }
+        }
+
+        public Task<int> StartSimulation()
+        {
+            return Task.Run(() =>
+            {
+                if (SongData == null)
+                    return 0;
+                int totalScore = 0;
+                int notes = 0;
+                double scorePerNote = (TotalAppeal * LevelCoefficients[SongData.Level]) / SongData.Notes;
+                double notesPerFrame = SongData.Notes / (SongData.Duration * TimeScale);
+                int frame = 0;
+                int totalFrame = 0;
+                CenterEffect.SkillTriggerProbabilityUp skillRateUp = null;
+
+                if (Unit.Center != null && Unit.Center.CenterEffect != null && Unit.Center.CenterEffect is CenterEffect.SkillTriggerProbabilityUp)
+                {
+                    skillRateUp = Unit.Center.CenterEffect as CenterEffect.SkillTriggerProbabilityUp;
+                }
+
+                Random rng = new Random();
+                double comboRate = 1;
+                List<TriggeredSkill> scoreUp = new List<TriggeredSkill>();
+                List<TriggeredSkill> comboBonus = new List<TriggeredSkill>();
+
+                while (notes <= SongData.Notes)
+                {
+                    frame++;
+                    totalFrame++;
+
+                    foreach (var s in scoreUp.ToArray())
+                    {
+                        if (totalFrame > s.Until)
+                        {
+                            scoreUp.Remove(s);
+                        }
+                    }
+
+                    foreach (var s in comboBonus.ToArray())
+                    {
+                        if (totalFrame > s.Until)
+                        {
+                            comboBonus.Remove(s);
+                        }
+                    }
+
+                    foreach (var slot in Unit.Slots)
+                    {
+                        if (slot != null && slot.Skill != null)
+                        {
+                            if (slot.Skill is Skill.ScoreBonus)
+                            {
+                                var sb = slot.Skill as Skill.ScoreBonus;
+                                if (totalFrame % (sb.Interval * TimeScale) == 0)
+                                {
+                                    if (rng.NextDouble() < sb.EstimateProbability(slot.SkillLevel) + (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0))
+                                    {
+                                        scoreUp.Add(new TriggeredSkill { Rate = sb.Rate, Until = totalFrame + sb.EstimateDuration(slot.SkillLevel) * TimeScale });
+                                    }
+                                }
+                            }
+                            else if (slot.Skill is Skill.ComboBonus)
+                            {
+                                var sb = slot.Skill as Skill.ComboBonus;
+                                if (totalFrame % (sb.Interval * TimeScale) == 0)
+                                {
+                                    if (rng.NextDouble() < sb.EstimateProbability(slot.SkillLevel) + (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0))
+                                    {
+                                        comboBonus.Add(new TriggeredSkill { Rate = sb.Rate, Until = totalFrame + sb.EstimateDuration(slot.SkillLevel) * TimeScale });
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (frame * notesPerFrame >= 1)
+                    {
+                        frame = 0;
+                        notes++;
+
+                        var progress = (double)notes / SongData.Notes;
+
+                        if (progress >= 0.9)
+                        {
+                            comboRate = 2;
+                        }
+                        else if (comboRate >= 0.8)
+                        {
+                            comboRate = 1.7;
+                        }
+                        else if (comboRate >= 0.7)
+                        {
+                            comboRate = 1.5;
+                        }
+                        else if (comboRate >= 0.5)
+                        {
+                            comboRate = 1.4;
+                        }
+                        else if (comboRate >= 0.25)
+                        {
+                            comboRate = 1.3;
+                        }
+                        else if (comboRate >= 0.1)
+                        {
+                            comboRate = 1.2;
+                        }
+                        else if (comboRate >= 0.05)
+                        {
+                            comboRate = 1.1;
+                        }
+                        else
+                        {
+                            comboRate = 1;
+                        }
+                        var scoreUpRate = scoreUp.Any() ? 1 + scoreUp.Max(x => x.Rate) : 1;
+                        var comboUpRate = comboBonus.Any() ? 1 + comboBonus.Max(x => x.Rate) : 1;
+                        totalScore += (int)Math.Round(scorePerNote * comboRate * scoreUpRate * comboUpRate);
+                    }
+                }
+                return totalScore;
+            });
+        }
+
+        private int CalculateAppeal(AppealType targetAppeal, IIdol idol, bool isSupportMember, bool encore = false)
         {
             if (idol == null)
             {
@@ -185,11 +337,11 @@ namespace Cindeck.Core
                 }
             }
 
-            if(GrooveBurst != null)
+            if (GrooveBurst != null)
             {
                 if (encore)
                 {
-                    if(Song != null && Song.Type.HasFlag(idol.Category))
+                    if (Song != null && Song.Type.HasFlag(idol.Category))
                     {
                         rate += 0.3;
                     }
@@ -222,7 +374,7 @@ namespace Cindeck.Core
             }
         }
 
-        private int CalculateAppeal(IIdol idol, bool isSupportMember=false, bool encore=false)
+        private int CalculateAppeal(IIdol idol, bool isSupportMember = false, bool encore = false)
         {
             return CalculateAppeal(AppealType.Vocal, idol, isSupportMember, encore) +
                 CalculateAppeal(AppealType.Dance, idol, isSupportMember, encore) +
@@ -242,10 +394,10 @@ namespace Cindeck.Core
                 SongData = SongDataList.FirstOrDefault();
             }
 
-            if (propertyName == "EnableSupportMembers"|| propertyName== "GrooveBurst" ||
+            if (propertyName == "EnableSupportMembers" || propertyName == "GrooveBurst" ||
                 propertyName == "GrooveType" || propertyName == "IsEncore" ||
-                propertyName == "Guest" || propertyName=="Unit" || 
-                propertyName=="Song" || propertyName== "EnableRoomEffect")
+                propertyName == "Guest" || propertyName == "Unit" ||
+                propertyName == "Song" || propertyName == "EnableRoomEffect")
             {
                 Reload();
             }

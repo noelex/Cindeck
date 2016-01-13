@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cindeck.Views"
+              xmlns:c="clr-namespace:Cindeck.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500">
     <UserControl.Resources>
@@ -14,7 +15,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <DockPanel LastChildFill="False">
+        <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="ユニット" Width="80"/>
@@ -99,42 +100,60 @@
                     <Label Content="{Binding Simulator.TotalAppeal}"/>
                 </StackPanel>
                 <Button HorizontalAlignment="Left" Content="実行" Command="{Binding StartSimulationCommand}" Width="200"/>
-                <Label Content="※結果はALL PERFECTのスコアで、ノーツの密度の変化は計算に入れていません"/>
-                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
-                    <Label Content="スコア(平均)"  FontWeight="Bold" />
-                    <Label>
-                        <TextBlock>
+                <StackPanel  x:Name="ResultPanel"  Visibility="{Binding Simulator.ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Label DockPanel.Dock="Top" Content="※結果はALL PERFECTのスコアで、ノーツの密度の変化は計算に入れていません"/>
+                    <StackPanel DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
+                        <Label Content="スコア(平均)"  FontWeight="Bold" />
+                        <Label>
+                            <TextBlock>
                         <Run Text="{Binding AverageScore}"></Run>
                         <Run>(1ノートあたり</Run>
                          <Run Text="{Binding AverageScorePerNote}"></Run>
                         <Run>)</Run>
-                        </TextBlock>
-                    </Label>
-                </StackPanel>
-
-                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
-                    <Label Content="スコア(最大)"  FontWeight="Bold" />
-                    <Label>
-                        <TextBlock>
+                            </TextBlock>
+                        </Label>
+                    </StackPanel>
+                    <StackPanel  DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
+                        <Label Content="スコア(最大)"  FontWeight="Bold" />
+                        <Label>
+                            <TextBlock>
                         <Run Text="{Binding MaxScore}"></Run>
                         <Run>(1ノートあたり</Run>
                          <Run Text="{Binding MaxScorePerNote}"></Run>
                         <Run>)</Run>
-                        </TextBlock>
-                    </Label>
-                </StackPanel>
-                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
-                    <Label Content="スコア(最小)"  FontWeight="Bold" />
-                    <Label>
-                        <TextBlock TextAlignment="Center">
+                            </TextBlock>
+                        </Label>
+                    </StackPanel>
+                    <StackPanel  DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
+                        <Label Content="スコア(最小)"  FontWeight="Bold" />
+                        <Label>
+                            <TextBlock TextAlignment="Center">
                         <Run Text="{Binding MinScore}"></Run>
                         <Run>(1ノートあたり</Run>
                         <Run Text="{Binding MinScorePerNote}"></Run>
                         <Run>)</Run>
-                        </TextBlock>
-                    </Label>
+                            </TextBlock>
+                        </Label>
+                    </StackPanel>
+                    <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal"  Margin="0,5,0,0">
+                        <Label Content="結果の詳細" Grid.Row="4" Grid.Column="0"/>
+                        <ComboBox x:Name="SimulationResults" SelectedItem="{Binding SelectedResult, Mode=TwoWay}" ItemsSource="{Binding SimulationResults}" DisplayMemberPath="Id" Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <StackPanel  DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
+                        <Label Content="スコア"  FontWeight="Bold" />
+                        <Label>
+                            <TextBlock TextAlignment="Center">
+                        <Run Text="{Binding SelectedItem.Score, ElementName=SimulationResults}"></Run>
+                        <Run>(1ノートあたり</Run>
+                        <Run Text="{Binding SelectedItem.ScorePerNote, ElementName=SimulationResults}"></Run>
+                        <Run>)</Run>
+                            </TextBlock>
+                        </Label>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
+            <c:SkillTimeline Visibility="{Binding Visibility, ElementName=ResultPanel, Mode=OneWay}"
+                             DataContext="{Binding Simulator.Unit}" SimulationResult="{Binding SelectedItem,ElementName=SimulationResults}"/>
         </DockPanel>
 
     </Grid>

@@ -24,6 +24,7 @@ namespace Cindeck.Controls
     public partial class SkillTimeline : UserControl
     {
         private Unit m_unit;
+        private Dictionary<int, TriggeredSkill[]> m_triggeredSkills=new Dictionary<int, TriggeredSkill[]>();
 
         public SkillTimeline()
         {
@@ -36,12 +37,27 @@ namespace Cindeck.Controls
             {
                 return "編成されていません\r\n\r\n";
             }
+
             var name= string.Format("{0}[{1}]{2}({3})\r\n", string.IsNullOrEmpty(idol.Label) ? "" : string.Format("[{0}]", idol.Label),
                 idol.Rarity.ToLocalizedString(), idol.Name,
                 idol.Skill == null ? "特技なし" : string.Format("{0}Lv{1}", idol.Skill.Name, idol.SkillLevel));
             var skillEffect = idol.Skill == null ? "\r\n" : GetSkillEffect(idol.Skill)+"\r\n";
             var skillDetail = idol.Skill == null ? "" : GetSkillDetails(idol.Skill, idol.SkillLevel);
-            return name + skillEffect + skillDetail;
+            if(SimulationResult==null)
+            {
+                return name + skillEffect + skillDetail;
+            }
+            else
+            {
+                string triggerDetail = "";
+                if(idol.Skill != null)
+                {
+                    int triggered = m_triggeredSkills.ContainsKey(idol.Oid) ? m_triggeredSkills[idol.Oid].Length : 0;
+                    int expected = (int)Math.Floor((SimulationResult.Duration-1.0) / idol.Skill.Interval);
+                    triggerDetail = string.Format("{0}/{1}回発動({2:P1})", triggered, expected, (double)triggered / expected);
+                }
+                return name + skillEffect + skillDetail + "\r\n" + triggerDetail;
+            }
         }
 
         private string GetSkillType(ISkill skill)
@@ -147,20 +163,39 @@ namespace Cindeck.Controls
             }
             double interval = idol.Skill.Interval;
             var duration = idol.Skill.EstimateDuration(idol.SkillLevel);
-            var playTime = 120;
-            var triggerCount = playTime / interval;
+            var playTime = (SimulationResult==null? 120:SimulationResult.Duration)-1;
+            var triggerCount = (int)Math.Floor( playTime / interval);
             var totalWidth = c.ActualWidth;
             var skillWidth = (duration / playTime) * totalWidth;
             var intervalWidth = (interval / playTime) * totalWidth;
             var brush = GetBrushBySkill(idol.Skill);
-
-            for(int i=1;i<triggerCount;i++)
+            var disabled = new SolidColorBrush(Colors.LightGray);
+            bool notAvail;
+            for (int i = 1; i <= triggerCount; i++)
             {
                 double left = i * intervalWidth;
                 double right = left + skillWidth;
-                var rect = new Rectangle { Fill = brush,
-                    Width = right > c.ActualWidth?skillWidth-(right - c.ActualWidth): skillWidth,
-                    Height =c.ActualHeight, Opacity=1 };
+
+                if (right > c.ActualWidth && skillWidth < (right - c.ActualWidth))
+                {
+                    break;
+                }
+
+                notAvail = SimulationResult != null && !(m_triggeredSkills.ContainsKey(idol.Oid) && m_triggeredSkills[idol.Oid].Any(x => x.Since == i * interval));
+                
+
+                var rect = new Rectangle
+                {
+                    Fill = notAvail? disabled : brush,
+                    Width = right > c.ActualWidth ? skillWidth - (right - c.ActualWidth) : skillWidth,
+                    Height = c.ActualHeight,
+                    Opacity = 1
+                };
+                if (rect.Width < 5)
+                {
+                    left -= 5-rect.Width;
+                    rect.Width = 5;
+                }
                 Canvas.SetLeft(rect, left);
                 Canvas.SetTop(rect, 0);
                 c.Children.Add(rect);
@@ -229,6 +264,18 @@ namespace Cindeck.Controls
 
                 LoadSlots();
             }
+            else if(e.Property==SimulationResultProperty)
+            {
+                if(e.NewValue!=null)
+                {
+                    m_triggeredSkills = (e.NewValue as SimulationResult).TriggeredSkills.GroupBy(x => x.Who.Oid).ToDictionary(x=>x.Key,x=>x.ToArray());
+                }
+                else
+                {
+                    m_triggeredSkills = new Dictionary<int, TriggeredSkill[]>();
+                }
+                LoadSlots();
+            }
             base.OnPropertyChanged(e);
         }
 
@@ -268,5 +315,14 @@ namespace Cindeck.Controls
                 (idol as INotifyPropertyChanged).PropertyChanged -= SkillTimeline_PropertyChanged;
             }
         }
+
+        public SimulationResult SimulationResult
+        {
+            get { return (SimulationResult)GetValue(SimulationResultProperty); }
+            set { SetValue(SimulationResultProperty, value); }
+        }
+
+        public static readonly DependencyProperty SimulationResultProperty =
+                DependencyProperty.Register("SimulationResult", typeof(SimulationResult), typeof(SkillTimeline), new PropertyMetadata(null));
     }
 }

@@ -139,6 +139,18 @@ namespace Cindeck.ViewModels
             set;
         }
 
+        public SimulationResult SelectedResult
+        {
+            get;
+            set;
+        }
+
+        public List<SimulationResult> SimulationResults
+        {
+            get;
+            private set;
+        }
+
         private async Task LoadSongs()
         {
             try
@@ -164,19 +176,24 @@ namespace Cindeck.ViewModels
             {
                 return;
             }
-            List<int> results = new List<int>();
-            for(int i=0;i<100;i++)
+            var results = new List<SimulationResult>();
+            var rng = new Random();
+            for (int i=1;i<=100;i++)
             {
-                results.Add(await Simulator.StartSimulation());
+                results.Add(await Simulator.StartSimulation(rng,i));
             }
-            MaxScore = results.Max();
-            MaxScorePerNote = MaxScore / Simulator.SongData.Notes;
 
-            MinScore = results.Min();
-            MinScorePerNote = MinScore / Simulator.SongData.Notes;
+            MaxScore = results.Max(x=>x.Score);
+            MaxScorePerNote = results.Max(x => x.ScorePerNote);
 
-            AverageScore = (int)results.Average();
-            AverageScorePerNote = AverageScore / Simulator.SongData.Notes;
+            MinScore = results.Min(x => x.Score);
+            MinScorePerNote = results.Min(x => x.ScorePerNote);
+
+            AverageScore = (int)results.Average(x => x.Score);
+            AverageScorePerNote = (int)results.Average(x => x.ScorePerNote);
+
+            SimulationResults = results;
+            SelectedResult = SimulationResults[0];
         }
 
         public int? GuestIid

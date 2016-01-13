@@ -1,5 +1,6 @@
 # Cindeck
 アイドルマスターシンデレラガールズ スターライトステージのプレーを支援するツールです。
+ダウンロードは[こちら](https://github.com/noelex/Cindeck/releases)
 
 ## 機能
 * アイドルデータの取り込み([アイマス デレステ攻略まとめwiki](http://imascg-slstage-wiki.gamerch.com/)さんから)

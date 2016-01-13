@@ -23,19 +23,40 @@ namespace Cindeck.Views
     /// </summary>
     public partial class MainView : Window
     {
+        private IViewModel vm;
 
         public MainView()
         {
             InitializeComponent();
+            vm = DataContext as IViewModel;
+            vm.OnActivate();
+            tabControl.SelectionChanged += Items_CurrentChanged;
+        }
+
+        private void Items_CurrentChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source==sender)
+            {
+                foreach (var x in tabControl.Items.OfType<TabItem>().Select(x => (x.Content as FrameworkElement).DataContext).OfType<IViewModel>())
+                {
+                    if (x == ((tabControl.SelectedItem as TabItem).Content as FrameworkElement).DataContext)
+                    {
+                        x.OnActivate();
+                    }
+                    else
+                    {
+                        x.OnDeactivate();
+                    }
+
+                }
+            }
+
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            var vm = DataContext as IDisposable;
-            if (vm != null)
-            {
-                vm.Dispose();
-            }
+            vm.OnDeactivate();
+            vm.Dispose();
             base.OnClosed(e);
         }
     }

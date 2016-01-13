@@ -2,6 +2,7 @@
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,13 +10,14 @@ using System.Threading.Tasks;
 namespace Cindeck.ViewModels
 {
     [ImplementPropertyChanged]
-    class MainViewModel:IDisposable
+    class MainViewModel:IViewModel
     {
         private AppConfig m_config;
 
         public MainViewModel()
         {
             m_config = AppConfig.Load();
+
             Units = new UnitViewModel(m_config);
             OwnedIdol = new OwnedIdolViewModel(m_config,Units);
             ImplementedIdol = new ImplementedIdolViewModel(m_config, OwnedIdol);
@@ -53,6 +55,16 @@ namespace Cindeck.ViewModels
             ImplementedIdol.Dispose();
             Units.Dispose();
             m_config.Save();
+        }
+
+        public void OnActivate()
+        {
+            
+        }
+
+        public void OnDeactivate()
+        {
+            
         }
     }
 }

@@ -12,7 +12,7 @@ using System.Windows;
 namespace Cindeck.ViewModels
 {
     [ImplementPropertyChanged]
-    class SimulationViewModel : IDisposable, INotifyPropertyChanged
+    class SimulationViewModel : IViewModel, INotifyPropertyChanged
     {
         private AppConfig m_config;
         private bool m_isLoading;
@@ -29,9 +29,37 @@ namespace Cindeck.ViewModels
 
             Songs = config.Songs;
             LoadSongsCommand = new AwaitableDelegateCommand(LoadSongs, () => !m_isLoading);
+            Simulator = new Simulator(config);
 
-            SelectedSong = Songs.FirstOrDefault();
-            SelectedUnit = Units.FirstOrDefault();
+            GrooveBursts = new List<Tuple<AppealType?, string>>
+            {
+               Tuple.Create(new AppealType?(),"なし" ),
+               Tuple.Create((AppealType?)AppealType.Vocal,"Vo 150%"),
+               Tuple.Create((AppealType?)AppealType.Dance,"Da 150%"),
+               Tuple.Create((AppealType?)AppealType.Visual,"Vi 150%")
+            };
+
+            GrooveTypes = new List<Tuple<IdolCategory, string>>
+            {
+               Tuple.Create(IdolCategory.Cute, "Cu 30%"),
+               Tuple.Create(IdolCategory.Cool, "Co 30%"),
+               Tuple.Create(IdolCategory.Passion, "Pa 30%")
+            };
+
+            Simulator.Song = Songs.FirstOrDefault();
+            Simulator.Unit = Units.FirstOrDefault();
+        }
+
+        public List<Tuple<AppealType?, string>> GrooveBursts
+        {
+            get;
+            private set;
+        }
+
+        public List<Tuple<IdolCategory, string>> GrooveTypes
+        {
+            get;
+            private set;
         }
 
         public bool EnableGuest
@@ -40,51 +68,7 @@ namespace Cindeck.ViewModels
             set;
         }
 
-        public Idol Guest
-        {
-            get;
-            private set;
-        }
-
-        public bool EnableRoomEffect
-        {
-            get;
-            set;
-        }
-
         public List<Song> Songs
-        {
-            get;
-            private set;
-        }
-
-        public IEnumerable<SongData> SongData
-        {
-            get
-            {
-                return SelectedSong != null ? SelectedSong.Data.Values : Enumerable.Empty<SongData>();
-            }
-        }
-
-        public Song SelectedSong
-        {
-            get;
-            set;
-        }
-
-        public SongData SelectedSongData
-        {
-            get;
-            set;
-        }
-
-        public bool EnableSupportMembers
-        {
-            get;
-            set;
-        }
-
-        public List<OwnedIdol> SupportMembers
         {
             get;
             private set;
@@ -98,16 +82,10 @@ namespace Cindeck.ViewModels
             }
         }
 
-        public Unit SelectedUnit
+        public Simulator Simulator
         {
             get;
-            set;
-        }
-
-        public AppealType? GrooveBurst
-        {
-            get;
-            set;
+            private set;
         }
 
         public IAsyncCommand LoadSongsCommand
@@ -135,114 +113,17 @@ namespace Cindeck.ViewModels
             LoadSongsCommand.RaiseCanExecuteChanged();
         }
 
-        private void SelectSupportMembers()
+        public int? GuestIid
         {
-            if(SelectedSong==null)
-            {
-                return;
-            }
-
-            var lst = new List<OwnedIdol>();
-
-            foreach (var item in m_config.OwnedIdols.Where(x=>SelectedSong.Type.HasFlag(x.Category)).OrderByDescending(x=>CalculateAppeal(x, true)))
-            {
-                if(lst.Count>=10)
-                {
-                    break;
-                }
-                lst.Add(item);
-            }
-
-            if(lst.Count<10)
-            {
-                foreach (var item in m_config.OwnedIdols.OrderByDescending(x => CalculateAppeal(x, true)))
-                {
-                    if (lst.Count >= 10)
-                    {
-                        break;
-                    }
-                    if(!lst.Contains(item))
-                    {
-                        lst.Add(item);
-                    }
-                }
-            }
-
-            SupportMembers = lst;
-        }
-
-        private int CalculateAppeal(AppealType targetAppeal, IIdol idol, bool isSupportMember)
-        {
-            if (idol == null)
-            {
-                return 0;
-            }
-            var rate = 1.0;
-
-            if(!isSupportMember)
-            {
-                if (EnableRoomEffect)
-                {
-                    rate += 0.1;
-                }
-
-                if (SelectedUnit != null && SelectedUnit.Center != null &&
-                    SelectedUnit.Center.CenterEffect != null && SelectedUnit.Center.CenterEffect is CenterEffect.AppealUp)
-                {
-                    var e = SelectedUnit.Center.CenterEffect as CenterEffect.AppealUp;
-                    if (e.Targets.HasFlag(idol.Category) && e.TargetAppeal.HasFlag(targetAppeal))
-                    {
-                        rate += e.Rate;
-                    }
-                }
-
-                if (Guest != null && Guest.CenterEffect != null && Guest.CenterEffect is CenterEffect.AppealUp)
-                {
-                    var e = Guest.CenterEffect as CenterEffect.AppealUp;
-                    if (e.Targets.HasFlag(idol.Category) && e.TargetAppeal.HasFlag(targetAppeal))
-                    {
-                        rate += e.Rate;
-                    }
-                }
-            }
-            
-
-            if (GrooveBurst != null && GrooveBurst.Value.HasFlag(targetAppeal))
-            {
-                rate += 1.5;
-            }
-
-            if (SelectedSong != null && SelectedSong.Type.HasFlag(idol.Category))
-            {
-                rate += 0.3;
-            }
-
-
-            switch (targetAppeal)
-            {
-                case AppealType.Vocal:
-                    return (int)Math.Ceiling(idol.Vocal * rate * (isSupportMember ? 0.5 : 1));
-                case AppealType.Dance:
-                    return (int)Math.Ceiling(idol.Dance * rate * (isSupportMember ? 0.5 : 1));
-                case AppealType.Visual:
-                    return (int)Math.Ceiling(idol.Visual * rate * (isSupportMember ? 0.5 : 1));
-                default:
-                    throw new Exception();
-            }
-        }
-
-        private int CalculateAppeal(IIdol idol, bool isSupportMember)
-        {
-            return CalculateAppeal(AppealType.Vocal, idol, isSupportMember) + 
-                CalculateAppeal(AppealType.Dance, idol, isSupportMember) + 
-                CalculateAppeal(AppealType.Visual, idol, isSupportMember);
+            get;
+            set;
         }
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if(propertyName== "SelectedSong")
+            if(propertyName== "GuestIid" || propertyName== "EnableGuest")
             {
-                SelectedSongData = SongData.FirstOrDefault();
+                Simulator.Guest=  GuestIid == null || !EnableGuest ? null : m_config.ImplementedIdols.FirstOrDefault(x => x.Iid == GuestIid);
             }
 
             if (PropertyChanged != null)
@@ -252,6 +133,25 @@ namespace Cindeck.ViewModels
         }
 
         public void Dispose()
+        {
+            
+        }
+
+        public void OnActivate()
+        {
+            if (GuestIid != null && !m_config.ImplementedIdols.Any(x => x.Iid == GuestIid))
+            {
+                GuestIid = null;
+            }
+            if (Simulator.Unit != null && !m_config.Units.Contains(Simulator.Unit))
+            {
+                Simulator.Unit = m_config.Units.FirstOrDefault();
+            }
+
+            Simulator.Reload();
+        }
+
+        public void OnDeactivate()
         {
             
         }

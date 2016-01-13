@@ -6,44 +6,100 @@
              xmlns:local="clr-namespace:Cindeck.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <DockPanel LastChildFill="False">
-            <Grid DockPanel.Dock="Top">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-                
-                <Label Content="ユニット" Grid.Row="0" Grid.Column="0"/>
-                <ComboBox Grid.Row="0" Grid.Column="1" MinWidth="200" DisplayMemberPath="Name" ItemsSource="{Binding Units}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}" HorizontalAlignment="Left" />
-                
-                <Label Content="楽曲" Grid.Row="1" Grid.Column="0"/>
-                
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-                    <ComboBox MinWidth="200" ItemsSource="{Binding Songs}" SelectedItem="{Binding SelectedSong, Mode=TwoWay}" DisplayMemberPath="Title" />
-                    <Button Command="{Binding LoadSongsCommand}" Content="Wikiから取り込む"></Button>
+            <StackPanel DockPanel.Dock="Top">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="ユニット" Width="80"/>
+                    <ComboBox Grid.Row="0" Grid.Column="1" MinWidth="100" DisplayMemberPath="Name" ItemsSource="{Binding Units}" SelectedItem="{Binding Simulator.Unit, Mode=TwoWay}" HorizontalAlignment="Left" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Visibility="{Binding Simulator.Unit, Converter={StaticResource NullToCollapsedConverter}}">
+                    <Label Content="センター効果" FontWeight="Bold"/>
+                    <Label Content="{Binding Simulator.Unit.Center.CenterEffect, FallbackValue=なし, Converter={StaticResource CenterEffectConverter}}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <Label Content="楽曲"  Width="80"/>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                        <ComboBox MinWidth="100" ItemsSource="{Binding Songs}" SelectedItem="{Binding Simulator.Song, Mode=TwoWay}" DisplayMemberPath="Title" />
+                        <ComboBox Margin="5,0,0,0" DisplayMemberPath="Difficulty"
+                           MinWidth="100" HorizontalAlignment="Left"
+                           ItemsSource="{Binding Simulator.SongDataList}" SelectedItem="{Binding Simulator.SongData, Mode=TwoWay}"/>
+                        <Button Margin="5,0,0,0" Command="{Binding LoadSongsCommand}" Content="Wikiから取り込む"></Button>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Margin="0,5,0,0" Orientation="Horizontal" Grid.Row="3" Visibility="{Binding Simulator.SongData, Converter={StaticResource NullToCollapsedConverter}}">
+                    <Label Content="タイプ" FontWeight="Bold"/>
+                    <Label Content="{Binding Simulator.Song.Type, Converter={StaticResource IdolCategoryToSongTypeConverter}}"/>
+                    <Label Content="Lv"  FontWeight="Bold"/>
+                    <Label Content="{Binding Simulator.SongData.Level}"/>
+                    <Label Content="ノーツ数" FontWeight="Bold"/>
+                    <Label Content="{Binding Simulator.SongData.Notes}"/>
+                    <Label Content="プレイ時間(秒)" FontWeight="Bold"/>
+                    <Label Content="{Binding Simulator.SongData.Duration}"/>
                 </StackPanel>
                 
-                <Label Content="難易度" Grid.Row="2" Grid.Column="0"/>
-                <ComboBox  Grid.Row="2" Grid.Column="1" DisplayMemberPath="Difficulty"
-                           MinWidth="200" HorizontalAlignment="Left"
-                           ItemsSource="{Binding SongData}" SelectedItem="{Binding SelectedSongData, Mode=TwoWay}"/>
-                <Label Content="Groove Burst"  Grid.Row="3" Grid.Column="0"/>
-                <ComboBox  Grid.Row="3" Grid.Column="1" MinWidth="200" HorizontalAlignment="Left"/>
-            </Grid>
+                <StackPanel Orientation="Horizontal"  Margin="0,5,0,0">
+                    <Label Content="Groove Burst"  Grid.Row="4" Grid.Column="0"/>
+                    <ComboBox ItemsSource="{Binding GrooveBursts}" SelectedValue="{Binding Simulator.GrooveBurst}" DisplayMemberPath="Item2" SelectedValuePath="Item1"  Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
+                    <ComboBox Visibility="{Binding Simulator.GrooveBurst, Converter={StaticResource NullToCollapsedConverter}}" Margin="5,0,0,0" ItemsSource="{Binding GrooveTypes}" SelectedValue="{Binding Simulator.GrooveType}" DisplayMemberPath="Item2" SelectedValuePath="Item1"  Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
+                    <CheckBox  Visibility="{Binding Simulator.GrooveBurst, Converter={StaticResource NullToCollapsedConverter}}" Margin="5,5,0,0" Content="アンコール (Groove属性ボーナスの代わりに選んだ曲の属性ボーナスを適用する)" IsChecked="{Binding Simulator.IsEncore, Mode=TwoWay}"/>
+                </StackPanel>
+            </StackPanel>
             <StackPanel Margin="0,5,0,0" Orientation="Vertical" DockPanel.Dock="Top">
-                <CheckBox Content="ゲスト" />
-                <CheckBox Content="ルーム効果"/>
-                <CheckBox Content="サポートメンバー" />
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox VerticalAlignment="Center" Content="ゲスト" IsChecked="{Binding EnableGuest, Mode=TwoWay}" />
+                    <TextBox FontWeight="Bold" VerticalContentAlignment="Center" Margin="5,0,0,0" Style="{StaticResource PlaceHolder}" Visibility="{Binding EnableGuest, Converter={StaticResource BooleanToVisibilityConverter}}" Tag="ゲストアイドルのIID"  Width="160" Text="{Binding GuestIid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IidConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding EnableGuest, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Label Content="{Binding Simulator.Guest, Converter={StaticResource IdolConverter}}" FontWeight="Bold"/>
+                        <Label Visibility="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource NullToCollapsedConverter}}" Content="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
+                    </StackPanel>
+                    <CheckBox  Margin="0,5,0,0" Content="ルーム効果(全アイドルの全アピール値10%アップ)" IsChecked="{Binding Simulator.EnableRoomEffect, Mode=TwoWay}"/>
+                <CheckBox  Margin="0,5,0,0" Content="サポートメンバー(自動的に所持アイドルから選びます)" IsChecked="{Binding Simulator.EnableSupportMembers, Mode=TwoWay}" />
+                <StackPanel Visibility="{Binding Simulator.EnableSupportMembers, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ItemsControl Margin="0,5,0,0" ItemsSource="{Binding Simulator.SupportMembers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <ItemsPresenter Margin="5" />
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Tag="{Binding Path=., Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5" Background="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}">
+                                    <Button.Content>
+                                        <Label Margin="5"  HorizontalAlignment="Left" Content="{Binding Path=., Mode=OneWay, Converter={StaticResource UnitSlotConverter}}" />
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="サポートメンバーの合計アピール" FontWeight="Bold" />
+                        <Label Content="{Binding Simulator.SupportMemberAppeal}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
+                    <Label Content="合計アピール"  FontWeight="Bold" />
+                    <Label Content="{Binding Simulator.TotalAppeal}"/>
+                </StackPanel>
             </StackPanel>
         </DockPanel>
-        
+
     </Grid>
 </UserControl>

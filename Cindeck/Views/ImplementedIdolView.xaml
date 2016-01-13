@@ -29,6 +29,8 @@
             <c:SelectedItemBindableDataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="所持に追加" Command="{Binding AddToOwnedCommand}"  />
+                    <Separator/>
+                    <MenuItem Header="IIDをコピー" Command="{Binding CopyIidCommand}"  />
                 </ContextMenu>
             </c:SelectedItemBindableDataGrid.ContextMenu>
             <c:SelectedItemBindableDataGrid.Columns>

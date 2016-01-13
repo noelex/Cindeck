@@ -14,7 +14,7 @@ using System.Collections;
 namespace Cindeck.ViewModels
 {
     [ImplementPropertyChanged]
-    class ImplementedIdolViewModel:IDisposable, INotifyPropertyChanged
+    class ImplementedIdolViewModel:IViewModel, INotifyPropertyChanged
     {
         private AppConfig m_config;
         private bool m_isLoading;
@@ -36,6 +36,7 @@ namespace Cindeck.ViewModels
 
             ReloadDataCommand = new AwaitableDelegateCommand(ReloadData, () => !m_isLoading);
             AddToOwnedCommand = new DelegateCommand(AddToOwned, () => SelectedIdols!=null && SelectedIdols.Count > 0);
+            CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdols != null && SelectedIdols.Count ==1);
         }
 
         public ICollectionView Idols
@@ -118,11 +119,30 @@ namespace Cindeck.ViewModels
             m_config.Save();
         }
 
+        public DelegateCommand CopyIidCommand
+        {
+            get;
+            private set;
+        }
+
+        private void CopyIid()
+        {
+            try
+            {
+                Clipboard.SetText(SelectedIdols.Cast<IIdol>().First().Iid.ToString("x8"));
+            }
+            catch
+            {
+
+            }
+        }
+
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
             if(propertyName== "SelectedIdols")
             {
                 AddToOwnedCommand.RaiseCanExecuteChanged();
+                CopyIidCommand.RaiseCanExecuteChanged();
             }
 
             if (PropertyChanged != null)
@@ -138,6 +158,16 @@ namespace Cindeck.ViewModels
             {
                 m_config.ImplementedIdolSortOptions.Add(x.ToSortOption());
             }
+        }
+
+        public void OnActivate()
+        {
+            
+        }
+
+        public void OnDeactivate()
+        {
+            
         }
     }
 }

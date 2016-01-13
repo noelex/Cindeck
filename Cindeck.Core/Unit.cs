@@ -235,6 +235,16 @@ namespace Cindeck.Core
             return false;
         }
 
+        public bool OccupiedByUnit(OwnedIdol idol)
+        {
+            if (Slot1 == idol) return true;
+            if (Slot2 == idol) return true;
+            if (Slot3 == idol) return true;
+            if (Slot4 == idol) return true;
+            if (Slot5 == idol) return true;
+            return false;
+        }
+
         public void RemoveIdol(OwnedIdol idol)
         {
             if (Slot1 == idol) Slot1 = null;

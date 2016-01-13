@@ -27,7 +27,7 @@
             <Label Content="ビジュアル" Foreground="White" Background="{StaticResource PassionImageColor}"/>
             <Label x:Name="VisualLabel"/>
 
-            <Label Content="全アピール" Foreground="White" Background="Gray"/>
+            <Label Content="合計アピール" Foreground="White" Background="Gray"/>
             <Label x:Name="TotalAppealLabel"/>
         </StackPanel>
     </Grid>

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -40,7 +41,7 @@ namespace Cindeck
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value==null?string.Empty:value.ToString();
+            return value==null?"なし":value.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -53,7 +54,7 @@ namespace Cindeck
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null ? string.Empty : value.ToString();
+            return value == null ? "なし" : value.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -129,4 +130,85 @@ namespace Cindeck
             throw new NotImplementedException();
         }
     }
+
+    class BooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = value as bool?;
+            return val.GetValueOrDefault() ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class IdolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var idol = value as IIdol;
+            if (idol != null)
+            {
+                return string.Format("[{1}] {0} {2}", string.IsNullOrEmpty(idol.Label) ? "" : string.Format("[{0}]", idol.Label), idol.Rarity.ToLocalizedString(), idol.Name);
+            }
+            return "(なし)";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class IidConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = value as int?;
+            return val == null ? string.Empty : val.Value.ToString("x8");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = value as string;
+            try
+            {
+                return int.Parse(value as string, NumberStyles.HexNumber);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
+
+    class NullToCollapsedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value == null ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class IdolCategoryToSongTypeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return ((IdolCategory)value).ToSongTypeLocalizedString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

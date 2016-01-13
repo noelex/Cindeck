@@ -57,6 +57,7 @@
     <Compile Include="FileDocumentSource.cs" />
     <Compile Include="GamerChWikiIdolSource.cs" />
     <Compile Include="GamerChWikiSongSource.cs" />
+    <Compile Include="IViewModel.cs" />
     <Compile Include="OwnedIdol.cs" />
     <Compile Include="ICenterEffect.cs" />
     <Compile Include="IDocumentSource.cs" />

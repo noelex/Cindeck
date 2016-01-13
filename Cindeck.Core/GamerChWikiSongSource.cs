@@ -38,7 +38,7 @@ namespace Cindeck.Core
 
                     var title = string.Join(" ",
                         columns[TitleColumn].InnerText.Trim()
-                        .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
+                        .Split(new[] { "\n","\r" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
                         .ToArray());
                     
                     var type = columns[TypeColumn].ChildNodes.First(x => x.Name == "#text").InnerText.Trim().ToSongType();

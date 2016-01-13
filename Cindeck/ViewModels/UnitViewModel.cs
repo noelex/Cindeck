@@ -14,7 +14,7 @@ using System.Windows.Data;
 namespace Cindeck
 {
     [ImplementPropertyChanged]
-    class UnitViewModel:IDisposable, INotifyPropertyChanged
+    class UnitViewModel:IViewModel, INotifyPropertyChanged
     {
         private AppConfig m_config;
 
@@ -30,6 +30,7 @@ namespace Cindeck
             MoveToSlotCommand = new DelegateCommand<string>(MoveToSlot, CanMoveToSlot);
             ResetSlotCommand = new DelegateCommand<string>(ResetSlot, CanResetSlot);
             HighlightCommand = new DelegateCommand<string>(Highlight, CanHighlight);
+            CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdol != null);
 
             Idols = new ListCollectionView(m_config.OwnedIdols);
             Units = m_config.Units;
@@ -193,11 +194,30 @@ namespace Cindeck
             return TemporalUnit.GetType().GetProperty(target).GetValue(TemporalUnit) != null;
         }
 
+        public DelegateCommand CopyIidCommand
+        {
+            get;
+            private set;
+        }
+
+        private void CopyIid()
+        {
+            try
+            {
+                Clipboard.SetText(SelectedIdol.Iid.ToString("x8"));
+            }
+            catch
+            {
+
+            }
+        }
+
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
             if (propertyName == "SelectedIdol")
             {
                 SendToSlotCommand.RaiseCanExecuteChanged();
+                CopyIidCommand.RaiseCanExecuteChanged();
             }
             else if (propertyName=="UnitName")
             {
@@ -239,6 +259,16 @@ namespace Cindeck
             {
                 m_config.UnitIdolSortOptions.Add(x.ToSortOption());
             }
+        }
+
+        public void OnActivate()
+        {
+            
+        }
+
+        public void OnDeactivate()
+        {
+            
         }
     }
 }

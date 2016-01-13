@@ -14,7 +14,7 @@ using System.Windows.Data;
 namespace Cindeck
 {
     [ImplementPropertyChanged]
-    class OwnedIdolViewModel:IDisposable,INotifyPropertyChanged
+    class OwnedIdolViewModel:IViewModel,INotifyPropertyChanged
     {
         private AppConfig m_config;
         private UnitViewModel m_uvm;
@@ -33,6 +33,7 @@ namespace Cindeck
             }
 
             DeleteCommand = new DelegateCommand(Delete, () => SelectedIdols.Count > 0);
+            CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdols != null && SelectedIdols.Count == 1);
         }
 
         public ICollectionView Idols
@@ -70,11 +71,30 @@ namespace Cindeck
             m_config.Save();
         }
 
+        public DelegateCommand CopyIidCommand
+        {
+            get;
+            private set;
+        }
+
+        private void CopyIid()
+        {
+            try
+            {
+                Clipboard.SetText(SelectedIdols.Cast<IIdol>().First().Iid.ToString("x8"));
+            }
+            catch
+            {
+
+            }
+        }
+
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
             if (propertyName == "SelectedIdols")
             {
                 DeleteCommand.RaiseCanExecuteChanged();
+                CopyIidCommand.RaiseCanExecuteChanged();
             }
 
             if (PropertyChanged != null)
@@ -96,6 +116,16 @@ namespace Cindeck
             {
                 m_config.OwnedIdolSortOptions.Add(x.ToSortOption());
             }
+        }
+
+        public void OnActivate()
+        {
+            
+        }
+
+        public void OnDeactivate()
+        {
+            
         }
     }
 }

@@ -10,11 +10,46 @@
     <local:LabeledNameConverter x:Key="LabeledNameConverter"/>
     <local:UnitSlotConverter x:Key="UnitSlotConverter"/>
     <local:IdolTypeToColorConverter x:Key="IdolTypeToColorConverter"/>
-
+    <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <local:IdolConverter x:Key="IdolConverter"/>
+    <local:IidConverter x:Key="IidConverter"/>
+    <local:NullToCollapsedConverter x:Key="NullToCollapsedConverter"/>
+    <local:IdolCategoryToSongTypeConverter x:Key="IdolCategoryToSongTypeConverter"/>
+    
     <SolidColorBrush Color="#FFC469" x:Key="PassionImageColor"/>
     <SolidColorBrush Color="Pink" x:Key="CuteImageColor"/>
     <SolidColorBrush Color="LightBlue" x:Key="CoolImageColor"/>
-    
+
+    <Style x:Key="PlaceHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Grid>
+                        <TextBox Text="{Binding Path=Text,
+                                                RelativeSource={RelativeSource TemplatedParent}, 
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="textSource" 
+                                 Background="Transparent" 
+                                 Panel.ZIndex="2" />
+                        <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="Foreground" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
+                                            <Setter Property="Foreground" Value="LightGray"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <x:Array Type="sys:Int32" x:Key="SkillLevels">
         <sys:Int32>1</sys:Int32>
         <sys:Int32>2</sys:Int32>

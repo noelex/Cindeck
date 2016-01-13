@@ -96,15 +96,15 @@
                 </Button>
             </Grid>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                <Label Content="センター効果:"/>
+                <Label Content="センター効果"  FontWeight="Bold"/>
                 <Label Content="{Binding TemporalUnit.Center.CenterEffect.Description, FallbackValue=なし}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                <Label Content="ステータス(センター効果なし):"/>
+                <Label Content="ステータス(センター効果なし)" FontWeight="Bold"/>
                 <c:UnitStatus Life="{Binding TemporalUnit.Life}" Vocal="{Binding TemporalUnit.Vocal}" Dance="{Binding TemporalUnit.Dance}" Visual="{Binding TemporalUnit.Visual}" TotalAppeal="{Binding TemporalUnit.TotalAppeal}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                <Label Content="ステータス(センター効果込み):"/>
+                <Label Content="ステータス(センター効果込み)"  FontWeight="Bold"/>
                 <c:UnitStatus Life="{Binding TemporalUnit.LifeWithCenterEffect}" Vocal="{Binding TemporalUnit.VocalWithCenterEffect}" Dance="{Binding TemporalUnit.DanceWithCenterEffect}" Visual="{Binding TemporalUnit.VisualWithCenterEffect}" TotalAppeal="{Binding TemporalUnit.TotalAppealWithCenterEffect}"/>
             </StackPanel>
             <c:SkillTimeline DataContext="{Binding TemporalUnit}" DockPanel.Dock="Top"/>
@@ -121,6 +121,8 @@
                         <MenuItem Header="スロット3" Command="{Binding SendToSlotCommand}" CommandParameter="Slot3"  />
                         <MenuItem Header="スロット4" Command="{Binding SendToSlotCommand}" CommandParameter="Slot4"  />
                         <MenuItem Header="スロット5" Command="{Binding SendToSlotCommand}" CommandParameter="Slot5"  />
+                        <Separator/>
+                        <MenuItem Header="IIDをコピー" Command="{Binding CopyIidCommand}"  />
                     </ContextMenu>
                 </c:SelectedItemBindableDataGrid.ContextMenu>
                 <c:SelectedItemBindableDataGrid.Columns>

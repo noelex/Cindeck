@@ -310,27 +310,27 @@ namespace Cindeck.Core
                         {
                             comboRate = 2;
                         }
-                        else if (comboRate >= 0.8)
+                        else if (progress >= 0.8)
                         {
                             comboRate = 1.7;
                         }
-                        else if (comboRate >= 0.7)
+                        else if (progress >= 0.7)
                         {
                             comboRate = 1.5;
                         }
-                        else if (comboRate >= 0.5)
+                        else if (progress >= 0.5)
                         {
                             comboRate = 1.4;
                         }
-                        else if (comboRate >= 0.25)
+                        else if (progress >= 0.25)
                         {
                             comboRate = 1.3;
                         }
-                        else if (comboRate >= 0.1)
+                        else if (progress >= 0.1)
                         {
                             comboRate = 1.2;
                         }
-                        else if (comboRate >= 0.05)
+                        else if (progress >= 0.05)
                         {
                             comboRate = 1.1;
                         }

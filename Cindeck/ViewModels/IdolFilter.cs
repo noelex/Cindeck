@@ -130,9 +130,9 @@ namespace Cindeck.ViewModels
             TypeFilter = config.TypeFilter;
             RarityFilter = config.RarityFilter;
             NameFilter = config.NameFilter;
-            var asm = typeof(Cindeck.Core.CenterEffect).Assembly;
+            var asm = typeof(CenterEffect).Assembly;
             CenterEffectFilter = string.IsNullOrEmpty(config.CenterEffectFilter) ? null : asm.GetType(config.CenterEffectFilter);
-            SkillFilter = string.IsNullOrEmpty(config.SkillFilter) ? null : Type.GetType(config.SkillFilter);
+            SkillFilter = string.IsNullOrEmpty(config.SkillFilter) ? null : asm.GetType(config.SkillFilter);
             FilterOwned = config.FilterOwned;
         }
 

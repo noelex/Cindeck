@@ -118,9 +118,7 @@ namespace Cindeck.Core
                 return lst;
             }
 
-            IdolCategory preferredCategory = (GrooveBurst == null) ? Song.Type : GrooveType;
-
-            foreach (var item in m_config.OwnedIdols.Where(x => preferredCategory.HasFlag(x.Category)).OrderByDescending(x => CalculateAppeal(x, true)))
+            foreach (var item in m_config.OwnedIdols.OrderByDescending(x => CalculateAppeal(x, true)))
             {
                 if (lst.Count >= 10)
                 {
@@ -129,21 +127,6 @@ namespace Cindeck.Core
                 if(!Unit.OccupiedByUnit(item))
                 {
                     lst.Add(item);
-                }
-            }
-
-            if (lst.Count < 10)
-            {
-                foreach (var item in m_config.OwnedIdols.OrderByDescending(x => CalculateAppeal(x, true)))
-                {
-                    if (lst.Count >= 10)
-                    {
-                        break;
-                    }
-                    if (!lst.Contains(item)&& !Unit.OccupiedByUnit(item))
-                    {
-                        lst.Add(item);
-                    }
                 }
             }
 

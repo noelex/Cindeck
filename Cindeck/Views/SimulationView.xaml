@@ -66,7 +66,7 @@
                         <Label Visibility="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource NullToCollapsedConverter}}" Content="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
                     </StackPanel>
                     <CheckBox  Margin="0,5,0,0" Content="ルーム効果(全アイドルの全アピール値10%アップ)" IsChecked="{Binding Simulator.EnableRoomEffect, Mode=TwoWay}"/>
-                <CheckBox  Margin="0,5,0,0" Content="サポートメンバー(自動的に所持アイドルから選びます)" IsChecked="{Binding Simulator.EnableSupportMembers, Mode=TwoWay}" />
+                <CheckBox  Margin="0,5,0,0" Content="サポートメンバー(自動的に所属アイドルから選びます)" IsChecked="{Binding Simulator.EnableSupportMembers, Mode=TwoWay}" />
                 <StackPanel Visibility="{Binding Simulator.EnableSupportMembers, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <ItemsControl Margin="0,5,0,0" ItemsSource="{Binding Simulator.SupportMembers}">
                         <ItemsControl.ItemsPanel>

@@ -46,7 +46,7 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="タイプ" Binding="{Binding Path=Category, Converter={StaticResource IdolCategoryConverter}}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="ライフ" Binding="{Binding Path=Life}"/>
-                <DataGridTextColumn IsReadOnly="True" Header="全アピール" Binding="{Binding Path=TotalAppeal}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="合計アピール" Binding="{Binding Path=TotalAppeal}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="ボーカルアピール" Binding="{Binding Path=Vocal}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="ダンスアピール" Binding="{Binding Path=Dance}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="ビジュアルアピール" Binding="{Binding Path=Visual}"/>

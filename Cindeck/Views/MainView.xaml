@@ -15,7 +15,7 @@
             <TabItem Header="アイドル一覧" x:Name="ImplementedIdolView">
                 <local:ImplementedIdolView DataContext="{Binding Path=ImplementedIdol}"/>
             </TabItem>
-            <TabItem Header="所持アイドル">
+            <TabItem Header="所属アイドル">
                 <local:OwnedIdolView DataContext="{Binding Path=OwnedIdol}"/>
             </TabItem>
             <TabItem Header="ユニット編成">

@@ -74,7 +74,7 @@ namespace Cindeck.ViewModels
                 }
                 if (idolsNotFound.Count>0)
                 {
-                    var res = MessageBox.Show("取り込んだデータから一部所持済みのアイドルのデータが見つかりませんでした。見つからなかったアイドルを所持アイドルから削除して、取り込みを続行しますか？", "確認", MessageBoxButton.YesNo);
+                    var res = MessageBox.Show("取り込んだデータから一部所属アイドルのデータが見つかりませんでした。見つからなかったアイドルを所属アイドルから削除して、取り込みを続行しますか？", "確認", MessageBoxButton.YesNo);
                     if (MessageBoxResult.No == res)
                     {
                         return;

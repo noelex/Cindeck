@@ -1,7 +1,7 @@
 # Cindeck
 デレステのユニット組みを手助けするツールです。  
-サポメンや特技Lvなども対応しているので、アイドルやユニットの性能のテストも手軽くできます。
-ダウンロードは[こちら](https://github.com/noelex/Cindeck/releases)
+サポメンや特技Lvなども対応しているので、アイドルやユニットの性能のテストも手軽くできます。  
+ダウンロードは[こちら](https://github.com/noelex/Cindeck/releases)。
 
 ## 機能
 * アイドルや楽曲データの取り込み([アイマス デレステ攻略まとめwiki](http://imascg-slstage-wiki.gamerch.com/)さんから)

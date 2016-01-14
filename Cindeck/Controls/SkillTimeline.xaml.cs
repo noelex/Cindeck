@@ -41,7 +41,7 @@ namespace Cindeck.Controls
             var name= string.Format("{0}[{1}]{2}({3})\r\n", string.IsNullOrEmpty(idol.Label) ? "" : string.Format("[{0}]", idol.Label),
                 idol.Rarity.ToLocalizedString(), idol.Name,
                 idol.Skill == null ? "特技なし" : string.Format("{0}Lv{1}", idol.Skill.Name, idol.SkillLevel));
-            var skillEffect = idol.Skill == null ? "\r\n" : GetSkillEffect(idol.Skill)+"\r\n";
+            var skillEffect = idol.Skill == null ? "・" : GetSkillEffect(idol.Skill)+ "・";
             var skillDetail = idol.Skill == null ? "" : GetSkillDetails(idol.Skill, idol.SkillLevel);
             if(SimulationResult==null)
             {

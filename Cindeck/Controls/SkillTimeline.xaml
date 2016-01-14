@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cindeck.Controls"
              mc:Ignorable="d" 
+              x:Name="Root"
              d:DesignHeight="300" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -31,6 +32,7 @@
             <Label Margin="5,0,0,0" Content="コンボ継続" Foreground="White" Background="{StaticResource ComboContinuationColorBrush}"></Label>
             <Label Margin="5,0,0,0" Content="ライフ回復" Foreground="White" Background="{StaticResource RevivalColorBrush}"></Label>
             <Label Margin="5,0,0,0" Content="ダメージガード" Foreground="White" Background="{StaticResource DamageGuardColorBrush}"></Label>
+            <Label Margin="5,0,0,0" Content="未発動" Visibility="{Binding SimulationResult, ElementName=Root, Converter={StaticResource NullToCollapsedConverter}}" Foreground="White" Background="LightGray"></Label>
         </StackPanel>
         <Grid Margin="0,10,0,0" Grid.Row="1" Background="#AADDFF">
             <Grid.RowDefinitions>

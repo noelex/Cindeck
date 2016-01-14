@@ -160,6 +160,7 @@ namespace Cindeck.ViewModels
                 Songs=m_config.Songs = await new GamerChWikiSongSource(
                     new WebDocumentSource("http://imascg-slstage-wiki.gamerch.com/%E6%A5%BD%E6%9B%B2%E6%83%85%E5%A0%B1%E4%B8%80%E8%A6%A7")).GetSongs();
                 m_config.Save();
+                Simulator.Song = Songs.FirstOrDefault();
                 MessageBox.Show("取り込みが完了しました。");
             }
             catch (Exception ex)
@@ -174,7 +175,7 @@ namespace Cindeck.ViewModels
         {
             if(Simulator.SongData==null)
             {
-                return;
+                MessageBox.Show("楽曲を選んでください");
             }
             var results = new List<SimulationResult>();
             var rng = new Random();

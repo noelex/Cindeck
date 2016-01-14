@@ -54,7 +54,7 @@ namespace Cindeck.Core
                     continue;
                 }
             }
-            return songs.Values.ToList();
+            return songs.Values.OrderBy(x=>x.Title).ToList();
         }
     }
 }

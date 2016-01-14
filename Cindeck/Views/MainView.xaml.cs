@@ -53,11 +53,11 @@ namespace Cindeck.Views
 
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             vm.OnDeactivate();
             vm.Dispose();
-            base.OnClosed(e);
+            base.OnClosing(e);
         }
     }
 }

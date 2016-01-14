@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Cindeck
+namespace Cindeck.ViewModels
 {
     [ImplementPropertyChanged]
     class OwnedIdolViewModel:IViewModel,INotifyPropertyChanged
@@ -26,6 +26,8 @@ namespace Cindeck
             m_config = config;
             m_uvm = uvm;
             Idols = new ListCollectionView(config.OwnedIdols);
+            Filter = new IdolFilter(config, Idols, false);
+            Filter.SetConfig(config.OwnedIdolFilterConfig);
 
             foreach (var option in config.OwnedIdolSortOptions)
             {
@@ -37,6 +39,12 @@ namespace Cindeck
         }
 
         public ICollectionView Idols
+        {
+            get;
+            private set;
+        }
+
+        public IdolFilter Filter
         {
             get;
             private set;
@@ -116,6 +124,7 @@ namespace Cindeck
             {
                 m_config.OwnedIdolSortOptions.Add(x.ToSortOption());
             }
+            m_config.OwnedIdolFilterConfig = Filter.GetConfig();
         }
 
         public void OnActivate()

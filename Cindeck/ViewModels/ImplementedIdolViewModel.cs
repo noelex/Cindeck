@@ -28,8 +28,8 @@ namespace Cindeck.ViewModels
             m_ovm = ovm;
 
             Idols = new ListCollectionView(m_config.ImplementedIdols);
-            
-            Idols.Filter = FilterIdols;
+            Filter = new IdolFilter(config, Idols, true);
+            Filter.SetConfig(config.ImplementedIdolFilterConfig);
 
             foreach(var option in m_config.ImplementedIdolSortOptions)
             {
@@ -39,18 +39,6 @@ namespace Cindeck.ViewModels
             ReloadDataCommand = new AwaitableDelegateCommand(ReloadData, () => !m_isLoading);
             AddToOwnedCommand = new DelegateCommand(AddToOwned, () => SelectedIdols!=null && SelectedIdols.Count > 0);
             CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdols != null && SelectedIdols.Count ==1);
-
-            IdolTypes = new List<Tuple<IdolCategory, string>>
-            {
-                Tuple.Create(IdolCategory.All,"すべて"),
-                Tuple.Create(IdolCategory.Cute,"キュート"),
-                Tuple.Create(IdolCategory.Cool,"クール"),
-                Tuple.Create(IdolCategory.Passion,"パッション")
-            };
-            TypeFilter = IdolCategory.All;
-
-            Rarities = typeof(Rarity).GetEnumValues().Cast<Rarity?>().Reverse().Select(x => Tuple.Create(x, x.Value.ToLocalizedString())).ToList();
-            Rarities.Insert(0, Tuple.Create(new Rarity?(), "すべて"));
         }
 
         public ICollectionView Idols
@@ -59,42 +47,11 @@ namespace Cindeck.ViewModels
             private set;
         }
 
-        public bool HideOwned
-        {
-            get;
-            set;
-        }
-
-        public List<Tuple<IdolCategory, string>> IdolTypes
+        public IdolFilter Filter
         {
             get;
             private set;
         }
-
-        public List<Tuple<Rarity?, string>> Rarities
-        {
-            get;
-            private set;
-        }
-
-        public IdolCategory TypeFilter
-        {
-            get;
-            set;
-        }
-
-        public Rarity? RarityFilter
-        {
-            get;
-            set;
-        }
-
-        public string NameFilter
-        {
-            get;
-            set;
-        }
-
 
         public IList SelectedIdols
         {
@@ -176,29 +133,6 @@ namespace Cindeck.ViewModels
             private set;
         }
 
-        private bool FilterIdols(object obj)
-        {
-            var idol = obj as Idol;
-            var ok = TypeFilter.HasFlag(idol.Category);
-
-            if(HideOwned)
-            {
-                ok &= !m_config.OwnedIdols.Any(x => x.Iid == idol.Iid);
-            }
-
-            if(!string.IsNullOrEmpty(NameFilter))
-            {
-                ok &= idol.Name.Contains(NameFilter) || (idol.Label != null && idol.Label.Contains(NameFilter));
-            }
-
-            if(RarityFilter!=null)
-            {
-                ok &= idol.Rarity == RarityFilter;
-            }
-
-            return ok;
-        }
-
         private void CopyIid()
         {
             try
@@ -219,12 +153,6 @@ namespace Cindeck.ViewModels
                 CopyIidCommand.RaiseCanExecuteChanged();
             }
 
-            if(propertyName=="HideOwned"|| propertyName == "NameFilter" || propertyName == "RarityFilter" ||
-                propertyName == "TypeFilter")
-            {
-                Idols.Refresh();
-            }
-
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -238,6 +166,7 @@ namespace Cindeck.ViewModels
             {
                 m_config.ImplementedIdolSortOptions.Add(x.ToSortOption());
             }
+            m_config.ImplementedIdolFilterConfig = Filter.GetConfig();
         }
 
         public void OnActivate()

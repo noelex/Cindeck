@@ -55,6 +55,7 @@
     <Compile Include="AppealType.cs" />
     <Compile Include="CenterEffect.cs" />
     <Compile Include="FileDocumentSource.cs" />
+    <Compile Include="FilterConfig.cs" />
     <Compile Include="GamerChWikiIdolSource.cs" />
     <Compile Include="GamerChWikiSongSource.cs" />
     <Compile Include="IViewModel.cs" />

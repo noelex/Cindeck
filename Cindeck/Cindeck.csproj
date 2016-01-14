@@ -61,6 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\IdolFilterPanel.xaml.cs">
+      <DependentUpon>IdolFilterPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SkillTimeline.xaml.cs">
       <DependentUpon>SkillTimeline.xaml</DependentUpon>
     </Compile>
@@ -71,6 +74,7 @@
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="Controls\SelectedItemBindableDataGrid.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ViewModels\IdolFilter.cs" />
     <Compile Include="ViewModels\ImplementedIdolViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OwnedIdolViewModel.cs" />
@@ -88,6 +92,10 @@
     <Compile Include="Views\UnitView.xaml.cs">
       <DependentUpon>UnitView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\IdolFilterPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SkillTimeline.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

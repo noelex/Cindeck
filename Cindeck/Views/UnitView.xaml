@@ -108,47 +108,52 @@
                 <c:UnitStatus Life="{Binding TemporalUnit.LifeWithCenterEffect}" Vocal="{Binding TemporalUnit.VocalWithCenterEffect}" Dance="{Binding TemporalUnit.DanceWithCenterEffect}" Visual="{Binding TemporalUnit.VisualWithCenterEffect}" TotalAppeal="{Binding TemporalUnit.TotalAppealWithCenterEffect}"/>
             </StackPanel>
             <c:SkillTimeline DataContext="{Binding TemporalUnit}" DockPanel.Dock="Top"/>
-            <c:SelectedItemBindableDataGrid x:Name="IdolGrid" ItemsSource="{Binding Path=Idols}" DockPanel.Dock="Top" SelectionMode="Single" SelectedItem="{Binding SelectedIdol, Mode=TwoWay}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Grid.Row="1" Margin="0,5,0,0">
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <Setter Property="Background" Value="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}"/>
-                    </Style>
-                </DataGrid.RowStyle>
-                <c:SelectedItemBindableDataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="スロット1" Command="{Binding SendToSlotCommand}" CommandParameter="Slot1" />
-                        <MenuItem Header="スロット2" Command="{Binding SendToSlotCommand}"  CommandParameter="Slot2" />
-                        <MenuItem Header="スロット3" Command="{Binding SendToSlotCommand}" CommandParameter="Slot3"  />
-                        <MenuItem Header="スロット4" Command="{Binding SendToSlotCommand}" CommandParameter="Slot4"  />
-                        <MenuItem Header="スロット5" Command="{Binding SendToSlotCommand}" CommandParameter="Slot5"  />
-                        <Separator/>
-                        <MenuItem Header="IIDをコピー" Command="{Binding CopyIidCommand}"  />
-                    </ContextMenu>
-                </c:SelectedItemBindableDataGrid.ContextMenu>
-                <c:SelectedItemBindableDataGrid.Columns>
-                    <DataGridTextColumn IsReadOnly="True" Header="OID" Binding="{Binding Path=Oid}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="IID" Binding="{Binding Path=Iid, StringFormat=x8}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="レア度" Binding="{Binding Path=Rarity, Converter={StaticResource RarityConverter}}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="名前" SortMemberPath="Name">
-                        <DataGridTextColumn.Binding>
-                            <MultiBinding Converter="{StaticResource LabeledNameConverter}">
-                                <Binding Path="Label"/>
-                                <Binding Path="Name"/>
-                            </MultiBinding>
-                        </DataGridTextColumn.Binding>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn IsReadOnly="True" Header="タイプ" Binding="{Binding Path=Category, Converter={StaticResource IdolCategoryConverter}}"/>
-                    <DataGridComboBoxColumn Header="特技Lv" ItemsSource="{StaticResource SkillLevels}" SelectedItemBinding="{Binding Path=SkillLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="ライフ" Binding="{Binding Path=Life}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="合計アピール" Binding="{Binding Path=TotalAppeal}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="ボーカルアピール" Binding="{Binding Path=Vocal}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="ダンスアピール" Binding="{Binding Path=Dance}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="ビジュアルアピール" Binding="{Binding Path=Visual}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="センター効果" Binding="{Binding Path=CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="特技" Binding="{Binding Path=Skill, Converter={StaticResource SkillConverter}}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="実装" Binding="{Binding Path=ImplementationDate, StringFormat=yyyy/MM/dd}"/>
-                </c:SelectedItemBindableDataGrid.Columns>
-            </c:SelectedItemBindableDataGrid>
+
+            <DockPanel LastChildFill="True">
+                <c:IdolFilterPanel Margin="0,5,0,0" DockPanel.Dock="Top" DataContext="{Binding Filter}"/>
+                <c:SelectedItemBindableDataGrid x:Name="IdolGrid" ItemsSource="{Binding Path=Idols}" DockPanel.Dock="Top" SelectionMode="Single" SelectedItem="{Binding SelectedIdol, Mode=TwoWay}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Grid.Row="1" Margin="0,5,0,0">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <c:SelectedItemBindableDataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="スロット1" Command="{Binding SendToSlotCommand}" CommandParameter="Slot1" />
+                            <MenuItem Header="スロット2" Command="{Binding SendToSlotCommand}"  CommandParameter="Slot2" />
+                            <MenuItem Header="スロット3" Command="{Binding SendToSlotCommand}" CommandParameter="Slot3"  />
+                            <MenuItem Header="スロット4" Command="{Binding SendToSlotCommand}" CommandParameter="Slot4"  />
+                            <MenuItem Header="スロット5" Command="{Binding SendToSlotCommand}" CommandParameter="Slot5"  />
+                            <Separator/>
+                            <MenuItem Header="IIDをコピー" Command="{Binding CopyIidCommand}"  />
+                        </ContextMenu>
+                    </c:SelectedItemBindableDataGrid.ContextMenu>
+                    <c:SelectedItemBindableDataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True" Header="OID" Binding="{Binding Path=Oid}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="IID" Binding="{Binding Path=Iid, StringFormat=x8}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="レア度" Binding="{Binding Path=Rarity, Converter={StaticResource RarityConverter}}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="名前" SortMemberPath="Name">
+                            <DataGridTextColumn.Binding>
+                                <MultiBinding Converter="{StaticResource LabeledNameConverter}">
+                                    <Binding Path="Label"/>
+                                    <Binding Path="Name"/>
+                                </MultiBinding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn IsReadOnly="True" Header="タイプ" Binding="{Binding Path=Category, Converter={StaticResource IdolCategoryConverter}}"/>
+                        <DataGridComboBoxColumn Header="特技Lv" ItemsSource="{StaticResource SkillLevels}" SelectedItemBinding="{Binding Path=SkillLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="ライフ" Binding="{Binding Path=Life}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="合計アピール" Binding="{Binding Path=TotalAppeal}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="ボーカルアピール" Binding="{Binding Path=Vocal}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="ダンスアピール" Binding="{Binding Path=Dance}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="ビジュアルアピール" Binding="{Binding Path=Visual}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="センター効果" Binding="{Binding Path=CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="特技" Binding="{Binding Path=Skill, Converter={StaticResource SkillConverter}}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="実装" Binding="{Binding Path=ImplementationDate, StringFormat=yyyy/MM/dd}"/>
+                    </c:SelectedItemBindableDataGrid.Columns>
+                </c:SelectedItemBindableDataGrid>
+
+            </DockPanel>
         </DockPanel>
     </Grid>
 </UserControl>

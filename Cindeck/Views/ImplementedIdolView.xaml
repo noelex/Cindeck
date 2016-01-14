@@ -16,18 +16,10 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
         <DockPanel Margin="0,5,0,0" DockPanel.Dock="Top">
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <Label Content="タイプ"/>
-                <ComboBox  Width="150" ItemsSource="{Binding IdolTypes}" DisplayMemberPath="Item2" SelectedValuePath="Item1" SelectedValue="{Binding TypeFilter, Mode=TwoWay}"/>
-                <Label Content="レア度"/>
-                <ComboBox  Width="150" ItemsSource="{Binding Rarities}" DisplayMemberPath="Item2" SelectedValuePath="Item1" SelectedValue="{Binding RarityFilter, Mode=TwoWay}"/>
-                <Label Content="名前"/>
-                <TextBox Width="200" Text="{Binding NameFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox Margin="5,0,0,0" VerticalAlignment="Center" IsChecked="{Binding HideOwned, Mode=TwoWay}"  Content="所有済みのアイドルを表示しない"/>
-            </StackPanel>
-            <Button DockPanel.Dock="Right" x:Name="btnLoadIdols" Command="{Binding Path=ReloadDataCommand}" Content="Wikiから取り込む" HorizontalAlignment="Right" Margin="0,0,10,0" Width="120" Height="20"/>
+            <c:IdolFilterPanel DataContext="{Binding Filter}"/>
+            <Button DockPanel.Dock="Right" x:Name="btnLoadIdols" Command="{Binding Path=ReloadDataCommand}" Content="Wikiから取り込む" HorizontalAlignment="Right" Margin="0,0,5,0" Width="100" Height="30"/>
         </DockPanel>
-        <c:SelectedItemBindableDataGrid ItemsSource="{Binding Idols}" Sorting="SelectedItemBindableDataGrid_Sorting" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Margin="10,10,0,0" VerticalAlignment="Stretch" Grid.Row="0">
+        <c:SelectedItemBindableDataGrid ItemsSource="{Binding Idols}" Sorting="SelectedItemBindableDataGrid_Sorting" Margin="0,5,0,0" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}"/>

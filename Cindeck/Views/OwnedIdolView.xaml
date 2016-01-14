@@ -13,12 +13,9 @@
             </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition x:Name="___名前なし_" Height="341*"/>
-            <RowDefinition Height="43*"/>
-        </Grid.RowDefinitions>
 
+    <DockPanel LastChildFill="True">
+        <c:IdolFilterPanel Margin="0,5,0,5" DockPanel.Dock="Top" DataContext="{Binding Filter}"/>
         <c:SelectedItemBindableDataGrid ItemsSource="{Binding Path=Idols}" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
@@ -56,5 +53,5 @@
                 <DataGridTextColumn IsReadOnly="True" Header="実装" Binding="{Binding Path=ImplementationDate, StringFormat=yyyy/MM/dd}"/>
             </c:SelectedItemBindableDataGrid.Columns>
         </c:SelectedItemBindableDataGrid>
-    </Grid>
+    </DockPanel>
 </UserControl>

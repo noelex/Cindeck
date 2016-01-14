@@ -95,6 +95,28 @@ namespace Cindeck.Core
             set;
         }
 
+
+        [DataMember(Order = 9)]
+        public FilterConfig ImplementedIdolFilterConfig
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Order = 10)]
+        public FilterConfig OwnedIdolFilterConfig
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Order = 11)]
+        public FilterConfig UnitIdolFilterConfig
+        {
+            get;
+            set;
+        }
+
         public int GetNextLid()
         {
             return NextOid++;

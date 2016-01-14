@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Cindeck
+namespace Cindeck.ViewModels
 {
     [ImplementPropertyChanged]
     class UnitViewModel:IViewModel, INotifyPropertyChanged
@@ -33,6 +33,9 @@ namespace Cindeck
             CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdol != null);
 
             Idols = new ListCollectionView(m_config.OwnedIdols);
+            Filter = new IdolFilter(config, Idols, false);
+            Filter.SetConfig(config.UnitIdolFilterConfig);
+
             Units = m_config.Units;
 
             TemporalUnit = new Unit();
@@ -63,6 +66,12 @@ namespace Cindeck
         }
 
         public ICollectionView Idols
+        {
+            get;
+            private set;
+        }
+
+        public IdolFilter Filter
         {
             get;
             private set;
@@ -259,6 +268,7 @@ namespace Cindeck
             {
                 m_config.UnitIdolSortOptions.Add(x.ToSortOption());
             }
+            m_config.UnitIdolFilterConfig = Filter.GetConfig();
         }
 
         public void OnActivate()

@@ -15,7 +15,6 @@ namespace Cindeck.ViewModels
     class SimulationViewModel : IViewModel, INotifyPropertyChanged
     {
         private AppConfig m_config;
-        private bool m_isLoading;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SimulationViewModel(AppConfig config)

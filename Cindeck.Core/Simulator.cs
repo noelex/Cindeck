@@ -156,11 +156,7 @@ namespace Cindeck.Core
             get
             {
                 return SupportMemberAppeal +
-                    CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot1)) +
-                    CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot2)) +
-                    CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot3)) +
-                    CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot4)) +
-                    CalculateAppeal(Unit.GetValueOrDefault(x => x.Slot5)) +
+                    Unit.GetValueOrDefault(u=>u.Slots.Sum(x=>CalculateAppeal(x)))+
                     CalculateAppeal(Guest);
             }
         }
@@ -304,40 +300,7 @@ namespace Cindeck.Core
                         frame = 0;
                         notes++;
 
-                        var progress = (double)notes / SongData.Notes;
-
-                        if (progress >= 0.9)
-                        {
-                            comboRate = 2;
-                        }
-                        else if (progress >= 0.8)
-                        {
-                            comboRate = 1.7;
-                        }
-                        else if (progress >= 0.7)
-                        {
-                            comboRate = 1.5;
-                        }
-                        else if (progress >= 0.5)
-                        {
-                            comboRate = 1.4;
-                        }
-                        else if (progress >= 0.25)
-                        {
-                            comboRate = 1.3;
-                        }
-                        else if (progress >= 0.1)
-                        {
-                            comboRate = 1.2;
-                        }
-                        else if (progress >= 0.05)
-                        {
-                            comboRate = 1.1;
-                        }
-                        else
-                        {
-                            comboRate = 1;
-                        }
+                        comboRate = CalculateComboRate(notes, SongData.Notes);
                         var scoreUpRate = scoreUp.Any() ? 1 + scoreUp.Max(x => x.Rate) : 1;
                         var comboUpRate = comboBonus.Any() ? 1 + comboBonus.Max(x => x.Rate) : 1;
                         totalScore += (int)Math.Round(scorePerNote * comboRate * scoreUpRate * comboUpRate);
@@ -346,14 +309,51 @@ namespace Cindeck.Core
                 result.Score = totalScore;
                 result.TriggeredSkills.ForEach(x =>
                 {
-                    x.Since = Math.Round( x.Since / TimeScale,1);
-                    x.Until = Math.Round(x.Until / TimeScale,1);
+                    x.Since = Math.Round(x.Since / TimeScale, 1);
+                    x.Until = Math.Round(x.Until / TimeScale, 1);
                 });
                 result.Duration = SongData.Duration;
                 result.ScorePerNote = (int)Math.Round((double)totalScore / SongData.Notes);
                 ResultsUpToDate = true;
                 return result;
             });
+        }
+
+        private double CalculateComboRate(int comboNotes, int totalNotes)
+        {
+            var progress = (double)comboNotes / totalNotes;
+            if (progress >= 0.9)
+            {
+                return 2;
+            }
+            else if (progress >= 0.8)
+            {
+                return 1.7;
+            }
+            else if (progress >= 0.7)
+            {
+                return 1.5;
+            }
+            else if (progress >= 0.5)
+            {
+                return 1.4;
+            }
+            else if (progress >= 0.25)
+            {
+                return 1.3;
+            }
+            else if (progress >= 0.1)
+            {
+                return 1.2;
+            }
+            else if (progress >= 0.05)
+            {
+                return 1.1;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         private int CalculateAppeal(AppealType targetAppeal, IIdol idol, bool isSupportMember, bool encore = false)

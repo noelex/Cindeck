@@ -65,6 +65,7 @@ namespace Cindeck.Core
             }
         }
 
+        [DependsOn("Slot1", "Slot2", "Slot3", "Slot4", "Slot5")]
         public IEnumerable<OwnedIdol> Slots
         {
             get
@@ -81,11 +82,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return Slot1.GetValueOrDefault(x => x.Vocal) +
-                    Slot2.GetValueOrDefault(x => x.Vocal) +
-                    Slot3.GetValueOrDefault(x => x.Vocal) +
-                    Slot4.GetValueOrDefault(x => x.Vocal) +
-                    Slot5.GetValueOrDefault(x => x.Vocal);
+                return Slots.Sum(x => x == null ? 0 : x.Vocal);
             }
         }
 
@@ -93,11 +90,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return Slot1.GetValueOrDefault(x => x.Dance) +
-                    Slot2.GetValueOrDefault(x => x.Dance) +
-                    Slot3.GetValueOrDefault(x => x.Dance) +
-                    Slot4.GetValueOrDefault(x => x.Dance) +
-                    Slot5.GetValueOrDefault(x => x.Dance);
+                return Slots.Sum(x => x == null ? 0 : x.Dance);
             }
         }
 
@@ -105,11 +98,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return Slot1.GetValueOrDefault(x => x.Visual) +
-                    Slot2.GetValueOrDefault(x => x.Visual) +
-                    Slot3.GetValueOrDefault(x => x.Visual) +
-                    Slot4.GetValueOrDefault(x => x.Visual) +
-                    Slot5.GetValueOrDefault(x => x.Visual);
+                return Slots.Sum(x => x == null ? 0 : x.Visual);
             }
         }
 
@@ -117,11 +106,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return Slot1.GetValueOrDefault(x => x.Life) +
-                    Slot2.GetValueOrDefault(x => x.Life) +
-                    Slot3.GetValueOrDefault(x => x.Life) +
-                    Slot4.GetValueOrDefault(x => x.Life) +
-                    Slot5.GetValueOrDefault(x => x.Life);
+                return Slots.Sum(x => x == null ? 0 : x.Life);
             }
         }
 
@@ -145,7 +130,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return GetVocal(Slot1) + GetVocal(Slot2) + GetVocal(Slot3) + GetVocal(Slot4) + GetVocal(Slot5);
+                return Slots.Sum(x => GetVocal(x));
             }
         }
 
@@ -153,7 +138,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return GetDance(Slot1) + GetDance(Slot2) + GetDance(Slot3) + GetDance(Slot4) + GetDance(Slot5);
+                return Slots.Sum(x => GetDance(x));
             }
         }
 
@@ -161,7 +146,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return GetVisual(Slot1) + GetVisual(Slot2) + GetVisual(Slot3) + GetVisual(Slot4) + GetVisual(Slot5);
+                return Slots.Sum(x => GetVisual(x));
             }
         }
 
@@ -169,7 +154,7 @@ namespace Cindeck.Core
         {
             get
             {
-                return GetLife(Slot1) + GetLife(Slot2) + GetLife(Slot3) + GetLife(Slot4) + GetLife(Slot5);
+                return Slots.Sum(x => GetLife(x));
             }
         }
 
@@ -239,22 +224,12 @@ namespace Cindeck.Core
 
         public bool AlreadyInUnit(OwnedIdol idol)
         {
-            if (Slot1 != null && Slot1.Iid == idol.Iid) return true;
-            if (Slot2 != null && Slot2.Iid == idol.Iid) return true;
-            if (Slot3 != null && Slot3.Iid == idol.Iid) return true;
-            if (Slot4 != null && Slot4.Iid == idol.Iid) return true;
-            if (Slot5 != null && Slot5.Iid == idol.Iid) return true;
-            return false;
+            return Slots.Any(x => x != null && x.Iid == idol.Iid);
         }
 
         public bool OccupiedByUnit(OwnedIdol idol)
         {
-            if (Slot1 == idol) return true;
-            if (Slot2 == idol) return true;
-            if (Slot3 == idol) return true;
-            if (Slot4 == idol) return true;
-            if (Slot5 == idol) return true;
-            return false;
+            return Slots.Any(x => x == idol);
         }
 
         public void RemoveIdol(OwnedIdol idol)

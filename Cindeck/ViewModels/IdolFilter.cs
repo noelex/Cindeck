@@ -132,7 +132,7 @@ namespace Cindeck.ViewModels
             NameFilter = config.NameFilter;
             var asm = typeof(CenterEffect).Assembly;
             CenterEffectFilter = string.IsNullOrEmpty(config.CenterEffectFilter) ? null : asm.GetType(config.CenterEffectFilter);
-            SkillFilter = string.IsNullOrEmpty(config.SkillFilter) ? null : asm.GetType(config.SkillFilter);
+            SkillFilter = string.IsNullOrEmpty(config.SkillFilter) ? null : Type.GetType(config.SkillFilter);
             FilterOwned = config.FilterOwned;
         }
 
@@ -163,7 +163,8 @@ namespace Cindeck.ViewModels
 
             if (!string.IsNullOrEmpty(NameFilter))
             {
-                ok &= idol.Name.Contains(NameFilter) || (idol.Label != null && idol.Label.Contains(NameFilter));
+                ok &= idol.Name.ToLower().Contains(NameFilter.ToLower()) ||
+                    (idol.Label != null && idol.Label.ToLower().Contains(NameFilter.ToLower()));
             }
 
             if (RarityFilter != null)

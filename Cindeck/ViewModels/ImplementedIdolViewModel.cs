@@ -125,6 +125,10 @@ namespace Cindeck.ViewModels
                 m_config.OwnedIdols.Add(new OwnedIdol(m_config.GetNextLid(), x));
             }
             m_config.Save();
+            if(Filter.FilterOwned)
+            {
+                Idols.Refresh();
+            }
         }
 
         public DelegateCommand CopyIidCommand

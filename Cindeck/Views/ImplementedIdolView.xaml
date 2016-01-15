@@ -19,7 +19,7 @@
             <c:IdolFilterPanel DataContext="{Binding Filter}"/>
             <Button DockPanel.Dock="Right" x:Name="btnLoadIdols" Command="{Binding Path=ReloadDataCommand}" Content="Wikiから取り込む" HorizontalAlignment="Right" Margin="0,0,5,0" Width="100" Height="30"/>
         </DockPanel>
-        <c:SelectedItemBindableDataGrid ItemsSource="{Binding Idols}" Sorting="SelectedItemBindableDataGrid_Sorting" Margin="0,5,0,0" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
+        <c:SelectedItemBindableDataGrid ItemsSource="{Binding Idols, IsAsync=True}" Sorting="SelectedItemBindableDataGrid_Sorting" Margin="0,5,0,0" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}"/>

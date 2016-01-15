@@ -16,7 +16,7 @@
 
     <DockPanel LastChildFill="True">
         <c:IdolFilterPanel Margin="0,5,0,5" DockPanel.Dock="Top" DataContext="{Binding Filter}"/>
-        <c:SelectedItemBindableDataGrid Margin="0,5,0,0" ItemsSource="{Binding Path=Idols}" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
+        <c:SelectedItemBindableDataGrid ItemsSource="{Binding Path=Idols, IsAsync=True}" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}"/>

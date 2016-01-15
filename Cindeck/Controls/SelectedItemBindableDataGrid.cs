@@ -18,6 +18,8 @@ namespace Cindeck.Controls
         public SelectedItemBindableDataGrid()
         {
             SelectionChanged += CustomDataGrid_SelectionChanged;
+            EnableColumnVirtualization = true;
+            EnableRowVirtualization = true;
         }
 
         void CustomDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

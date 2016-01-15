@@ -136,7 +136,7 @@
                     
                     <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal"  Margin="0,5,0,0">
                         <Label Content="結果の詳細" Grid.Row="4" Grid.Column="0"/>
-                        <ComboBox x:Name="SimulationResults" SelectedItem="{Binding SelectedResult, Mode=TwoWay}" ItemsSource="{Binding SimulationResults}" DisplayMemberPath="Id" Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
+                        <ComboBox x:Name="SimulationResults" SelectedItem="{Binding SelectedResult, Mode=TwoWay}" ItemsSource="{Binding SimulationResults}" DisplayMemberPath="Name" Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
                     </StackPanel>
                     <StackPanel  DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
                         <Label Content="スコア"  FontWeight="Bold" />

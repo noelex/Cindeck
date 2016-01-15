@@ -17,7 +17,6 @@ namespace Cindeck.ViewModels
     class ImplementedIdolViewModel:IViewModel, INotifyPropertyChanged
     {
         private AppConfig m_config;
-        private bool m_isLoading;
         private OwnedIdolViewModel m_ovm;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -36,7 +35,7 @@ namespace Cindeck.ViewModels
                 Idols.SortDescriptions.Add(option.ToSortDescription());
             }
 
-            ReloadDataCommand = new AwaitableDelegateCommand(ReloadData, () => !m_isLoading);
+            ReloadDataCommand = new AwaitableDelegateCommand(ReloadData);
             AddToOwnedCommand = new DelegateCommand(AddToOwned, () => SelectedIdols!=null && SelectedIdols.Count > 0);
             CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdols != null && SelectedIdols.Count ==1);
         }
@@ -69,7 +68,6 @@ namespace Cindeck.ViewModels
         {
             try
             {
-                m_isLoading = true;
                 ReloadDataCommand.RaiseCanExecuteChanged();
                 var result = await new GamerChWikiIdolSource(new WebDocumentSource("http://imascg-slstage-wiki.gamerch.com/%E3%82%AB%E3%83%BC%E3%83%89%E5%85%A8%E3%82%AB%E3%83%A9%E3%83%A0%E4%B8%80%E8%A6%A7")).GetIdols();
                 var idolsNotFound = new List<OwnedIdol>();
@@ -108,7 +106,6 @@ namespace Cindeck.ViewModels
             {
                 MessageBox.Show("データを取り込めませんでした：" + ex.Message);
             }
-            m_isLoading = false;
             ReloadDataCommand.RaiseCanExecuteChanged();
         }
 

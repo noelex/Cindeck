@@ -46,7 +46,7 @@ namespace Cindeck.Core
                     .Replace("PERFCT", "PERFECT")
                     .Replace("秒毎", "秒ごと")));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // データに誤りがあるが、一応返しておく
                 return null;

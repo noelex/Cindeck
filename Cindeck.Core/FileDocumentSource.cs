@@ -16,9 +16,9 @@ namespace Cindeck.Core
             m_path = path;
         }
 
-        public async Task<string> Load()
+        public Task<string> Load()
         {
-            return File.ReadAllText(m_path);
+            return Task.Run(() => File.ReadAllText(m_path));
         }
     }
 }

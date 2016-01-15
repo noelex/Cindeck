@@ -28,7 +28,7 @@ namespace Cindeck.ViewModels
             }
 
             Songs = config.Songs;
-            LoadSongsCommand = new AwaitableDelegateCommand(LoadSongs, () => !m_isLoading);
+            LoadSongsCommand = new AwaitableDelegateCommand(LoadSongs);
 
             Simulator = new Simulator(config);
 
@@ -144,7 +144,6 @@ namespace Cindeck.ViewModels
         {
             try
             {
-                m_isLoading = true;
                 LoadSongsCommand.RaiseCanExecuteChanged();
                 Songs=m_config.Songs = await new GamerChWikiSongSource(
                     new WebDocumentSource("http://imascg-slstage-wiki.gamerch.com/%E6%A5%BD%E6%9B%B2%E6%83%85%E5%A0%B1%E4%B8%80%E8%A6%A7")).GetSongs();
@@ -156,7 +155,6 @@ namespace Cindeck.ViewModels
             {
                 MessageBox.Show("データを取り込めませんでした：" + ex.Message);
             }
-            m_isLoading = false;
             LoadSongsCommand.RaiseCanExecuteChanged();
         }
 

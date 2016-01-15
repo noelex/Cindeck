@@ -49,7 +49,7 @@ namespace Cindeck.Core
                     }
                     songs[title].Data[data.Difficulty] = data;
                 }
-                catch(Exception e)
+                catch(Exception)
                 {
                     continue;
                 }

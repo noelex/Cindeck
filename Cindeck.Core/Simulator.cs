@@ -48,8 +48,10 @@ namespace Cindeck.Core
         public int Id
         {
             get;
-            private set;
         }
+
+        public string Name => $"{Id}回目";
+
         public int Score
         {
             get;
@@ -63,7 +65,6 @@ namespace Cindeck.Core
         public List<TriggeredSkill> TriggeredSkills
         {
             get;
-            private set;
         }
 
         public int Duration

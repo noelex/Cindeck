@@ -20,8 +20,7 @@ namespace Cindeck.Core
     [KnownType(typeof(Skill.ScoreBonus))]
     public class Idol : IIdol
     {
-        public int Iid {
-            get { return (Label + Name + Rarity).GetHashCode(); } }
+        public int Iid => (Label + Name + Rarity).GetHashCode(); 
 
         [DataMember]
         public string Label { get; private set; }
@@ -47,10 +46,7 @@ namespace Cindeck.Core
         [DataMember]
         public int Visual { get; private set; }
 
-        public int TotalAppeal { get
-            {
-                return Dance + Visual + Vocal;
-            } }
+        public int TotalAppeal => Dance + Visual + Vocal;
 
         [DataMember]
         public ICenterEffect CenterEffect { get; private set; }
@@ -59,11 +55,7 @@ namespace Cindeck.Core
         public ISkill Skill { get; private set; }
 
         [DataMember]
-        public DateTime ImplementationDate
-        {
-            get;
-            private set;
-        }
+        public DateTime ImplementationDate{ get; private set; }
 
         public Idol(string label,string name,Rarity rarity, IdolCategory cat, int life,int dance,int vocal,int visual,DateTime implemented, ICenterEffect centerEffect,ISkill skill)
         {
@@ -82,12 +74,12 @@ namespace Cindeck.Core
 
         public override string ToString()
         {
-            return string.Format("{0:x8}: [{1}]{2}{3}", Iid, Rarity.ToLocalizedString(), string.IsNullOrEmpty(Label)?"":string.Format("[{0}]",Label), Name);
+            return $"{Iid:x8}: [{Rarity.ToLocalizedString()}]{(string.IsNullOrEmpty(Label) ? "" : $"[{Label}]")}{Name}";
         }
 
         public override bool Equals(object obj)
         {
-            return obj != null && obj is Idol && ((Idol)obj).Iid == Iid;
+            return (obj as Idol)?.Iid == Iid;
         }
 
         public override int GetHashCode()

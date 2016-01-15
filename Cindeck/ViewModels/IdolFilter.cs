@@ -58,25 +58,21 @@ namespace Cindeck.ViewModels
         public List<Tuple<IdolCategory, string>> IdolTypes
         {
             get;
-            private set;
         }
 
         public List<Tuple<Rarity?, string>> Rarities
         {
             get;
-            private set;
         }
 
         public List<Tuple<Type, string>> CenterEffects
         {
             get;
-            private set;
         }
 
         public List<Tuple<Type, string>> Skills
         {
             get;
-            private set;
         }
 
         public IdolCategory TypeFilter
@@ -186,8 +182,8 @@ namespace Cindeck.ViewModels
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if (propertyName == "FilterOwned" || propertyName == "NameFilter" || propertyName == "RarityFilter" ||
-                propertyName == "TypeFilter" || propertyName == "CenterEffectFilter" || propertyName == "SkillFilter")
+            if (propertyName == nameof(FilterOwned) || propertyName == nameof(NameFilter) || propertyName == nameof(RarityFilter) ||
+                propertyName == nameof(TypeFilter) || propertyName == nameof(CenterEffectFilter) || propertyName == nameof(SkillFilter))
             {
                 m_target.Refresh();
             }

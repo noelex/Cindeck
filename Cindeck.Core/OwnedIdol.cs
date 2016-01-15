@@ -26,92 +26,31 @@ namespace Cindeck.Core
             SkillLevel = skillLevel;
         }
 
-        public IdolCategory Category
-        {
-            get
-            {
-                return Idol.Category;
-            }
-        }
+        public IdolCategory Category => Idol.Category;
 
-        public ICenterEffect CenterEffect
-        {
-            get
-            {
-                return Idol.CenterEffect;
-            }
-        }
+        public ICenterEffect CenterEffect => Idol.CenterEffect;
 
-        public int Dance
-        {
-            get
-            {
-                return Idol.Dance;
-            }
-        }
+        public int Dance => Idol.Dance;
 
-        public int Iid
-        {
-            get
-            {
-                return Idol.Iid;
-            }
-        }
+        public int Iid => Idol.Iid;
 
-        public DateTime ImplementationDate
-        {
-            get
-            {
-                return Idol.ImplementationDate;
-            }
-        }
+        public DateTime ImplementationDate => Idol.ImplementationDate;
 
-        public string Label
-        {
-            get
-            {
-                return Idol.Label;
-            }
-        }
+        public string Label => Idol.Label;
 
         [DataMember]
         public int Oid
         {
-            get;
-            private set;
+            get; private set;
         }
 
-        public int Life
-        {
-            get
-            {
-                return Idol.Life;
-            }
-        }
+        public int Life => Idol.Life;
 
-        public string Name
-        {
-            get
-            {
-                return Idol.Name;
-            }
-        }
+        public string Name => Idol.Name;
 
-        public Rarity Rarity
-        {
-            get
-            {
-                return Idol.Rarity;
-            }
-        }
+        public Rarity Rarity => Idol.Rarity;
 
-        public ISkill Skill
-        {
-            get
-            {
-                return Idol.Skill;
-            }
-        }
+        public ISkill Skill => Idol.Skill;
 
         [DataMember]
         public int SkillLevel
@@ -120,29 +59,11 @@ namespace Cindeck.Core
             set;
         }
 
-        public int TotalAppeal
-        {
-            get
-            {
-                return Idol.TotalAppeal;
-            }
-        }
+        public int TotalAppeal => Idol.TotalAppeal;
 
-        public int Visual
-        {
-            get
-            {
-                return Idol.Visual;
-            }
-        }
+        public int Visual => Idol.Visual;
 
-        public int Vocal
-        {
-            get
-            {
-                return Idol.Vocal;
-            }
-        }
+        public int Vocal => Idol.Vocal;
 
         public void UpdateReference(Idol idol)
         {

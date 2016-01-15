@@ -31,29 +31,25 @@ namespace Cindeck.Core
         [DataMember]
         public SongDifficulty Difficulty
         {
-            get;
-            private set;
+            get; private set;
         }
 
         [DataMember]
         public int Level
         {
-            get;
-            private set;
+            get; private set;
         }
 
         [DataMember]
         public int Notes
         {
-            get;
-            private set;
+            get; private set;
         }
 
         [DataMember]
         public int Duration
         {
-            get;
-            private set;
+            get; private set;
         }
     }
 
@@ -77,15 +73,13 @@ namespace Cindeck.Core
         [DataMember]
         public string Title
         {
-            get;
-            private set;
+            get; private set;
         }
 
         [DataMember]
         public IdolCategory Type
         {
-            get;
-            private set;
+            get; private set;
         }
     }
 }

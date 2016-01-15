@@ -46,7 +46,7 @@ namespace Cindeck.Core
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}", Name, Description);
+            return $"{Name}: {Description}";
         }
 
         public static Skill Create(string name, string desc)
@@ -108,14 +108,8 @@ namespace Cindeck.Core
                 private set;
             }
 
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}秒ごとに{1}で{2}、{3}をPERFECTにする",
-                        Interval, TriggerProbability.ToLocalizedString(), Duration.ToLocalizedString(), Targets.ToLocalizedString());
-                }
-            }
+            public override string Description =>
+                    $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}をPERFECTにする";
 
             public JudgeEnhancement Clone()
             {
@@ -167,14 +161,8 @@ namespace Cindeck.Core
                 private set;
             }
 
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}秒ごとに{1}で{2}、{3}のスコアが{4}%アップ",
-                            Interval, TriggerProbability.ToLocalizedString(), Duration.ToLocalizedString(), Targets.ToLocalizedString(),(int)(Rate*100));
-                }
-            }
+            public override string Description =>
+                    $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}のスコアが{Rate:P0}アップ";
 
             public ScoreBonus Clone()
             {
@@ -221,14 +209,8 @@ namespace Cindeck.Core
                 private set;
             }
 
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}秒ごとに{1}で{2}、COMBOボーナスが{3}%アップ",
-                        Interval, TriggerProbability.ToLocalizedString(), Duration.ToLocalizedString(), (int)(Rate * 100));
-                }
-            }
+            public override string Description =>
+                    $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、COMBOボーナスが{Rate:P0}アップ";
 
             public ComboBonus Clone()
             {
@@ -273,14 +255,9 @@ namespace Cindeck.Core
                 private set;
             }
 
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}秒ごとに{1}で{2}、{3}でもCOMBOが継続する",
-                        Interval, TriggerProbability.ToLocalizedString(), Duration.ToLocalizedString(), Targets.ToLocalizedString());
-                }
-            }
+            public override string Description =>
+                     $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}でもCOMBOが継続する";
+  
 
             public ComboContinuation Clone()
             {
@@ -325,14 +302,8 @@ namespace Cindeck.Core
                 private set;
             }
 
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}秒ごとに{1}で{2}、PERFECTでライフが{3}回復",
-                        Interval, TriggerProbability.ToLocalizedString(), Duration.ToLocalizedString(), Amount);
-                }
-            }
+            public override string Description =>
+                $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、PERFECTでライフが{Amount}回復";
 
             public Revival Clone()
             {
@@ -370,14 +341,8 @@ namespace Cindeck.Core
         [DataContract]
         public class DamageGuard : Skill
         {
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}秒ごとに{1}で{2}、ライフが減少しなくなる",
-                        Interval, TriggerProbability.ToLocalizedString(), Duration.ToLocalizedString());
-                }
-            }
+            public override string Description =>
+                $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、ライフが減少しなくなる";
 
             public DamageGuard Clone()
             {

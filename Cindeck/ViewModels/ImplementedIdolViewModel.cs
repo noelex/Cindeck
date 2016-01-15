@@ -151,7 +151,7 @@ namespace Cindeck.ViewModels
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if(propertyName== "SelectedIdols")
+            if(propertyName== nameof(SelectedIdols))
             {
                 AddToOwnedCommand.RaiseCanExecuteChanged();
                 CopyIidCommand.RaiseCanExecuteChanged();

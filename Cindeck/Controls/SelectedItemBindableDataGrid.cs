@@ -94,6 +94,6 @@ namespace Cindeck.Controls
         }
 
         public static readonly DependencyProperty SelectedItemsListProperty =
-                DependencyProperty.Register("SelectedItemsList", typeof(IList), typeof(SelectedItemBindableDataGrid), new PropertyMetadata(null));
+                DependencyProperty.Register(nameof(SelectedItemsList), typeof(IList), typeof(SelectedItemBindableDataGrid), new PropertyMetadata(null));
     }
 }

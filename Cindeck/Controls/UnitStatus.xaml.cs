@@ -59,23 +59,23 @@ namespace Cindeck.Controls
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            if(e.Property.Name=="Life")
+            if(e.Property.Name== nameof(Life))
             {
                 LifeLabel.Content = e.NewValue;
             }
-            else if (e.Property.Name == "Vocal")
+            else if (e.Property.Name == nameof(Vocal))
             {
                 VocalLabel.Content = e.NewValue;
             }
-            else if (e.Property.Name == "Dance")
+            else if (e.Property.Name == nameof(Dance))
             {
                 DanceLabel.Content = e.NewValue;
             }
-            else if (e.Property.Name == "Visual")
+            else if (e.Property.Name == nameof(Visual))
             {
                 VisualLabel.Content = e.NewValue;
             }
-            else if (e.Property.Name == "TotalAppeal")
+            else if (e.Property.Name == nameof(TotalAppeal))
             {
                 TotalAppealLabel.Content = e.NewValue;
             }
@@ -83,14 +83,14 @@ namespace Cindeck.Controls
         }
 
         public static readonly DependencyProperty LifeProperty =
-                DependencyProperty.Register("Life", typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
+                DependencyProperty.Register(nameof(Life), typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
         public static readonly DependencyProperty VocalProperty =
-                DependencyProperty.Register("Vocal", typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
+                DependencyProperty.Register(nameof(Vocal), typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
         public static readonly DependencyProperty DanceProperty =
-                DependencyProperty.Register("Dance", typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
+                DependencyProperty.Register(nameof(Dance), typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
         public static readonly DependencyProperty VisualProperty =
-                DependencyProperty.Register("Visual", typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
+                DependencyProperty.Register(nameof(Visual), typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
         public static readonly DependencyProperty TotalAppealProperty =
-        DependencyProperty.Register("TotalAppeal", typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(TotalAppeal), typeof(int), typeof(UnitStatus), new PropertyMetadata(null));
     }
 }

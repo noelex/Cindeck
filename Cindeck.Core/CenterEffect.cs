@@ -32,7 +32,7 @@ namespace Cindeck.Core
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}", Name, Description);
+            return $"{Name}: {Description}";
         }
 
         public static CenterEffect Create(string name, string desc)
@@ -80,13 +80,8 @@ namespace Cindeck.Core
                 private set;
             }
 
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}の{1}アピール値{2}%アップ", Targets.ToFullLocalizedString(), TargetAppeal.ToLocalizedString(), (int)(Rate * 100));
-                }
-            }
+            public override string Description=>
+                    $"{Targets.ToFullLocalizedString()}の{TargetAppeal.ToLocalizedString()}アピール値{Rate:P0}アップ";
 
             public static new AppealUp Create(string name, string desc)
             {
@@ -126,14 +121,8 @@ namespace Cindeck.Core
                 private set;
             }
 
-
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}のライフ{1}%アップ", Targets.ToFullLocalizedString(), (int)(Rate * 100));
-                }
-            }
+            public override string Description=>
+                    $"{Targets.ToFullLocalizedString()}のライフ{Rate:P0}アップ";
 
             public static new LifeUp Create(string name, string desc)
             {
@@ -171,13 +160,8 @@ namespace Cindeck.Core
                 private set;
             }
 
-            public override string Description
-            {
-                get
-                {
-                    return string.Format("{0}の特技発動確率{1}%アップ", Targets.ToFullLocalizedString(), (int)(Rate * 100));
-                }
-            }
+            public override string Description =>
+                    $"{Targets.ToFullLocalizedString()}の特技発動確率{Rate:P0}アップ";
 
             public SkillTriggerProbabilityUp Clone()
             {

@@ -50,7 +50,6 @@ namespace Cindeck.ViewModels
         public ObservableCollection<Unit> Units
         {
             get;
-            private set;
         }
 
         public Unit TemporalUnit
@@ -68,13 +67,11 @@ namespace Cindeck.ViewModels
         public ICollectionView Idols
         {
             get;
-            private set;
         }
 
         public IdolFilter Filter
         {
             get;
-            private set;
         }
 
         public OwnedIdol SelectedIdol
@@ -92,7 +89,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand<string> SendToSlotCommand
         {
             get;
-            private set;
         }
 
         private void SendToSlot(string slot)
@@ -110,7 +106,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand SaveCommand
         {
             get;
-            private set;
         }
 
         private void Save()
@@ -133,7 +128,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand DeleteCommand
         {
             get;
-            private set;
         }
 
         private void Delete()
@@ -150,7 +144,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand<string> MoveToSlotCommand
         {
             get;
-            private set;
         }
 
         private void MoveToSlot(string target)
@@ -174,7 +167,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand<string> ResetSlotCommand
         {
             get;
-            private set;
         }
 
         private void ResetSlot(string target)
@@ -190,7 +182,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand<string> HighlightCommand
         {
             get;
-            private set;
         }
 
         private void Highlight(string target)
@@ -206,7 +197,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand CopyIidCommand
         {
             get;
-            private set;
         }
 
         private void CopyIid()
@@ -223,18 +213,18 @@ namespace Cindeck.ViewModels
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if (propertyName == "SelectedIdol")
+            if (propertyName == nameof(SelectedIdol))
             {
                 SendToSlotCommand.RaiseCanExecuteChanged();
                 CopyIidCommand.RaiseCanExecuteChanged();
             }
-            else if (propertyName=="UnitName")
+            else if (propertyName == nameof(UnitName))
             {
                 SaveCommand.RaiseCanExecuteChanged();
             }
-            else if(propertyName=="SelectedUnit")
+            else if (propertyName == nameof(SelectedUnit))
             {
-                if(SelectedUnit!=null)
+                if (SelectedUnit != null)
                 {
                     TemporalUnit.CopyFrom(SelectedUnit);
                 }

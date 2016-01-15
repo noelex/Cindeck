@@ -56,13 +56,11 @@ namespace Cindeck.ViewModels
         public List<Tuple<AppealType?, string>> GrooveBursts
         {
             get;
-            private set;
         }
 
         public List<Tuple<IdolCategory, string>> GrooveTypes
         {
             get;
-            private set;
         }
 
         public bool EnableGuest
@@ -77,30 +75,21 @@ namespace Cindeck.ViewModels
             private set;
         }
 
-        public ObservableCollection<Unit> Units
-        {
-            get
-            {
-                return m_config.Units;
-            }
-        }
+        public ObservableCollection<Unit> Units => m_config.Units;
 
         public Simulator Simulator
         {
             get;
-            private set;
         }
 
         public IAsyncCommand LoadSongsCommand
         {
             get;
-            private set;
         }
 
         public IAsyncCommand StartSimulationCommand
         {
             get;
-            private set;
         }
 
         public int MaxScore
@@ -205,7 +194,7 @@ namespace Cindeck.ViewModels
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if(propertyName== "GuestIid" || propertyName== "EnableGuest")
+            if(propertyName== nameof(GuestIid) || propertyName== nameof(EnableGuest))
             {
                 Simulator.Guest=  GuestIid == null || !EnableGuest ? null : m_config.ImplementedIdols.FirstOrDefault(x => x.Iid == GuestIid);
             }

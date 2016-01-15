@@ -41,13 +41,11 @@ namespace Cindeck.ViewModels
         public ICollectionView Idols
         {
             get;
-            private set;
         }
 
         public IdolFilter Filter
         {
             get;
-            private set;
         }
 
         public IList SelectedIdols
@@ -59,7 +57,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand DeleteCommand
         {
             get;
-            private set;
         }
 
         private void Delete()
@@ -82,7 +79,6 @@ namespace Cindeck.ViewModels
         public DelegateCommand CopyIidCommand
         {
             get;
-            private set;
         }
 
         private void CopyIid()
@@ -99,7 +95,7 @@ namespace Cindeck.ViewModels
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if (propertyName == "SelectedIdols")
+            if (propertyName == nameof(SelectedIdols))
             {
                 DeleteCommand.RaiseCanExecuteChanged();
                 CopyIidCommand.RaiseCanExecuteChanged();

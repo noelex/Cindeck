@@ -50,11 +50,11 @@ namespace Cindeck.Controls
             else
             {
                 string triggerDetail = "";
-                if(idol.Skill != null)
+                if (idol.Skill != null)
                 {
                     int triggered = m_triggeredSkills.ContainsKey(idol.Oid) ? m_triggeredSkills[idol.Oid].Length : 0;
-                    int expected = (int)Math.Floor((SimulationResult.Duration-1.0) / idol.Skill.Interval);
-                    triggerDetail = string.Format("{0}/{1}回発動({2:P1})", triggered, expected, (double)triggered / expected);
+                    int expected = (int)Math.Floor((SimulationResult.Duration - 1.0) / idol.Skill.Interval);
+                    triggerDetail = $"{triggered}/{expected}回発動({((double)triggered / expected):P1})";
                 }
                 return name + skillEffect + skillDetail + "\r\n" + triggerDetail;
             }
@@ -94,39 +94,39 @@ namespace Cindeck.Controls
             if (skill is Skill.ComboBonus)
             {
                 var s = skill as Skill.ComboBonus;
-                return string.Format("コンボボーナスが{0:P0}アップ",s.Rate);
+                return $"コンボボーナスが{s.Rate:P0}アップ";
             }
             if (skill is Skill.ComboContinuation)
             {
                 var s = skill as Skill.ComboContinuation;
-                return string.Format("{0}でもコンボが継続する", s.Targets.ToLocalizedString());
+                return $"{s.Targets.ToLocalizedString()}でもコンボが継続する";
             }
             if (skill is Skill.DamageGuard)
             {
                 var s = skill as Skill.DamageGuard;
-                return string.Format("ライフが減少しなくなる");
+                return "ライフが減少しなくなる";
             }
             if (skill is Skill.JudgeEnhancement)
             {
                 var s = skill as Skill.JudgeEnhancement;
-                return string.Format("{0}をPERFECTにする", s.Targets.ToLocalizedString());
+                return $"{s.Targets.ToLocalizedString()}をPERFECTにする";
             }
             if (skill is Skill.Revival)
             {
                 var s = skill as Skill.Revival;
-                return string.Format("PERFECTでライフが{0}回復", s.Amount);
+                return $"PERFECTでライフが{s.Amount}回復";
             }
             if (skill is Skill.ScoreBonus)
             {
                 var s = skill as Skill.ScoreBonus;
-                return string.Format("{0}のスコアが{1:P0}アップ", s.Targets.ToLocalizedString(), s.Rate);
+                return $"{s.Targets.ToLocalizedString()}のスコアが{s.Rate:P0}アップ";
             }
             return null;
         }
 
         private string GetSkillDetails(ISkill skill,int lv)
         {
-            return string.Format("{0}秒ごとに{1:P1}の確率で発動(持続時間{2:F1}秒)", skill.Interval,skill.EstimateProbability(lv),skill.EstimateDuration(lv));
+            return $"{skill.Interval}秒ごとに{skill.EstimateProbability(lv):P1}の確率で発動(持続時間{skill.EstimateDuration(lv):F1}秒)";
         }
 
         private void LoadSlots()
@@ -323,6 +323,6 @@ namespace Cindeck.Controls
         }
 
         public static readonly DependencyProperty SimulationResultProperty =
-                DependencyProperty.Register("SimulationResult", typeof(SimulationResult), typeof(SkillTimeline), new PropertyMetadata(null));
+                DependencyProperty.Register(nameof(SimulationResult), typeof(SimulationResult), typeof(SkillTimeline), new PropertyMetadata(null));
     }
 }

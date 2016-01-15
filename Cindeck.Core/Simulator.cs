@@ -113,13 +113,8 @@ namespace Cindeck.Core
             set;
         }
 
-        public IEnumerable<SongData> SongDataList
-        {
-            get
-            {
-                return Song != null ? Song.Data.Values : Enumerable.Empty<SongData>();
-            }
-        }
+        public IEnumerable<SongData> SongDataList =>
+            Song != null ? Song.Data.Values : Enumerable.Empty<SongData>();
 
         public Song Song
         {
@@ -151,15 +146,8 @@ namespace Cindeck.Core
             private set;
         }
 
-        public int TotalAppeal
-        {
-            get
-            {
-                return SupportMemberAppeal +
-                    Unit.GetValueOrDefault(u=>u.Slots.Sum(x=>CalculateAppeal(x)))+
-                    CalculateAppeal(Guest);
-            }
-        }
+        public int TotalAppeal =>
+            SupportMemberAppeal + Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(x))) + CalculateAppeal(Guest);
 
         public Unit Unit
         {
@@ -444,15 +432,15 @@ namespace Cindeck.Core
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if (propertyName == "Song")
+            if (propertyName == nameof(Song))
             {
                 SongData = SongDataList.FirstOrDefault();
             }
 
-            if (propertyName == "EnableSupportMembers" || propertyName == "GrooveBurst" ||
-                propertyName == "GrooveType" || propertyName == "IsEncore" ||
-                propertyName == "Guest" || propertyName == "Unit" ||
-                propertyName == "Song" || propertyName == "SongData" || propertyName == "EnableRoomEffect")
+            if (propertyName == nameof(EnableSupportMembers) || propertyName == nameof(GrooveBurst) ||
+                propertyName == nameof(GrooveType) || propertyName == nameof(IsEncore) ||
+                propertyName == nameof(Guest) || propertyName == nameof(Unit) ||
+                propertyName == nameof(Song) || propertyName == nameof(SongData) || propertyName == nameof(EnableRoomEffect))
             {
                 Reload();
             }

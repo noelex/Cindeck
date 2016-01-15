@@ -27,25 +27,21 @@ namespace Cindeck.ViewModels
         public OwnedIdolViewModel OwnedIdol
         {
             get;
-            private set;
         }
 
         public ImplementedIdolViewModel ImplementedIdol
         {
             get;
-            private set;
         }
 
         public UnitViewModel Units
         {
             get;
-            private set;
         }
 
         public SimulationViewModel Simulation
         {
             get;
-            private set;
         }
 
 

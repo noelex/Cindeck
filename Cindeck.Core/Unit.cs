@@ -78,85 +78,25 @@ namespace Cindeck.Core
             }
         }
 
-        public int Vocal
-        {
-            get
-            {
-                return Slots.Sum(x => x == null ? 0 : x.Vocal);
-            }
-        }
+        public int Vocal => Slots.Sum(x => x == null ? 0 : x.Vocal);
 
-        public int Dance
-        {
-            get
-            {
-                return Slots.Sum(x => x == null ? 0 : x.Dance);
-            }
-        }
+        public int Dance => Slots.Sum(x => x == null ? 0 : x.Dance);
 
-        public int Visual
-        {
-            get
-            {
-                return Slots.Sum(x => x == null ? 0 : x.Visual);
-            }
-        }
+        public int Visual => Slots.Sum(x => x == null ? 0 : x.Visual);
 
-        public int Life
-        {
-            get
-            {
-                return Slots.Sum(x => x == null ? 0 : x.Life);
-            }
-        }
+        public int Life => Slots.Sum(x => x == null ? 0 : x.Life);
 
-        public int TotalAppeal
-        {
-            get
-            {
-                return Dance + Vocal + Visual;
-            }
-        }
+        public int TotalAppeal => Dance + Vocal + Visual;
 
-        public int TotalAppealWithCenterEffect
-        {
-            get
-            {
-                return DanceWithCenterEffect + VocalWithCenterEffect + VisualWithCenterEffect;
-            }
-        }
+        public int TotalAppealWithCenterEffect => DanceWithCenterEffect + VocalWithCenterEffect + VisualWithCenterEffect;
 
-        public int VocalWithCenterEffect
-        {
-            get
-            {
-                return Slots.Sum(x => GetVocal(x));
-            }
-        }
+        public int VocalWithCenterEffect => Slots.Sum(x => GetVocal(x));
 
-        public int DanceWithCenterEffect
-        {
-            get
-            {
-                return Slots.Sum(x => GetDance(x));
-            }
-        }
+        public int DanceWithCenterEffect => Slots.Sum(x => GetDance(x));
 
-        public int VisualWithCenterEffect
-        {
-            get
-            {
-                return Slots.Sum(x => GetVisual(x));
-            }
-        }
+        public int VisualWithCenterEffect => Slots.Sum(x => GetVisual(x));
 
-        public int LifeWithCenterEffect
-        {
-            get
-            {
-                return Slots.Sum(x => GetLife(x));
-            }
-        }
+        public int LifeWithCenterEffect => Slots.Sum(x => GetLife(x));
 
         private int GetLife(OwnedIdol idol)
         {
@@ -164,9 +104,10 @@ namespace Cindeck.Core
             {
                 return 0;
             }
-            if(Center!=null&&Center.CenterEffect!=null&&Center.CenterEffect is CenterEffect.LifeUp&&Center.CenterEffect.Targets.HasFlag(idol.Category))
+            var effect = Center?.CenterEffect as CenterEffect.LifeUp;
+            if (effect?.Targets.HasFlag(idol.Category) == true)
             {
-                return (int)Math.Ceiling(idol.Life + idol.Life * (Center.CenterEffect as CenterEffect.LifeUp).Rate);
+                return (int)Math.Ceiling(idol.Life + idol.Life * effect.Rate);
             }
             return idol.Life;
         }
@@ -177,13 +118,10 @@ namespace Cindeck.Core
             {
                 return 0;
             }
-            if (Center != null && Center.CenterEffect != null && Center.CenterEffect is CenterEffect.AppealUp && Center.CenterEffect.Targets.HasFlag(idol.Category))
+            var effect = Center?.CenterEffect as CenterEffect.AppealUp;
+            if (effect?.Targets.HasFlag(idol.Category) == true && effect?.TargetAppeal.HasFlag(AppealType.Vocal) == true)
             {
-                var effect = Center.CenterEffect as CenterEffect.AppealUp;
-                if (effect.TargetAppeal.HasFlag(AppealType.Vocal))
-                {
-                    return (int)Math.Ceiling(idol.Vocal + idol.Vocal * effect.Rate);
-                }
+                return (int)Math.Ceiling(idol.Vocal + idol.Vocal * effect.Rate);
             }
             return idol.Vocal;
         }
@@ -194,13 +132,10 @@ namespace Cindeck.Core
             {
                 return 0;
             }
-            if (Center != null && Center.CenterEffect != null && Center.CenterEffect is CenterEffect.AppealUp && Center.CenterEffect.Targets.HasFlag(idol.Category))
+            var effect = Center?.CenterEffect as CenterEffect.AppealUp;
+            if (effect?.Targets.HasFlag(idol.Category) == true && effect?.TargetAppeal.HasFlag(AppealType.Dance) == true)
             {
-                var effect = Center.CenterEffect as CenterEffect.AppealUp;
-                if (effect.TargetAppeal.HasFlag(AppealType.Dance))
-                {
-                    return (int)Math.Ceiling(idol.Dance + idol.Dance * effect.Rate);
-                }
+                return (int)Math.Ceiling(idol.Dance + idol.Dance * effect.Rate);
             }
             return idol.Dance;
         }
@@ -211,20 +146,17 @@ namespace Cindeck.Core
             {
                 return 0;
             }
-            if (Center != null && Center.CenterEffect != null && Center.CenterEffect is CenterEffect.AppealUp && Center.CenterEffect.Targets.HasFlag(idol.Category))
+            var effect = Center?.CenterEffect as CenterEffect.AppealUp;
+            if (effect?.Targets.HasFlag(idol.Category) == true && effect?.TargetAppeal.HasFlag(AppealType.Visual) == true)
             {
-                var effect = Center.CenterEffect as CenterEffect.AppealUp;
-                if (effect.TargetAppeal.HasFlag(AppealType.Visual))
-                {
-                    return (int)Math.Ceiling(idol.Visual + idol.Visual * effect.Rate);
-                }
+                return (int)Math.Ceiling(idol.Visual + idol.Visual * effect.Rate);
             }
             return idol.Visual;
         }
 
         public bool AlreadyInUnit(OwnedIdol idol)
         {
-            return Slots.Any(x => x != null && x.Iid == idol.Iid);
+            return Slots.Any(x => x?.Iid == idol.Iid);
         }
 
         public bool OccupiedByUnit(OwnedIdol idol)

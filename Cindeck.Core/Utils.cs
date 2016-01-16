@@ -41,7 +41,7 @@ namespace Cindeck.Core
             { Rarity.SSR,"SSR"},
             { Rarity.SSRPlus,"SSR+"}};
 
-        private static readonly Dictionary<SongDifficulty,string> m_songDifficulties = new Dictionary<SongDifficulty, string> {
+        private static readonly Dictionary<SongDifficulty, string> m_songDifficulties = new Dictionary<SongDifficulty, string> {
             { SongDifficulty.Debut,"DEBUT"},
             { SongDifficulty.Regular,"REGULAR"},
             { SongDifficulty.Pro,"PRO"},
@@ -105,16 +105,9 @@ namespace Cindeck.Core
 
         private static Dictionary<SkillTriggerProbability, double> ProbabilityInitialValues = new Dictionary<SkillTriggerProbability, double>
         {
-            {SkillTriggerProbability.High,0.40 },
-            {SkillTriggerProbability.Medium,0.35 },
+            {SkillTriggerProbability.High,0.50 },
+            {SkillTriggerProbability.Medium,0.40 },
             {SkillTriggerProbability.Low,0.30 },
-        };
-
-        private static Dictionary<SkillTriggerProbability, double> ProbabilityScaleFactors = new Dictionary<SkillTriggerProbability, double>
-        {
-            {SkillTriggerProbability.High,0.02778 },
-            {SkillTriggerProbability.Medium,0.01944 },
-            {SkillTriggerProbability.Low,0.01667 },
         };
 
         private static Dictionary<SkillDuration, double> DurationInitialValues = new Dictionary<SkillDuration, double>
@@ -124,15 +117,6 @@ namespace Cindeck.Core
             {SkillDuration.Medium,4 },
             {SkillDuration.Short,3 },
             {SkillDuration.Instantaneous,2 },
-        };
-
-        private static Dictionary<SkillDuration, double> DurationScaleFactors = new Dictionary<SkillDuration, double>
-        {
-            {SkillDuration.VeryLong,0.33333 },
-            {SkillDuration.Long,0.27778 },
-            {SkillDuration.Medium,0.22222 },
-            {SkillDuration.Short,0.16667 },
-            {SkillDuration.Instantaneous,0.11111 },
         };
 
         public static string ToLocalizedString(this SkillTriggerProbability pos)
@@ -176,14 +160,14 @@ namespace Cindeck.Core
             return m_songDifficulties[diff];
         }
 
-        public static string ToLocalizedString(this NoteJudgement judgement, bool descending=true)
+        public static string ToLocalizedString(this NoteJudgement judgement, bool descending = true)
         {
             var res = new List<string>();
 
             var values = judgement.GetType().GetEnumValues().Cast<NoteJudgement>();
-            if(descending)
+            if (descending)
             {
-                values = values.OrderByDescending(x=>x);
+                values = values.OrderByDescending(x => x);
             }
             foreach (var x in values)
             {
@@ -232,15 +216,15 @@ namespace Cindeck.Core
 
         public static NoteJudgement ToJudgement(this string s)
         {
-            var res=0;
-            foreach(var x in s.Split('/'))
+            var res = 0;
+            foreach (var x in s.Split('/'))
             {
                 res |= (int)m_stringToJudge[x];
             }
             return (NoteJudgement)res;
         }
 
-        public static R GetValueOrDefault<T,R>(this T t, Func<T, R> accessor)
+        public static R GetValueOrDefault<T, R>(this T t, Func<T, R> accessor)
         {
             if (t != null)
             {
@@ -249,14 +233,24 @@ namespace Cindeck.Core
             return default(R);
         }
 
-        public static double EstimateProbability(this ISkill skill,int skillLv)
+        public static double EstimateProbability(this ISkill skill, int skillLv)
         {
-            return ProbabilityInitialValues[skill.TriggerProbability] + ProbabilityScaleFactors[skill.TriggerProbability] * (skillLv - 1);
+            var result = ProbabilityInitialValues[skill.TriggerProbability];
+            for (int i = 1; i < skillLv; i++)
+            {
+                result *= 1.05;
+            }
+            return result;
         }
 
         public static double EstimateDuration(this ISkill skill, int skillLv)
         {
-            return DurationInitialValues[skill.Duration] + DurationScaleFactors[skill.Duration] * (skillLv - 1);
+            var result = DurationInitialValues[skill.Duration];
+            for (int i = 1; i < skillLv; i++)
+            {
+                result *= 1.05;
+            }
+            return result;
         }
     }
 }

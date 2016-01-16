@@ -74,6 +74,13 @@ namespace Cindeck.Core
         }
     }
 
+    public enum SkillTriggerControl
+    {
+        Auto,
+        AlwaysTrigger,
+        NeverTrigger
+    }
+
     [ImplementPropertyChanged]
     public class Simulator : INotifyPropertyChanged
     {
@@ -180,6 +187,12 @@ namespace Cindeck.Core
             set;
         }
 
+        public SkillTriggerControl SkillControl
+        {
+            get;
+            set;
+        }
+
         private List<OwnedIdol> SelectSupportMembers()
         {
             var lst = new List<OwnedIdol>();
@@ -260,7 +273,9 @@ namespace Cindeck.Core
                                 var sb = slot.Skill as Skill;
                                 if (totalFrame % (sb.Interval * TimeScale) == 0)
                                 {
-                                    if (rng.NextDouble() < sb.EstimateProbability(slot.SkillLevel) + (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0))
+                                    if (SkillControl!=SkillTriggerControl.NeverTrigger&&
+                                    (SkillControl ==SkillTriggerControl.AlwaysTrigger || 
+                                    rng.NextDouble() < sb.EstimateProbability(slot.SkillLevel) + (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0)))
                                     {
                                         var skill = new TriggeredSkill
                                         {
@@ -440,7 +455,7 @@ namespace Cindeck.Core
 
             if (propertyName == nameof(EnableSupportMembers) || propertyName == nameof(GrooveBurst) ||
                 propertyName == nameof(GrooveType) || propertyName == nameof(IsEncore) ||
-                propertyName == nameof(Guest) || propertyName == nameof(Unit) ||
+                propertyName == nameof(Guest) || propertyName == nameof(Unit) || propertyName== nameof(SkillControl)||
                 propertyName == nameof(Song) || propertyName == nameof(SongData) || propertyName == nameof(EnableRoomEffect))
             {
                 Reload();

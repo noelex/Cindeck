@@ -47,6 +47,13 @@ namespace Cindeck.ViewModels
                Tuple.Create(IdolCategory.Passion, "Pa 30%")
             };
 
+            SkillControls = new List<Tuple<SkillTriggerControl, string>>
+            {
+                Tuple.Create(SkillTriggerControl.Auto, "制御しない"),
+                Tuple.Create(SkillTriggerControl.AlwaysTrigger, "100%発動する"),
+                Tuple.Create(SkillTriggerControl.NeverTrigger, "発動しない"),
+            };
+
             StartSimulationCommand = new AwaitableDelegateCommand(StartSimulation);
 
             Simulator.Song = Songs.FirstOrDefault();
@@ -59,6 +66,11 @@ namespace Cindeck.ViewModels
         }
 
         public List<Tuple<IdolCategory, string>> GrooveTypes
+        {
+            get;
+        }
+
+        public List<Tuple<SkillTriggerControl, string>> SkillControls
         {
             get;
         }

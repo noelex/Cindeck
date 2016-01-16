@@ -20,14 +20,13 @@
                 <StackPanel Orientation="Horizontal">
                     <Label Content="ユニット" Width="80"/>
                     <ComboBox Grid.Row="0" Grid.Column="1" MinWidth="100" DisplayMemberPath="Name" ItemsSource="{Binding Units}" SelectedItem="{Binding Simulator.Unit, Mode=TwoWay}" HorizontalAlignment="Left" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Visibility="{Binding Simulator.Unit, Converter={StaticResource NullToCollapsedConverter}}">
-                    <Label Content="センター効果" FontWeight="Bold"/>
-                    <Label Content="{Binding Simulator.Unit.Center.CenterEffect, FallbackValue=なし, Converter={StaticResource CenterEffectConverter}}"/>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding Simulator.Unit, Converter={StaticResource NullToCollapsedConverter}}">
+                        <Label Content="センター効果" FontWeight="Bold"/>
+                        <Label Content="{Binding Simulator.Unit.Center.CenterEffect, FallbackValue=なし, Converter={StaticResource CenterEffectConverter}}"/>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <Label Content="楽曲"  Width="80"/>
-
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
                         <ComboBox MinWidth="200" IsEditable="True" ItemsSource="{Binding Songs}" SelectedItem="{Binding Simulator.Song, Mode=TwoWay}" DisplayMemberPath="Title" />
                         <ComboBox Margin="5,0,0,0" DisplayMemberPath="Difficulty"
@@ -56,11 +55,11 @@
             <StackPanel Margin="0,5,0,0" Orientation="Vertical" DockPanel.Dock="Top">
                 <StackPanel Orientation="Horizontal">
                     <CheckBox VerticalAlignment="Center" Content="ゲスト" IsChecked="{Binding EnableGuest, Mode=TwoWay}" />
-                    <TextBox FontWeight="Bold" VerticalContentAlignment="Center" Margin="5,0,0,0" Style="{StaticResource PlaceHolder}" Visibility="{Binding EnableGuest, Converter={StaticResource BooleanToVisibilityConverter}}" Tag="ゲストセンターのIID"  Width="160" Text="{Binding GuestIid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IidConverter}}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Visibility="{Binding EnableGuest, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Label Content="{Binding Simulator.Guest, Converter={StaticResource IdolConverter}}" FontWeight="Bold"/>
-                    <Label Visibility="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource NullToCollapsedConverter}}" Content="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
+                    <TextBox FontWeight="Bold" VerticalContentAlignment="Center" Margin="5,0,0,0" Style="{StaticResource PlaceHolder}" Visibility="{Binding EnableGuest, Converter={StaticResource BooleanToVisibilityConverter}}" Tag="ゲストセンターのIID"  Width="135" Text="{Binding GuestIid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IidConverter}}"/>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding EnableGuest, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Label Content="{Binding Simulator.Guest, Converter={StaticResource IdolConverter}}" FontWeight="Bold"/>
+                        <Label Visibility="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource NullToCollapsedConverter}}" Content="{Binding Simulator.Guest.CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
+                    </StackPanel>
                 </StackPanel>
                 <CheckBox  Margin="0,5,0,0" Content="ルーム効果(全アイドルの全アピール値10%アップ)" IsChecked="{Binding Simulator.EnableRoomEffect, Mode=TwoWay}"/>
                 <CheckBox  Margin="0,5,0,0" Content="サポートメンバー(自動的に所属アイドルから選びます)" IsChecked="{Binding Simulator.EnableSupportMembers, Mode=TwoWay}" />
@@ -91,9 +90,13 @@
                         <Label Content="{Binding Simulator.SupportMemberAppeal}"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel  Margin="0,5,0,0" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <Label Content="合計アピール"  FontWeight="Bold" />
                     <Label Content="{Binding Simulator.TotalAppeal}"/>
+                </StackPanel>
+                <StackPanel  Margin="0,5,0,5" Orientation="Horizontal">
+                    <Label Content="特技発動率"  Grid.Row="4" Grid.Column="0"/>
+                    <ComboBox ItemsSource="{Binding SkillControls}" SelectedValue="{Binding Simulator.SkillControl}" DisplayMemberPath="Item2" SelectedValuePath="Item1" MinWidth="100" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <Button HorizontalAlignment="Left" Content="実行" Command="{Binding StartSimulationCommand}" Width="200"/>
                 <StackPanel  x:Name="ResultPanel"  Visibility="{Binding Simulator.ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">

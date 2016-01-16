@@ -44,6 +44,8 @@ namespace Cindeck.ViewModels
             get;
         }
 
+        public string Title => $"Cindeck {m_config.Version}";
+
 
         public void Dispose()
         {

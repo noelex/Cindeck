@@ -174,6 +174,12 @@ namespace Cindeck.ViewModels
             if(Simulator.SongData==null)
             {
                 MessageBox.Show("楽曲を選んでください");
+                return;
+            }
+            if (Simulator.Unit == null)
+            {
+                MessageBox.Show("ユニットを選んでください");
+                return;
             }
             var results = new List<SimulationResult>();
             var rng = new Random();
@@ -225,7 +231,7 @@ namespace Cindeck.ViewModels
             {
                 GuestIid = null;
             }
-            if (Simulator.Unit != null && !m_config.Units.Contains(Simulator.Unit))
+            if (Simulator.Unit == null)
             {
                 Simulator.Unit = m_config.Units.FirstOrDefault();
             }

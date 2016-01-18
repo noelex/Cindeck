@@ -235,22 +235,12 @@ namespace Cindeck.Core
 
         public static double EstimateProbability(this ISkill skill, int skillLv)
         {
-            var result = ProbabilityInitialValues[skill.TriggerProbability];
-            for (int i = 1; i < skillLv; i++)
-            {
-                result *= 1.05;
-            }
-            return result;
+            return ProbabilityInitialValues[skill.TriggerProbability] * Math.Pow(1.05, skillLv - 1);
         }
 
         public static double EstimateDuration(this ISkill skill, int skillLv)
         {
-            var result = DurationInitialValues[skill.Duration];
-            for (int i = 1; i < skillLv; i++)
-            {
-                result *= 1.05;
-            }
-            return result;
+            return DurationInitialValues[skill.Duration] * Math.Pow(1.05, skillLv - 1);
         }
     }
 }

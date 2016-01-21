@@ -8,6 +8,6 @@ namespace Cindeck.Core
 {
     public interface IIdolSource
     {
-        Task<List<Idol>> GetIdols();
+        Task<Tuple<List<Idol>, int>> GetIdols();
     }
 }

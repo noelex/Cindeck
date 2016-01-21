@@ -73,7 +73,7 @@ namespace Cindeck.ViewModels
                 var idolsNotFound = new List<OwnedIdol>();
                 foreach(var item in m_config.OwnedIdols)
                 {
-                    if(!result.Any(x=>x.Iid==item.Iid))
+                    if(!result.Item1.Any(x=>x.Iid==item.Iid))
                     {
                         idolsNotFound.Add(item);
                     }
@@ -87,7 +87,7 @@ namespace Cindeck.ViewModels
                     }
                 }
                 m_config.ImplementedIdols.Clear();
-                foreach (var item in result)
+                foreach (var item in result.Item1)
                 {
                     m_config.ImplementedIdols.Add(item);
                 }
@@ -97,10 +97,10 @@ namespace Cindeck.ViewModels
                 }
                 foreach (var item in m_config.OwnedIdols)
                 {
-                    item.UpdateReference(result.First(x=>x.Iid==item.Iid));
+                    item.UpdateReference(result.Item1.First(x=>x.Iid==item.Iid));
                 }
                 m_config.Save();
-                MessageBox.Show("取り込みが完了しました。");
+                MessageBox.Show($"取り込みが完了しました（{result.Item1.Count}成功・{result.Item2}失敗）");
             }
             catch (Exception ex)
             {

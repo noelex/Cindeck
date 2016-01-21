@@ -53,7 +53,7 @@ namespace Cindeck.Core
             }
         }
 
-        public async Task<List<Idol>> GetIdols()
+        public async Task<Tuple<List<Idol>,int>> GetIdols()
         {
             var raw = await m_doc.Load();
             var hdoc = new HtmlDocument();
@@ -69,7 +69,7 @@ namespace Cindeck.Core
                     result.Add(idol);
                 }
             }
-            return result;
+            return Tuple.Create(result,rows.Count-result.Count);
         }
     }
 }

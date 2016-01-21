@@ -17,29 +17,33 @@ namespace Cindeck.Core
             m_doc = document;
         }
 
-        public async Task<List<Song>> GetSongs()
+        public async Task<Tuple<List<Song>, int>> GetSongs()
         {
             var raw = await m_doc.Load();
             var hdoc = new HtmlDocument();
             hdoc.LoadHtml(raw);
             var rows = hdoc.DocumentNode.SelectNodes("//article/section/table/tbody/tr");
             var songs = new Dictionary<string, Song>();
-
+            int failed = 0;
             foreach(var row in rows)
             {
                 try
                 {
                     var columns =row.SelectNodes("td");
                     var duration = columns[DurationColumn].ChildNodes.First(x => x.Name == "#text").InnerText.Trim().Split(':');
+                    var title = string.Join(" ",
+                        columns[TitleColumn].InnerText.Trim()
+                        .Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
+                        .ToArray());
+                    if (duration.Length < 2)
+                    {
+                        // まだプレイ時間のデータがない場合は2分と想定する
+                        duration = new[] { "2", "00" };
+                    }
                     var data = new SongData(columns[DifficultyColumn].ChildNodes.First(x=>x.Name=="#text").InnerText.Trim().ToSongDifficulty(),
                                         int.Parse(columns[LevelColumn].ChildNodes.First(x => x.Name == "#text").InnerText.Trim()),
                                         int.Parse(columns[NotesColumn].ChildNodes.First(x => x.Name == "#text").InnerText.Trim()),
                                         int.Parse(duration[0])*60+int.Parse(duration[1]));
-
-                    var title = string.Join(" ",
-                        columns[TitleColumn].InnerText.Trim()
-                        .Split(new[] { "\n","\r" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
-                        .ToArray());
                     
                     var type = columns[TypeColumn].ChildNodes.First(x => x.Name == "#text").InnerText.Trim().ToSongType();
 
@@ -51,10 +55,11 @@ namespace Cindeck.Core
                 }
                 catch(Exception)
                 {
+                    failed++;
                     continue;
                 }
             }
-            return songs.Values.OrderBy(x=>x.Title).ToList();
+            return Tuple.Create(songs.Values.OrderBy(x => x.Title).ToList(), failed);
         }
     }
 }

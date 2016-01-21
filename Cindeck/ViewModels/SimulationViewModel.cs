@@ -156,11 +156,12 @@ namespace Cindeck.ViewModels
             try
             {
                 LoadSongsCommand.RaiseCanExecuteChanged();
-                Songs=m_config.Songs = await new GamerChWikiSongSource(
+                var result= await new GamerChWikiSongSource(
                     new WebDocumentSource("http://imascg-slstage-wiki.gamerch.com/%E6%A5%BD%E6%9B%B2%E6%83%85%E5%A0%B1%E4%B8%80%E8%A6%A7")).GetSongs();
+                Songs = m_config.Songs = result.Item1;
                 m_config.Save();
                 Simulator.Song = Songs.FirstOrDefault();
-                MessageBox.Show("取り込みが完了しました。");
+                MessageBox.Show($"取り込みが完了しました（{result.Item1.Count}成功・{result.Item2}失敗）");
             }
             catch (Exception ex)
             {

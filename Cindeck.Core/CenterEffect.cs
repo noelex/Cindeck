@@ -175,7 +175,7 @@ namespace Cindeck.Core
 
             public static new SkillTriggerProbabilityUp Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(キュートアイドル|クールアイドル|パッションアイドル|全員)の特技発動確率(\d+)[%％]アップ$");
+                var m = Regex.Match(desc, @"^(キュートアイドル|クールアイドル|パッションアイドル|全員)の特技発動[確]?率(\d+)[%％]アップ$");
                 if (m.Success)
                 {
                     return new SkillTriggerProbabilityUp

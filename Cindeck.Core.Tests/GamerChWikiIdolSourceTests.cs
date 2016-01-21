@@ -14,7 +14,7 @@ namespace Cindeck.Core.Tests
         [TestMethod()]
         public void TestGetIdols()
         {
-            var a= new GamerChWikiIdolSource(new FileDocumentSource("test-wiki-data-page.html")).GetIdols().Result;
+            var a= new GamerChWikiIdolSource(new FileDocumentSource("test-wiki-data-page.html")).GetIdols().Result.Item1;
             Assert.AreEqual(a.Count(), 338);
         }
     }

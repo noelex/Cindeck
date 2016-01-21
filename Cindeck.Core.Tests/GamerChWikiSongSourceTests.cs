@@ -14,7 +14,7 @@ namespace Cindeck.Core.Tests
         [TestMethod()]
         public void TestGetSongs()
         {
-            var a = new GamerChWikiSongSource(new FileDocumentSource("test-song-data-page.html")).GetSongs().Result;
+            var a = new GamerChWikiSongSource(new FileDocumentSource("test-song-data-page.html")).GetSongs().Result.Item1;
             Assert.AreEqual(a.Count(), 338);
         }
     }

@@ -8,7 +8,7 @@ namespace Cindeck.Core
 {
     public class IdolSource : IIdolSource
     {
-        public Task<List<Idol>> GetIdols()
+        public Task<Tuple<List<Idol>, int>> GetIdols()
         {
             throw new NotImplementedException();
         }

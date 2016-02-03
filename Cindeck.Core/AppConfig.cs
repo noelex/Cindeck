@@ -39,7 +39,7 @@ namespace Cindeck.Core
             NextOid = 1;
         }
 
-        public string Version => "v0.8";
+        public string Version => "v0.9";
 
         [DataMember(Order = 1)]
         private int NextOid

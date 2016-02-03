@@ -154,8 +154,12 @@ namespace Cindeck.Core
             private set;
         }
 
-        public int TotalAppeal =>
-            SupportMemberAppeal + Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(x))) + CalculateAppeal(Guest);
+        public int TotalAppeal
+        {
+            get;
+            private set;
+        }
+            
 
         public Unit Unit
         {
@@ -443,6 +447,7 @@ namespace Cindeck.Core
         {
             SupportMembers = SelectSupportMembers();
             SupportMemberAppeal = SupportMembers.Sum(x => CalculateAppeal(x, true, IsEncore));
+            TotalAppeal= SupportMemberAppeal + Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(x, false, IsEncore))) + CalculateAppeal(Guest, false, IsEncore);
             ResultsUpToDate = false;
         }
 

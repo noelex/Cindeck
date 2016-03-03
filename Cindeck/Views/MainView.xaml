@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Cindeck.Views"
         xmlns:vm="clr-namespace:Cindeck.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="920" Width="1280" WindowStartupLocation="CenterScreen">
+        Title="{Binding Title}" Height="720" Width="1280" MinWidth="1200"  WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>

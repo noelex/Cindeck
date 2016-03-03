@@ -11,9 +11,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
+        </ResourceDictionary>
     </UserControl.Resources>
-
     <DockPanel LastChildFill="True">
         <c:IdolFilterPanel Margin="0,5,0,5" DockPanel.Dock="Top" DataContext="{Binding Filter}"/>
         <c:SelectedItemBindableDataGrid ItemsSource="{Binding Path=Idols, IsAsync=True}" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">

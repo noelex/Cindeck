@@ -15,7 +15,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <DockPanel LastChildFill="True">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="ユニット" Width="80"/>
@@ -136,7 +137,7 @@
                             </Label>
                         </StackPanel>
                     </StackPanel>
-                    
+
                     <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal"  Margin="0,5,0,0">
                         <Label Content="結果の詳細" Grid.Row="4" Grid.Column="0"/>
                         <ComboBox x:Name="SimulationResults" SelectedItem="{Binding SelectedResult, Mode=TwoWay}" ItemsSource="{Binding SimulationResults}" DisplayMemberPath="Name" Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
@@ -157,6 +158,6 @@
             <c:SkillTimeline Visibility="{Binding Visibility, ElementName=ResultPanel, Mode=OneWay}"
                              DataContext="{Binding Simulator.Unit}" SimulationResult="{Binding SelectedItem,ElementName=SimulationResults}"/>
         </DockPanel>
-
+        </ScrollViewer>
     </Grid>
 </UserControl>

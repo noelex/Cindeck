@@ -185,8 +185,7 @@ namespace Cindeck.ViewModels
             }
 
             var results = new ConcurrentBag<SimulationResult>();
-            var rng = new Random();
-            await Task.Run(() => Parallel.For(1, 101, i => results.Add(Simulator.StartSimulation(rng, i))));
+            await Task.Run(() => Parallel.For(1, 101, i => results.Add(Simulator.StartSimulation(RandomFactory.Create(), i))));
 
             MaxScore = results.Max(x=>x.Score);
             MaxScorePerNote = results.Max(x => x.ScorePerNote);
@@ -197,7 +196,7 @@ namespace Cindeck.ViewModels
             AverageScore = (int)results.Average(x => x.Score);
             AverageScorePerNote = (int)results.Average(x => x.ScorePerNote);
 
-            SimulationResults = results.ToList();
+            SimulationResults = results.OrderBy(x => x.Id).ToList();
             SelectedResult = SimulationResults[0];
         }
 

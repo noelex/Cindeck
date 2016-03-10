@@ -70,6 +70,7 @@
     <Compile Include="ISkill.cs" />
     <Compile Include="NoteJudgement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomFactory.cs" />
     <Compile Include="Rarity.cs" />
     <Compile Include="Simulator.cs" />
     <Compile Include="Skill.cs" />

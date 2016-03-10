@@ -84,7 +84,7 @@ namespace Cindeck.Core
     [ImplementPropertyChanged]
     public class Simulator : INotifyPropertyChanged
     {
-        private const double TimeScale = 10;
+        private const double TimeScale = 100;
         private static readonly Dictionary<int, double> LevelCoefficients = new Dictionary<int, double>
     {
             // DEBUT
@@ -230,7 +230,7 @@ namespace Cindeck.Core
                     return result;
 
                 int totalScore = 0;
-                int notes = 0;
+                int notes = 1;
                 double scorePerNote = (TotalAppeal * LevelCoefficients[SongData.Level]) / SongData.Notes;
                 double notesPerFrame = SongData.Notes / (SongData.Duration * TimeScale);
                 int frame = 0;
@@ -303,15 +303,15 @@ namespace Cindeck.Core
                         }
                     }
 
-                    if (frame * notesPerFrame >= 1 || totalFrame > SongData.Duration * TimeScale)
+                    if (notes<= SongData.Notes&&(frame * notesPerFrame >= 1 || totalFrame > SongData.Duration * TimeScale))
                     {
-                        frame = 0;
-                        notes++;
-
                         comboRate = CalculateComboRate(notes, SongData.Notes);
                         var scoreUpRate = scoreUp.Any() ? 1 + scoreUp.Max(x => x.Rate) : 1;
                         var comboUpRate = comboBonus.Any() ? 1 + comboBonus.Max(x => x.Rate) : 1;
                         totalScore += (int)Math.Round(scorePerNote * comboRate * scoreUpRate * comboUpRate);
+
+                        frame = 0;
+                        notes++;
                     }
                 }
                 result.Score = totalScore;

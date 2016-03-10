@@ -1,6 +1,7 @@
 ﻿using Cindeck.Core;
 using PropertyChanged;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -182,12 +183,10 @@ namespace Cindeck.ViewModels
                 MessageBox.Show("ユニットを選んでください");
                 return;
             }
-            var results = new List<SimulationResult>();
+
+            var results = new ConcurrentBag<SimulationResult>();
             var rng = new Random();
-            for (int i=1;i<=100;i++)
-            {
-                results.Add(await Simulator.StartSimulation(rng,i));
-            }
+            await Task.Run(() => Parallel.For(1, 101, i => results.Add(Simulator.StartSimulation(rng, i))));
 
             MaxScore = results.Max(x=>x.Score);
             MaxScorePerNote = results.Max(x => x.ScorePerNote);
@@ -198,7 +197,7 @@ namespace Cindeck.ViewModels
             AverageScore = (int)results.Average(x => x.Score);
             AverageScorePerNote = (int)results.Average(x => x.ScorePerNote);
 
-            SimulationResults = results;
+            SimulationResults = results.ToList();
             SelectedResult = SimulationResults[0];
         }
 

@@ -239,7 +239,7 @@ namespace Cindeck.ViewModels
 
         public bool IsIdolInUse(OwnedIdol idol)
         {
-            return TemporalUnit.AlreadyInUnit(idol) || m_config.Units.Any(x => x.AlreadyInUnit(idol));
+            return TemporalUnit.OccupiedByUnit(idol) || m_config.Units.Any(x => x.OccupiedByUnit(idol));
         }
 
         public void RemoveIdolFromUnits(OwnedIdol idol)

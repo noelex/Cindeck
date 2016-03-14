@@ -242,5 +242,22 @@ namespace Cindeck.Core
         {
             return DurationInitialValues[skill.Duration] * Math.Pow(1.05, skillLv - 1);
         }
+
+        public static double CalculateSkillScore(this ISkill skill, int skillLv=10)
+        {
+            if(!(skill is Skill.ComboBonus)&& !(skill is Skill.ScoreBonus))
+            {
+                return 0;
+            }
+
+            var notes = 700;
+            var playTime = 120.0;
+
+            var notesPerSecond = notes / playTime;
+            var triggerCount=playTime / skill.Interval;
+            var expectedTriggerCount = (int)Math.Floor(skill.EstimateProbability(skillLv) * triggerCount);
+            return expectedTriggerCount * skill.EstimateDuration(skillLv) *
+                notesPerSecond * (1 + (skill is Skill.ComboBonus ? (skill as Skill.ComboBonus).Rate : (skill as Skill.ScoreBonus).Rate));
+        }
     }
 }

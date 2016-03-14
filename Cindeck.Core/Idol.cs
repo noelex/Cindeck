@@ -28,6 +28,8 @@ namespace Cindeck.Core
         [DataMember]
         public string Name { get; private set; }
 
+        public string LabeledName => string.IsNullOrEmpty(Label) ? Name : $"[{Label}] {Name}";
+
         [DataMember]
         public Rarity Rarity { get; private set; }
 
@@ -53,6 +55,8 @@ namespace Cindeck.Core
 
         [DataMember]
         public ISkill Skill { get; private set; }
+
+        public double SkillScore => Skill.CalculateSkillScore();
 
         [DataMember]
         public DateTime ImplementationDate{ get; private set; }

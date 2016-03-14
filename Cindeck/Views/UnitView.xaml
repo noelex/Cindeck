@@ -133,16 +133,10 @@
                             <DataGridTextColumn IsReadOnly="True" Header="OID" Binding="{Binding Path=Oid}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="IID" Binding="{Binding Path=Iid, StringFormat=x8}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="レア度" Binding="{Binding Path=Rarity, Converter={StaticResource RarityConverter}}"/>
-                            <DataGridTextColumn IsReadOnly="True" Header="名前" SortMemberPath="Name">
-                                <DataGridTextColumn.Binding>
-                                    <MultiBinding Converter="{StaticResource LabeledNameConverter}">
-                                        <Binding Path="Label"/>
-                                        <Binding Path="Name"/>
-                                    </MultiBinding>
-                                </DataGridTextColumn.Binding>
-                            </DataGridTextColumn>
+                            <DataGridTextColumn IsReadOnly="True" Header="名前" SortMemberPath="Name" Binding="{Binding Path=LabeledName}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="タイプ" Binding="{Binding Path=Category, Converter={StaticResource IdolCategoryConverter}}"/>
                             <DataGridComboBoxColumn Header="特技Lv" ItemsSource="{StaticResource SkillLevels}" SelectedItemBinding="{Binding Path=SkillLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn IsReadOnly="True" Header="特技効果値" Binding="{Binding Path=SkillScore, StringFormat=F2}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="ライフ" Binding="{Binding Path=Life}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="合計アピール" Binding="{Binding Path=TotalAppeal}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="ボーカルアピール" Binding="{Binding Path=Vocal}"/>

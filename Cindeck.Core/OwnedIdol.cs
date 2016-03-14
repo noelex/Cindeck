@@ -48,6 +48,8 @@ namespace Cindeck.Core
 
         public string Name => Idol.Name;
 
+        public string LabeledName => Idol.LabeledName;
+
         public Rarity Rarity => Idol.Rarity;
 
         public ISkill Skill => Idol.Skill;
@@ -58,6 +60,8 @@ namespace Cindeck.Core
             get;
             set;
         }
+
+        public double SkillScore => Skill.CalculateSkillScore(SkillLevel);
 
         public int TotalAppeal => Idol.TotalAppeal;
 

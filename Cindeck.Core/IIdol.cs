@@ -12,6 +12,7 @@ namespace Cindeck.Core
         string Label { get; }
         int Life { get; }
         string Name { get; }
+        string LabeledName { get; }
         Rarity Rarity { get; }
         ISkill Skill { get; }
         int TotalAppeal { get; }

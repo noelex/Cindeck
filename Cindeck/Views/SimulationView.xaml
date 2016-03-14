@@ -50,7 +50,7 @@
                     <Label Content="Groove Burst"  Grid.Row="4" Grid.Column="0"/>
                     <ComboBox ItemsSource="{Binding GrooveBursts}" SelectedValue="{Binding Simulator.GrooveBurst}" DisplayMemberPath="Item2" SelectedValuePath="Item1"  Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
                     <ComboBox Visibility="{Binding Simulator.GrooveBurst, Converter={StaticResource NullToCollapsedConverter}}" Margin="5,0,0,0" ItemsSource="{Binding GrooveTypes}" SelectedValue="{Binding Simulator.GrooveType}" DisplayMemberPath="Item2" SelectedValuePath="Item1"  Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
-                    <CheckBox  Visibility="{Binding Simulator.GrooveBurst, Converter={StaticResource NullToCollapsedConverter}}" Margin="5,5,0,0" Content="アンコール (Groove属性ボーナスの代わりに選んだ曲の属性ボーナスを適用する)" IsChecked="{Binding Simulator.IsEncore, Mode=TwoWay}"/>
+                    <!--<CheckBox Visibility="{Binding Simulator.GrooveBurst, Converter={StaticResource NullToCollapsedConverter}}" Margin="5,5,0,0" Content="アンコール (Groove属性ボーナスの代わりに選んだ曲の属性ボーナスを適用する)" IsChecked="{Binding Simulator.IsEncore, Mode=TwoWay}"/>-->
                 </StackPanel>
             </StackPanel>
             <StackPanel Margin="0,5,0,0" Orientation="Vertical" DockPanel.Dock="Top">

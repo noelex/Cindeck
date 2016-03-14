@@ -80,7 +80,7 @@ namespace Cindeck
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return string.IsNullOrEmpty((string)values[0])?values[1]:string.Format("[{0}]{1}", values);
+            return values.All(x => x is string)?string.IsNullOrEmpty((string)values[0])?values[1]:string.Format("[{0}]{1}", values):string.Empty;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

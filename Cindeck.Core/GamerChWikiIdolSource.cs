@@ -39,12 +39,15 @@ namespace Cindeck.Core
                 td[CategoryColumn].InnerText.Trim().ToIdolCategory(), Convert.ToInt32(td[LifeColumn].InnerText.Trim()), Convert.ToInt32(td[DanceColumn].InnerText.Trim().Replace(",", "")),
                  Convert.ToInt32(td[VocalColumn].InnerText.Trim().Replace(",", "")), Convert.ToInt32(td[VisualColumn].InnerText.Trim().Replace(",", "")),
                  DateTime.Parse(td[ImplementationDateColumn].InnerText.Trim()),
-                CenterEffect.Create(td[CenterEffectColumn].InnerText.Trim(), td[CenterEffectDetailsColumn].InnerText.Trim()),
+                CenterEffect.Create(td[CenterEffectColumn].InnerText.Trim(), 
+                    td[CenterEffectDetailsColumn].InnerText.Trim()
+                    .Replace("パッショナイドル", "パッションアイドル")),
                 Skill.Create(td[SkillColumn].InnerText.Trim(),
                     td[SkillDetailsColumn].InnerText.Trim()
                     .Replace("PEFECT", "PERFECT")
                     .Replace("PERFCT", "PERFECT")
-                    .Replace("秒毎", "秒ごと")));
+                    .Replace("秒毎", "秒ごと")
+                    .Replace("しばらく間", "しばらくの間")));
             }
             catch (Exception)
             {

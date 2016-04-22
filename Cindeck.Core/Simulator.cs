@@ -20,7 +20,10 @@ namespace Cindeck.Core
         {
             get
             {
-                return (Who.Skill is Skill.ScoreBonus) ? (Who.Skill as Skill.ScoreBonus).Rate : (Who.Skill as Skill.ComboBonus).Rate;
+                if (Who.Skill is Skill.ScoreBonus) return (Who.Skill as Skill.ScoreBonus).Rate;
+                if (Who.Skill is Skill.ComboBonus) return (Who.Skill as Skill.ComboBonus).Rate;
+                if (Who.Skill is Skill.Overload) return (Who.Skill as Skill.Overload).Rate;
+                throw new NotSupportedException();
             }
         }
 
@@ -68,6 +71,12 @@ namespace Cindeck.Core
         }
 
         public int Duration
+        {
+            get;
+            set;
+        }
+
+        public int RemainingLife
         {
             get;
             set;
@@ -160,6 +169,12 @@ namespace Cindeck.Core
             private set;
         }
 
+        public int Life
+        {
+            get;
+            private set;
+        }
+
 
         public Unit Unit
         {
@@ -221,6 +236,49 @@ namespace Cindeck.Core
             return lst;
         }
 
+        private void CheckSkillDueTime(int frame, params List<TriggeredSkill>[] skillLists)
+        {
+            foreach(var skillList in skillLists)
+            {
+                foreach (var s in skillList.ToArray())
+                {
+                    if (frame > s.Until)
+                    {
+                        skillList.Remove(s);
+                    }
+                }
+            }
+        }
+
+        private int CalculateLife(Unit unit, Idol guest)
+        {
+            if(unit==null)
+            {
+                return 0;
+            }
+
+            var life = 0;
+            var centerEffect = unit.Center?.CenterEffect is CenterEffect.LifeUp ? (CenterEffect.LifeUp)unit.Center.CenterEffect : null;
+            var guestCenterEffect = guest?.CenterEffect is CenterEffect.LifeUp ? (CenterEffect.LifeUp)guest.CenterEffect : null;
+
+            foreach (var idol in unit.Slots.Cast<IIdol>().Concat(Enumerable.Repeat(guest,1)))
+            {
+                if (idol == null) continue;
+
+                var rate = 1.0;
+                if (centerEffect!=null && centerEffect.Targets.HasFlag(idol.Category) == true)
+                {
+                    rate += centerEffect.Rate;
+                }
+                if (guestCenterEffect != null && guestCenterEffect.Targets.HasFlag(idol.Category) == true)
+                {
+                    rate += guestCenterEffect.Rate;
+                }
+                life += (int)Math.Ceiling(idol.Life * rate);
+            }
+            return life;
+        }
+
         public SimulationResult StartSimulation(Random rng, int id)
         {
             var result = new SimulationResult(id);
@@ -233,6 +291,7 @@ namespace Cindeck.Core
             double notesPerFrame = SongData.Notes / (SongData.Duration * TimeScale);
             int frame = 0;
             int totalFrame = 0;
+            int totalLife = Life, maxLife=Life;
             CenterEffect.SkillTriggerProbabilityUp skillRateUp = null;
 
             if (Unit.Center != null && Unit.Center.CenterEffect != null && Unit.Center.CenterEffect is CenterEffect.SkillTriggerProbabilityUp)
@@ -241,29 +300,17 @@ namespace Cindeck.Core
             }
 
             double comboRate = 1;
-            List<TriggeredSkill> scoreUp = new List<TriggeredSkill>();
-            List<TriggeredSkill> comboBonus = new List<TriggeredSkill>();
+            
+            List<TriggeredSkill> scoreUp = new List<TriggeredSkill>(),
+                comboBonus = new List<TriggeredSkill>(), overload = new List<TriggeredSkill>(),
+                damgeGuard=new List<TriggeredSkill>(), revival=new List<TriggeredSkill>();
 
             while (notes <= SongData.Notes)
             {
                 frame++;
                 totalFrame++;
 
-                foreach (var s in scoreUp.ToArray())
-                {
-                    if (totalFrame > s.Until)
-                    {
-                        scoreUp.Remove(s);
-                    }
-                }
-
-                foreach (var s in comboBonus.ToArray())
-                {
-                    if (totalFrame > s.Until)
-                    {
-                        comboBonus.Remove(s);
-                    }
-                }
+                CheckSkillDueTime(totalFrame, scoreUp, comboBonus, overload, damgeGuard, revival);
 
                 if (totalFrame < SongData.Duration * TimeScale)
                 {
@@ -285,13 +332,38 @@ namespace Cindeck.Core
                                         Since = totalFrame,
                                         Until = totalFrame + sb.EstimateDuration(slot.SkillLevel) * TimeScale
                                     };
-                                    if (sb is Skill.ScoreBonus)
+
+                                    switch(sb.GetType().Name)
                                     {
-                                        scoreUp.Add(skill);
-                                    }
-                                    else if (sb is Skill.ComboBonus)
-                                    {
-                                        comboBonus.Add(skill);
+                                        case nameof(Skill.DamageGuard):
+                                            damgeGuard.Add(skill);
+                                            break;
+                                        case nameof(Skill.Revival):
+                                            revival.Add(skill);
+                                            break;
+                                        case nameof(Skill.ScoreBonus):
+                                            scoreUp.Add(skill);
+                                            break;
+                                        case nameof(Skill.ComboBonus):
+                                            comboBonus.Add(skill);
+                                            break;
+                                        case nameof(Skill.Overload):
+                                            var o = sb as Skill.Overload;
+                                            if (totalLife - o.ConsumingLife > 0)
+                                            {
+                                                if (!damgeGuard.Any())
+                                                {
+                                                    totalLife -= o.ConsumingLife;
+                                                }
+                                                overload.Add(skill);
+                                            }
+                                            else
+                                            {
+                                                continue;
+                                            }
+                                            break;
+                                        default:
+                                            break;
                                     }
 
                                     result.TriggeredSkills.Add(skill);
@@ -304,8 +376,12 @@ namespace Cindeck.Core
                 if (notes <= SongData.Notes && (frame * notesPerFrame >= 1 || totalFrame > SongData.Duration * TimeScale))
                 {
                     comboRate = CalculateComboRate(notes, SongData.Notes);
-                    var scoreUpRate = scoreUp.Any() ? 1 + scoreUp.Max(x => x.Rate) : 1;
-                    var comboUpRate = comboBonus.Any() ? 1 + comboBonus.Max(x => x.Rate) : 1;
+
+                    totalLife += revival.Select(x => x.Who.Skill).Cast<Skill.Revival>().Select(x => x.Amount).DefaultIfEmpty(0).Max();
+                    if (totalLife > maxLife) totalLife = maxLife;
+
+                    var scoreUpRate = 1 + scoreUp.Select(x => x.Rate).Concat(overload.Select(x => x.Rate)).DefaultIfEmpty(0).Max();
+                    var comboUpRate = 1 + comboBonus.Select(x => x.Rate).DefaultIfEmpty(0).Max();
                     totalScore += (int)Math.Round(scorePerNote * comboRate * scoreUpRate * comboUpRate);
 
                     frame = 0;
@@ -319,6 +395,7 @@ namespace Cindeck.Core
                 x.Until = Math.Round(x.Until / TimeScale, 1);
             });
             result.Duration = SongData.Duration;
+            result.RemainingLife = totalLife;
             result.ScorePerNote = (int)Math.Round((double)totalScore / SongData.Notes);
             ResultsUpToDate = true;
             return result;
@@ -445,6 +522,7 @@ namespace Cindeck.Core
             SupportMembers = SelectSupportMembers();
             SupportMemberAppeal = SupportMembers.Sum(x => CalculateAppeal(x, true, IsEncore));
             TotalAppeal = SupportMemberAppeal + Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(x, false, IsEncore))) + CalculateAppeal(Guest, false, IsEncore);
+            Life = CalculateLife(Unit, Guest);
             ResultsUpToDate = false;
         }
 

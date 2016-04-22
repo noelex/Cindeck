@@ -94,6 +94,8 @@
                 <StackPanel Orientation="Horizontal">
                     <Label Content="合計アピール"  FontWeight="Bold" />
                     <Label Content="{Binding Simulator.TotalAppeal}"/>
+                    <Label Content="ライフ"  FontWeight="Bold" />
+                    <Label Content="{Binding Simulator.Life}"/>
                 </StackPanel>
                 <StackPanel  Margin="0,5,0,5" Orientation="Horizontal">
                     <Label Content="特技発動率"  Grid.Row="4" Grid.Column="0"/>
@@ -152,7 +154,9 @@
                         <Run>)</Run>
                             </TextBlock>
                         </Label>
-                    </StackPanel>
+                        <Label Content="終了時のライフ"  FontWeight="Bold" />
+                        <Label Content="{Binding SelectedItem.RemainingLife, ElementName=SimulationResults}"/>
+                     </StackPanel>
                 </StackPanel>
             </StackPanel>
             <c:SkillTimeline Visibility="{Binding Visibility, ElementName=ResultPanel, Mode=OneWay}"

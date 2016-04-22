@@ -92,6 +92,12 @@ namespace Cindeck.Core
                 return skill;
             }
 
+            skill = Overload.Create(name, desc);
+            if (skill != null)
+            {
+                return skill;
+            }
+
             throw new FormatException("Unknown skill description: " + desc);
         }
 
@@ -319,7 +325,7 @@ namespace Cindeck.Core
 
             public static new Revival Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]PERFECTでライフが(\d+)回復$");
+                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]?PERFECTでライフが(\d+)回復$");
                 if (m.Success)
                 {
                     return new Revival
@@ -366,6 +372,71 @@ namespace Cindeck.Core
                         Interval = int.Parse(m.Groups[1].Value),
                         TriggerProbability = m.Groups[2].Value.ToTriggerProbability(),
                         Duration = m.Groups[3].Value.ToSkillDuration()
+                    };
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// ライフ消費してスコアUP＆コンボ継続
+        /// </summary>
+        [DataContract]
+        public class Overload:Skill
+        {
+            [DataMember]
+            public int ConsumingLife
+            {
+                get;
+                private set;
+            }
+
+            [DataMember]
+            public double Rate
+            {
+                get;
+                private set;
+            }
+
+            [DataMember]
+            public NoteJudgement ContinuationTargets
+            {
+                get;
+                private set;
+            }
+
+            public override string Description =>
+                     $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}でライフを{ConsumingLife}消費して、{Duration.ToLocalizedString()}スコアが{Rate:P0}アップ、{ContinuationTargets.ToLocalizedString()}でもCOMBO継続";
+
+            public Overload Clone()
+            {
+                return new Overload
+                {
+                    Duration = Duration,
+                    Interval = Interval,
+                    Name = Name,
+                    TriggerProbability = TriggerProbability,
+                    ContinuationTargets = ContinuationTargets,
+                    Rate=Rate,
+                    ConsumingLife=ConsumingLife
+                };
+            }
+
+            public static new Overload Create(string name, string desc)
+            {
+                //9秒ごとに中確率でライフを15消費して、しばらくの間スコアが16%アップ、NICE/BADでもCOMBO継続
+                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)でライフを(\d+)消費して、(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)スコアが(\d+)[%％]アップ[、。]([A-Z/]+)でもCOMBO継続$");
+                if (m.Success)
+                {
+                    return new Overload
+                    {
+                        Name = name,
+                        Interval = int.Parse(m.Groups[1].Value),
+                        TriggerProbability = m.Groups[2].Value.ToTriggerProbability(),
+                        ConsumingLife = int.Parse(m.Groups[3].Value),
+                        Duration = m.Groups[4].Value.ToSkillDuration(),
+                        Rate = int.Parse(m.Groups[5].Value) / 100.0,
+                        ContinuationTargets = m.Groups[6].Value.ToJudgement()
                     };
                 }
                 return null;

@@ -51,7 +51,6 @@ namespace Cindeck.Core
             }
             catch (Exception)
             {
-                // データに誤りがあるが、一応返しておく
                 return null;
             }
         }

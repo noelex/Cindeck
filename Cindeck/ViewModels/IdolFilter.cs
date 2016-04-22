@@ -51,7 +51,8 @@ namespace Cindeck.ViewModels
                 Tuple.Create(typeof(Skill.JudgeEnhancement),"判定強化"),
                 Tuple.Create(typeof(Skill.ComboContinuation),"コンボ継続"),
                 Tuple.Create(typeof(Skill.Revival),"ライフ回復"),
-                Tuple.Create(typeof(Skill.DamageGuard),"ダメージガード")
+                Tuple.Create(typeof(Skill.DamageGuard),"ダメージガード"),
+                Tuple.Create(typeof(Skill.Overload),"オーバーロード")
             };
         }
 

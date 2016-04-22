@@ -18,6 +18,7 @@
             <SolidColorBrush x:Key="ComboContinuationColorBrush" Color="#CD96CD"/>
             <SolidColorBrush x:Key="RevivalColorBrush" Color="#32CC4D"/>
             <SolidColorBrush x:Key="DamageGuardColorBrush" Color="#51A6F5"/>
+            <SolidColorBrush x:Key="OverloadColorBrush" Color="#ed7d31"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -32,6 +33,7 @@
             <Label Margin="5,0,0,0" Content="コンボ継続" Foreground="White" Background="{StaticResource ComboContinuationColorBrush}"></Label>
             <Label Margin="5,0,0,0" Content="ライフ回復" Foreground="White" Background="{StaticResource RevivalColorBrush}"></Label>
             <Label Margin="5,0,0,0" Content="ダメージガード" Foreground="White" Background="{StaticResource DamageGuardColorBrush}"></Label>
+            <Label Margin="5,0,0,0" Content="オーバーロード" Foreground="White" Background="{StaticResource OverloadColorBrush}"></Label>
             <Label Margin="5,0,0,0" Content="未発動" Visibility="{Binding SimulationResult, ElementName=Root, Converter={StaticResource NullToCollapsedConverter}}" Foreground="White" Background="LightGray"></Label>
         </StackPanel>
         <Grid Margin="0,10,0,0" Grid.Row="1" Background="#AADDFF">

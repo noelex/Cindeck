@@ -86,6 +86,10 @@ namespace Cindeck.Controls
             {
                 return "スコアボーナス";
             }
+            if (skill is Skill.Overload)
+            {
+                return "オーバーロード";
+            }
             return null;
         }
 
@@ -120,6 +124,11 @@ namespace Cindeck.Controls
             {
                 var s = skill as Skill.ScoreBonus;
                 return $"{s.Targets.ToLocalizedString()}のスコアが{s.Rate:P0}アップ";
+            }
+            if (skill is Skill.Overload)
+            {
+                var s = skill as Skill.Overload;
+                return $"ライフを{s.ConsumingLife}消費して、スコアが{s.Rate:P0}アップ、{s.ContinuationTargets.ToLocalizedString()}でもCOMBOが継続する";
             }
             return null;
         }
@@ -182,7 +191,6 @@ namespace Cindeck.Controls
                 }
 
                 notAvail = SimulationResult != null && !(m_triggeredSkills.ContainsKey(idol.Oid) && m_triggeredSkills[idol.Oid].Any(x => x.Since == i * interval));
-                
 
                 var rect = new Rectangle
                 {
@@ -227,6 +235,10 @@ namespace Cindeck.Controls
             if (skill is Skill.ScoreBonus)
             {
                 return Resources["ScoreBonusColorBrush"] as Brush;
+            }
+            if (skill is Skill.Overload)
+            {
+                return Resources["OverloadColorBrush"] as Brush;
             }
             return null;
         }

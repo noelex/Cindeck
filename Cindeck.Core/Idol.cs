@@ -18,6 +18,7 @@ namespace Cindeck.Core
     [KnownType(typeof(Skill.DamageGuard))]
     [KnownType(typeof(Skill.Revival))]
     [KnownType(typeof(Skill.ScoreBonus))]
+    [KnownType(typeof(Skill.Overload))]
     public class Idol : IIdol
     {
         public int Iid => (Label + Name + Rarity).GetHashCode(); 

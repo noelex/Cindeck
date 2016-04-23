@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Cindeck.ViewModels
 {
@@ -16,7 +17,15 @@ namespace Cindeck.ViewModels
 
         public MainViewModel()
         {
-            m_config = AppConfig.Load();
+            try
+            {
+                m_config = AppConfig.Load();
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show($"app.configを読み込めませんでした：{e.Message}");
+                Application.Current.Shutdown();
+            }
 
             Units = new UnitViewModel(m_config);
             OwnedIdol = new OwnedIdolViewModel(m_config,Units);

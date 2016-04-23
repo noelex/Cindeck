@@ -115,7 +115,7 @@ namespace Cindeck.Core
             }
 
             public override string Description =>
-                    $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}をPERFECTにする";
+                    $"{Interval}秒毎、{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}をPERFECTにする";
 
             public JudgeEnhancement Clone()
             {
@@ -131,7 +131,8 @@ namespace Cindeck.Core
 
             public static new JudgeEnhancement Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)をPERFECTにする$");
+                //11秒毎、低確率でしばらくの間、GREATをPERFECTにする
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)をPERFECTにする$");
                 if (m.Success)
                 {
                     return new JudgeEnhancement
@@ -168,7 +169,7 @@ namespace Cindeck.Core
             }
 
             public override string Description =>
-                    $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}のスコアが{Rate:P0}アップ";
+                    $"{Interval}秒毎、{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}のスコア{Rate:P0}アップ";
 
             public ScoreBonus Clone()
             {
@@ -185,7 +186,8 @@ namespace Cindeck.Core
 
             public static new ScoreBonus Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)のスコアが(\d+)[%％]アップ$");
+                //6秒毎、低確率で少しの間、PERFECTのスコア10%アップ
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)のスコア(\d+)[%％]アップ$");
                 if (m.Success)
                 {
                     return new ScoreBonus
@@ -216,7 +218,7 @@ namespace Cindeck.Core
             }
 
             public override string Description =>
-                    $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、COMBOボーナスが{Rate:P0}アップ";
+                    $"{Interval}秒毎、{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、COMBOボーナス{Rate:P0}アップ";
 
             public ComboBonus Clone()
             {
@@ -232,7 +234,8 @@ namespace Cindeck.Core
 
             public static new ComboBonus Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]COMBOボーナスが(\d+)[%％]アップ$");
+                //9秒毎、低確率でかなりの間、COMBOボーナス8%アップ
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]COMBOボーナス(\d+)[%％]アップ$");
                 if (m.Success)
                 {
                     return new ComboBonus
@@ -262,7 +265,7 @@ namespace Cindeck.Core
             }
 
             public override string Description =>
-                     $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}でもCOMBOが継続する";
+                     $"{Interval}秒毎、{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、{Targets.ToLocalizedString()}でもCOMBOが継続する";
   
 
             public ComboContinuation Clone()
@@ -279,7 +282,8 @@ namespace Cindeck.Core
 
             public static new ComboContinuation Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)でもCOMBOが継続する$");
+                //12秒毎、中確率でしばらくの間、NICEでもCOMBOが継続する
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)でもCOMBOが継続する$");
                 if (m.Success)
                 {
                     return new ComboContinuation
@@ -309,7 +313,7 @@ namespace Cindeck.Core
             }
 
             public override string Description =>
-                $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、PERFECTでライフが{Amount}回復";
+                $"{Interval}秒毎、{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、PERFECTでライフ{Amount}回復";
 
             public Revival Clone()
             {
@@ -325,7 +329,8 @@ namespace Cindeck.Core
 
             public static new Revival Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]?PERFECTでライフが(\d+)回復$");
+                //11秒毎、低確率でしばらくの間、PERFECTでライフ2回復
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]?PERFECTでライフ(\d+)回復$");
                 if (m.Success)
                 {
                     return new Revival
@@ -348,7 +353,7 @@ namespace Cindeck.Core
         public class DamageGuard : Skill
         {
             public override string Description =>
-                $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、ライフが減少しなくなる";
+                $"{Interval}秒毎、{TriggerProbability.ToLocalizedString()}で{Duration.ToLocalizedString()}、ライフが減少しなくなる";
 
             public DamageGuard Clone()
             {
@@ -363,7 +368,8 @@ namespace Cindeck.Core
 
             public static new DamageGuard Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]ライフが減少しなくなる$");
+                //11秒毎、中確率でかなりの間、ライフが減少しなくなる
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]ライフが減少しなくなる$");
                 if (m.Success)
                 {
                     return new DamageGuard
@@ -406,7 +412,7 @@ namespace Cindeck.Core
             }
 
             public override string Description =>
-                     $"{Interval}秒ごとに{TriggerProbability.ToLocalizedString()}でライフを{ConsumingLife}消費して、{Duration.ToLocalizedString()}スコアが{Rate:P0}アップ、{ContinuationTargets.ToLocalizedString()}でもCOMBO継続";
+                     $"{Interval}秒毎、{TriggerProbability.ToLocalizedString()}でライフを{ConsumingLife}消費し、{Duration.ToLocalizedString()}PERFECTのスコア{Rate:P0}アップ、{ContinuationTargets.ToLocalizedString()}でもCOMBO継続";
 
             public Overload Clone()
             {
@@ -424,8 +430,9 @@ namespace Cindeck.Core
 
             public static new Overload Create(string name, string desc)
             {
-                //9秒ごとに中確率でライフを15消費して、しばらくの間スコアが16%アップ、NICE/BADでもCOMBO継続
-                var m = Regex.Match(desc, @"^(\d+)秒ご[とど]に(高確率|中確率|低確率)でライフを(\d+)消費して、(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)スコアが(\d+)[%％]アップ[、。]([A-Z/]+)でもCOMBO継続$");
+
+                //9秒ごと、中確率でライフを15消費し、しばらくの間PERFECTのスコア16%アップ、NICE/BADでもCOMBO継続
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)でライフを(\d+)消費し、(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)PERFECTのスコア(\d+)[%％]アップ[、。]([A-Z/]+)でもCOMBO継続$");
                 if (m.Success)
                 {
                     return new Overload

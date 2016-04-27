@@ -73,7 +73,7 @@ namespace Cindeck.Core
         {
             if(idol.Iid!=Idol.Iid)
             {
-                throw new Exception("Cannot update reference to an idol with difference IID.");
+                throw new Exception("Cannot update reference to an idol with different IID.");
             }
             Idol = idol;
         }

@@ -12,6 +12,7 @@ namespace Cindeck.Core
     [KnownType(typeof(CenterEffect.AppealUp))]
     [KnownType(typeof(CenterEffect.LifeUp))]
     [KnownType(typeof(CenterEffect.SkillTriggerProbabilityUp))]
+    [KnownType(typeof(CenterEffect.ConditionalAppealUp))]
     [KnownType(typeof(Skill.ComboBonus))]
     [KnownType(typeof(Skill.ComboContinuation))]
     [KnownType(typeof(Skill.JudgeEnhancement))]

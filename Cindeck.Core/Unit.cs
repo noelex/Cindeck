@@ -114,44 +114,61 @@ namespace Cindeck.Core
 
         private int GetVocal(OwnedIdol idol)
         {
-            if (idol == null)
-            {
-                return 0;
-            }
-            var effect = Center?.CenterEffect as CenterEffect.AppealUp;
-            if (effect?.Targets.HasFlag(idol.Category) == true && effect?.TargetAppeal.HasFlag(AppealType.Vocal) == true)
-            {
-                return (int)Math.Ceiling(idol.Vocal + idol.Vocal * effect.Rate);
-            }
-            return idol.Vocal;
+            return GetAppeal(idol, AppealType.Vocal);
         }
 
         private int GetDance(OwnedIdol idol)
         {
-            if (idol == null)
-            {
-                return 0;
-            }
-            var effect = Center?.CenterEffect as CenterEffect.AppealUp;
-            if (effect?.Targets.HasFlag(idol.Category) == true && effect?.TargetAppeal.HasFlag(AppealType.Dance) == true)
-            {
-                return (int)Math.Ceiling(idol.Dance + idol.Dance * effect.Rate);
-            }
-            return idol.Dance;
+            return GetAppeal(idol, AppealType.Dance);
         }
 
         private int GetVisual(OwnedIdol idol)
+        {
+            return GetAppeal(idol, AppealType.Visual);
+        }
+
+        private int GetAppeal(OwnedIdol idol,AppealType type)
         {
             if (idol == null)
             {
                 return 0;
             }
-            var effect = Center?.CenterEffect as CenterEffect.AppealUp;
-            if (effect?.Targets.HasFlag(idol.Category) == true && effect?.TargetAppeal.HasFlag(AppealType.Visual) == true)
+
+            var effect = Center?.CenterEffect;
+            var rawValue= (int)idol.GetType().GetProperty(type.ToString()).GetValue(idol);
+            if (effect != null)
             {
-                return (int)Math.Ceiling(idol.Visual + idol.Visual * effect.Rate);
+                if (effect is CenterEffect.AppealUp)
+                {
+                    var e = effect as CenterEffect.AppealUp;
+                    if (e.Targets.HasFlag(idol.Category) == true && e.TargetAppeal.HasFlag(type) == true)
+                    {
+                        return (int)Math.Ceiling(rawValue + rawValue * e.Rate);
+                    }
+                }
+                else if(effect is CenterEffect.ConditionalAppealUp)
+                {
+                    var e = effect as CenterEffect.ConditionalAppealUp;
+                    var conditionFulfilled = false;
+                    switch (e.Condition)
+                    {
+                        case AppealUpCondition.UnitContainsAllTypes:
+                            conditionFulfilled = Slots.Any(x => x.Category == IdolCategory.Cool) && 
+                                Slots.Any(x => x.Category == IdolCategory.Cute) && 
+                                Slots.Any(x => x.Category == IdolCategory.Passion);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (conditionFulfilled && e.Targets.HasFlag(idol.Category) == true && e.TargetAppeal.HasFlag(type) == true)
+                    {
+                        return (int)Math.Ceiling(rawValue + rawValue * e.Rate);
+                    }
+                }
             }
-            return idol.Visual;
+
+            return rawValue;
         }
 
         public bool AlreadyInUnit(OwnedIdol idol)

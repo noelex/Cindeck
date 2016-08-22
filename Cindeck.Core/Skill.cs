@@ -187,7 +187,7 @@ namespace Cindeck.Core
             public static new ScoreBonus Create(string name, string desc)
             {
                 //6秒毎、低確率で少しの間、PERFECTのスコア10%アップ
-                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)のスコア(\d+)[%％]アップ$");
+                var m = Regex.Match(desc, @"^(\d+)秒(?:毎|ごと)、(高確率|中確率|低確率)で(一瞬の間|わずかな間|少しの間|しばらくの間|かなりの間)[、。]([A-Z/]+)のスコアが?(\d+)[%％]アップ$");
                 if (m.Success)
                 {
                     return new ScoreBonus

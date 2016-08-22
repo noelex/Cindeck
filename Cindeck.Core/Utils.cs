@@ -89,6 +89,9 @@ namespace Cindeck.Core
             { "SSR", Rarity.SSR},
             { "SSR+", Rarity.SSRPlus}};
 
+        private static readonly Dictionary<string, AppealUpCondition> m_stringToAppealUpCondition = new Dictionary<string, AppealUpCondition> { { "3タイプ全てのアイドル編成時", AppealUpCondition.UnitContainsAllTypes } };
+        private static readonly Dictionary<AppealUpCondition, string> m_appealUpConditionToString = new Dictionary<AppealUpCondition, string> { { AppealUpCondition.UnitContainsAllTypes, "3タイプ全てのアイドル編成時" } };
+
         private static readonly Dictionary<string, IdolCategory> m_stringToSongType = new Dictionary<string, IdolCategory> {
             { "All", IdolCategory.All},
             { "Co", IdolCategory.Cool},
@@ -160,6 +163,11 @@ namespace Cindeck.Core
             return m_songDifficulties[diff];
         }
 
+        public static string ToLocalizedString(this AppealUpCondition condition)
+        {
+            return m_appealUpConditionToString[condition];
+        }
+
         public static string ToLocalizedString(this NoteJudgement judgement, bool descending = true)
         {
             var res = new List<string>();
@@ -212,6 +220,11 @@ namespace Cindeck.Core
         public static SongDifficulty ToSongDifficulty(this string s)
         {
             return m_stringToDifficulty[s];
+        }
+
+        public static AppealUpCondition ToAppealUpCondition(this string s)
+        {
+            return m_stringToAppealUpCondition[s];
         }
 
         public static NoteJudgement ToJudgement(this string s)

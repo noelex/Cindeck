@@ -60,6 +60,12 @@ namespace Cindeck.Core
                 return effect;
             }
 
+            effect = ConditionalAppealUp.Create(name, desc);
+            if (effect != null)
+            {
+                return effect;
+            }
+
             throw new FormatException("Unknown effect description: " + desc);
         }
 
@@ -85,7 +91,7 @@ namespace Cindeck.Core
 
             public static new AppealUp Create(string name, string desc)
             {
-                var m = Regex.Match(desc, @"^(キュートアイドル|クールアイドル|パッションアイドル|全員)の(ダンス|ボーカル|ビジュアル|全)(アピール)?値[が]?(\d+)[%％]アップ$");
+                var m = Regex.Match(desc, @"^(キュートアイドル|クールアイドル|パッションアイドル|全員)の(ダンス|ボーカル|ビジュアル|全)(アピール値?)?[が]?(\d+)[%％]アップ$");
                 if (m.Success)
                 {
                     return new AppealUp
@@ -107,6 +113,63 @@ namespace Cindeck.Core
                     Rate = Rate,
                     Targets = Targets,
                     TargetAppeal=TargetAppeal
+                };
+            }
+        }
+
+        [DataContract]
+        public class ConditionalAppealUp : CenterEffect
+        {
+            [DataMember]
+            public AppealUpCondition Condition
+            {
+                get;
+                private set;
+            }
+
+            [DataMember]
+            public double Rate
+            {
+                get;
+                private set;
+            }
+
+            [DataMember]
+            public AppealType TargetAppeal
+            {
+                get;
+                private set;
+            }
+
+            public override string Description =>
+                    $"{Condition.ToLocalizedString()}、{Targets.ToFullLocalizedString()}の{TargetAppeal.ToLocalizedString()}アピール値{Rate:P0}アップ";
+
+            public static new ConditionalAppealUp Create(string name, string desc)
+            {
+                var m = Regex.Match(desc, @"^(3タイプ全てのアイドル編成時)、(キュートアイドル|クールアイドル|パッションアイドル|全員)の(ダンス|ボーカル|ビジュアル|全)(アピール値?)?[が]?(\d+)[%％]アップ$");
+                if (m.Success)
+                {
+                    return new ConditionalAppealUp
+                    {
+                        Name = name,
+                        Condition=m.Groups[1].Value.ToAppealUpCondition(),
+                        Targets = m.Groups[2].Value.ToIdolCategory(),
+                        TargetAppeal = m.Groups[3].Value.ToAppealType(),
+                        Rate = int.Parse(m.Groups[5].Value) / 100.0,
+                    };
+                }
+                return null;
+            }
+
+            public ConditionalAppealUp Clone()
+            {
+                return new ConditionalAppealUp
+                {
+                    Name = Name,
+                    Rate = Rate,
+                    Targets = Targets,
+                    TargetAppeal = TargetAppeal,
+                    Condition = Condition
                 };
             }
         }

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
     <Compile Include="AppealType.cs" />
+    <Compile Include="AppealUpCondition.cs" />
     <Compile Include="CenterEffect.cs" />
     <Compile Include="FileDocumentSource.cs" />
     <Compile Include="FilterConfig.cs" />

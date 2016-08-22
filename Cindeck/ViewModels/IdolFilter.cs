@@ -39,7 +39,8 @@ namespace Cindeck.ViewModels
                 Tuple.Create((Type)null,"全部"),
                 Tuple.Create(typeof(CenterEffect.AppealUp),"アピールアップ"),
                 Tuple.Create(typeof(CenterEffect.SkillTriggerProbabilityUp),"スキル発動率アップ"),
-                Tuple.Create(typeof(CenterEffect.LifeUp),"ライフアップ")
+                Tuple.Create(typeof(CenterEffect.LifeUp),"ライフアップ"),
+                Tuple.Create(typeof(CenterEffect.ConditionalAppealUp),"条件付きアピールアップ"),
             };
 
 

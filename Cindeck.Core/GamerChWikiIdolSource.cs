@@ -47,6 +47,7 @@ namespace Cindeck.Core
                     .Replace("PEFECT", "PERFECT")
                     .Replace("PERFCT", "PERFECT")
                     .Replace("秒毎", "秒ごと")
+                    .Replace("秒間", "秒ごと")
                     .Replace("しばらく間", "しばらくの間")));
             }
             catch (Exception)

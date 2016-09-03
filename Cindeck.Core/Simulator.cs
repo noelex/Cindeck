@@ -438,6 +438,45 @@ namespace Cindeck.Core
             }
         }
 
+        private double GetAppealUpRate(IIdol idol, IIdol center, AppealType targetAppeal)
+        {
+            var effect = center?.CenterEffect;
+
+            if (effect != null && Unit != null)
+            {
+                if (effect is CenterEffect.AppealUp)
+                {
+                    var e = effect as CenterEffect.AppealUp;
+                    if (e.Targets.HasFlag(idol.Category) == true && e.TargetAppeal.HasFlag(targetAppeal) == true)
+                    {
+                        return e.Rate;
+                    }
+                }
+                else if (effect is CenterEffect.ConditionalAppealUp)
+                {
+                    var e = effect as CenterEffect.ConditionalAppealUp;
+                    var conditionFulfilled = false;
+                    switch (e.Condition)
+                    {
+                        case AppealUpCondition.UnitContainsAllTypes:
+                            conditionFulfilled = Unit.Slots.Any(x => x.Category == IdolCategory.Cool) &&
+                                Unit.Slots.Any(x => x.Category == IdolCategory.Cute) &&
+                                Unit.Slots.Any(x => x.Category == IdolCategory.Passion);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (conditionFulfilled && e.Targets.HasFlag(idol.Category) == true && e.TargetAppeal.HasFlag(targetAppeal) == true)
+                    {
+                        return e.Rate;
+                    }
+                }
+            }
+
+            return 0;
+        }
+
         private int CalculateAppeal(AppealType targetAppeal, IIdol idol, bool isSupportMember, bool encore = false)
         {
             if (idol == null)
@@ -453,24 +492,8 @@ namespace Cindeck.Core
                     rate += 0.1;
                 }
 
-                if (Unit != null && Unit.Center != null &&
-                    Unit.Center.CenterEffect != null && Unit.Center.CenterEffect is CenterEffect.AppealUp)
-                {
-                    var e = Unit.Center.CenterEffect as CenterEffect.AppealUp;
-                    if (e.Targets.HasFlag(idol.Category) && e.TargetAppeal.HasFlag(targetAppeal))
-                    {
-                        rate += e.Rate;
-                    }
-                }
-
-                if (Guest != null && Guest.CenterEffect != null && Guest.CenterEffect is CenterEffect.AppealUp)
-                {
-                    var e = Guest.CenterEffect as CenterEffect.AppealUp;
-                    if (e.Targets.HasFlag(idol.Category) && e.TargetAppeal.HasFlag(targetAppeal))
-                    {
-                        rate += e.Rate;
-                    }
-                }
+                rate += GetAppealUpRate(idol, Unit?.Center, targetAppeal);
+                rate += GetAppealUpRate(idol, Guest, targetAppeal);
             }
 
             if (GrooveBurst != null)

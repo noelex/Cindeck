@@ -15,6 +15,7 @@ namespace Cindeck.Core
     public class AppConfig
     {
         private static DataContractSerializer m_serializer= new DataContractSerializer(typeof(AppConfig),new DataContractSerializerSettings{ PreserveObjectReferences=true  });
+        private static AppConfig m_current = null;
 
         private AppConfig()
         {
@@ -36,10 +37,11 @@ namespace Cindeck.Core
                  new SortOption { Column=nameof(IIdol.Rarity), Direction=ListSortDirection.Descending },
                 new SortOption { Column=nameof(IIdol.ImplementationDate), Direction=ListSortDirection.Descending }
             };
+
             NextOid = 1;
         }
 
-        public string Version => "v1.7.1";
+        public string Version => "v1.8";
 
         [DataMember(Order = 1)]
         private int NextOid
@@ -119,6 +121,27 @@ namespace Cindeck.Core
             set;
         }
 
+        [DataMember(Order = 12)]
+        public ObservableCollection<Potential> PotentialData
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Order = 13)]
+        public FilterConfig PotentialFilterConfig
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Order = 14)]
+        public List<SortOption> PotentialSortOptions
+        {
+            get;
+            set;
+        }
+
         public int GetNextLid()
         {
             return NextOid++;
@@ -133,16 +156,68 @@ namespace Cindeck.Core
             }  
         }
 
+        public static AppConfig Current
+        {
+            get
+            {
+                return m_current;
+            }
+        }
+
         public static AppConfig Load()
         {
+            AppConfig config = null;
             if(!File.Exists("app.config"))
             {
-                return new AppConfig();
+                config = new AppConfig();
             }
-            using (var fs = File.OpenRead("app.config"))
+            else
             {
-                return (AppConfig)m_serializer.ReadObject(fs);
+                using (var fs = File.OpenRead("app.config"))
+                {
+                    config = (AppConfig)m_serializer.ReadObject(fs);
+                }
             }
+
+            if (config.PotentialData == null)
+            {
+                config.PotentialData = new ObservableCollection<Potential>();
+            }
+
+            if (config.ImplementedIdols.Count > 0 && config.PotentialData.Count == 0)
+            {
+                var idolList = config.ImplementedIdols.GroupBy(x => x.Name)
+                    .Select(x => new Potential { Category = x.First().Category, Name = x.Key });
+
+                foreach (var x in idolList)
+                {
+                    config.PotentialData.Add(x);
+                }
+            }
+
+            config.ImplementedIdols.CollectionChanged += (sender, e) =>
+            {
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                {
+                    foreach (var idol in e.NewItems.OfType<Idol>())
+                    {
+                        if (!config.PotentialData.Any(x => x.Name == idol.Name))
+                        {
+                            config.PotentialData.Add(new Potential { Category = idol.Category, Name = idol.Name });
+                        }
+                    }
+                }
+            };
+
+            if(config.PotentialSortOptions==null)
+            {
+                config.PotentialSortOptions = new List<SortOption>()
+                {
+                     new SortOption { Column=nameof(IIdol.Name), Direction=ListSortDirection.Ascending }
+                };
+            }
+
+            return m_current = config;
         }
 
         public static void Reset()

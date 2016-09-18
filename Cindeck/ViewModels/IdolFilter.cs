@@ -15,12 +15,18 @@ namespace Cindeck.ViewModels
         private AppConfig m_config;
         private ICollectionView m_target;
 
-        public IdolFilter(AppConfig config, ICollectionView target, bool allowFilterOwned)
+        public IdolFilter(AppConfig config, ICollectionView target, bool enableOwnedFilter=true,
+            bool enableCategoryFilter=true, bool enableNameFilter=true, bool enableRarityFilter = true, bool enableCenterEffectFilter = true, bool enableSkillFilter = true)
         {
             m_config = config;
             m_target = target;
             target.Filter = FilterIdols;
-            AllowFilterOwned = allowFilterOwned;
+            EnableOwnedFilter = enableOwnedFilter;
+            EnableRarityFilter = enableRarityFilter;
+            EnableCenterEffectFilter = enableCenterEffectFilter;
+            EnableSkillFilter = enableSkillFilter;
+            EnableCategoryFilter = enableCategoryFilter;
+            EnableNameFilter = enableNameFilter;
 
             IdolTypes = new List<Tuple<IdolCategory, string>>
             {
@@ -113,7 +119,37 @@ namespace Cindeck.ViewModels
             set;
         }
 
-        public bool AllowFilterOwned
+        public bool EnableCategoryFilter
+        {
+            get;
+            set;
+        }
+
+        public bool EnableNameFilter
+        {
+            get;
+            set;
+        }
+
+        public bool EnableOwnedFilter
+        {
+            get;
+            set;
+        }
+
+        public bool EnableRarityFilter
+        {
+            get;
+            set;
+        }
+
+        public bool EnableCenterEffectFilter
+        {
+            get;
+            set;
+        }
+
+        public bool EnableSkillFilter
         {
             get;
             set;

@@ -79,6 +79,7 @@
     <Compile Include="ViewModels\ImplementedIdolViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OwnedIdolViewModel.cs" />
+    <Compile Include="ViewModels\PotentialViewModel.cs" />
     <Compile Include="ViewModels\SimulationViewModel.cs" />
     <Compile Include="ViewModels\UnitViewModel.cs" />
     <Compile Include="Views\ImplementedIdolView.xaml.cs">
@@ -86,6 +87,9 @@
     </Compile>
     <Compile Include="Views\OwnedIdolView.xaml.cs">
       <DependentUpon>OwnedIdolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PotentialView.xaml.cs">
+      <DependentUpon>PotentialView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SimulationView.xaml.cs">
       <DependentUpon>SimulationView.xaml</DependentUpon>
@@ -126,6 +130,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\OwnedIdolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PotentialView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

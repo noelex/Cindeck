@@ -10,7 +10,7 @@ namespace Cindeck.Core
 {
     [DataContract(IsReference = true)]
     [ImplementPropertyChanged]
-    public class OwnedIdol:IIdol
+    public class OwnedIdol : IIdol
     {
         [DataMember]
         private Idol Idol
@@ -19,7 +19,7 @@ namespace Cindeck.Core
             set;
         }
 
-        public OwnedIdol(int lid, Idol idol, int skillLevel=10)
+        public OwnedIdol(int lid, Idol idol, int skillLevel = 10)
         {
             Oid = lid;
             Idol = idol;
@@ -29,8 +29,6 @@ namespace Cindeck.Core
         public IdolCategory Category => Idol.Category;
 
         public ICenterEffect CenterEffect => Idol.CenterEffect;
-
-        public int Dance => Idol.Dance;
 
         public int Iid => Idol.Iid;
 
@@ -43,8 +41,6 @@ namespace Cindeck.Core
         {
             get; private set;
         }
-
-        public int Life => Idol.Life;
 
         public string Name => Idol.Name;
 
@@ -63,15 +59,25 @@ namespace Cindeck.Core
 
         public double SkillScore => Skill.CalculateSkillScore(SkillLevel);
 
-        public int TotalAppeal => Idol.TotalAppeal;
+        public int TotalAppeal => Vocal + Dance + Visual;
 
-        public int Visual => Idol.Visual;
+        [DependsOn(nameof(Timestamp))]
+        public int Vocal => Idol.GetVocalWithPotential();
 
-        public int Vocal => Idol.Vocal;
+        [DependsOn(nameof(Timestamp))]
+        public int Dance => Idol.GetDanceWithPotential();
+
+        [DependsOn(nameof(Timestamp))]
+        public int Visual => Idol.GetVisualWithPotential();
+
+        [DependsOn(nameof(Timestamp))]
+        public int Life => Idol.GetLifeWithPotential();
+
+        public DateTime Timestamp { get; set; }
 
         public void UpdateReference(Idol idol)
         {
-            if(idol.Iid!=Idol.Iid)
+            if (idol.Iid != Idol.Iid)
             {
                 throw new Exception("Cannot update reference to an idol with different IID.");
             }

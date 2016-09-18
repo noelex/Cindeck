@@ -31,6 +31,7 @@ namespace Cindeck.ViewModels
             OwnedIdol = new OwnedIdolViewModel(m_config,Units);
             ImplementedIdol = new ImplementedIdolViewModel(m_config, OwnedIdol);
             Simulation = new SimulationViewModel(m_config);
+            Potential = new PotentialViewModel(m_config);
         }
 
         public OwnedIdolViewModel OwnedIdol
@@ -53,6 +54,11 @@ namespace Cindeck.ViewModels
             get;
         }
 
+        public PotentialViewModel Potential
+        {
+            get;
+        }
+
         public string Title => $"Cindeck {m_config.Version}";
 
 
@@ -61,6 +67,7 @@ namespace Cindeck.ViewModels
             OwnedIdol.Dispose();
             ImplementedIdol.Dispose();
             Units.Dispose();
+            Potential.Dispose();
             m_config.Save();
         }
 

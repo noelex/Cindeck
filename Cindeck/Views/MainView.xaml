@@ -18,6 +18,9 @@
             <TabItem Header="所属アイドル">
                 <local:OwnedIdolView DataContext="{Binding Path=OwnedIdol}"/>
             </TabItem>
+            <TabItem Header="ポテンシャル">
+                <local:PotentialView DataContext="{Binding Path=Potential}"/>
+            </TabItem>
             <TabItem Header="ユニット編成">
                 <local:UnitView DataContext="{Binding Path=Units}"/>
             </TabItem>

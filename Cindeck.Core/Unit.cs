@@ -19,14 +19,14 @@ namespace Cindeck.Core
             set;
         }
 
-        [DataMember]
+        [DataMember, DependsOn(nameof(Timestamp))]
         public OwnedIdol Slot1
         {
             get;
             set;
         }
 
-        [DataMember]
+        [DataMember, DependsOn(nameof(Timestamp))]
         public OwnedIdol Slot2
         {
             get;
@@ -36,21 +36,21 @@ namespace Cindeck.Core
         /// <summary>
         /// センターです
         /// </summary>
-        [DataMember]
+        [DataMember, DependsOn(nameof(Timestamp))]
         public OwnedIdol Slot3
         {
             get;
             set;
         }
 
-        [DataMember]
+        [DataMember, DependsOn(nameof(Timestamp))]
         public OwnedIdol Slot4
         {
             get;
             set;
         }
 
-        [DataMember]
+        [DataMember, DependsOn(nameof(Timestamp))]
         public OwnedIdol Slot5
         {
             get;
@@ -64,6 +64,8 @@ namespace Cindeck.Core
                 return Slot3;
             }
         }
+
+        public DateTime Timestamp { get; set; }
 
         [DependsOn("Slot1", "Slot2", "Slot3", "Slot4", "Slot5")]
         public IEnumerable<OwnedIdol> Slots

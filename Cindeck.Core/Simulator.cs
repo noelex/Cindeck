@@ -115,10 +115,18 @@ namespace Cindeck.Core
         public Simulator(AppConfig config)
         {
             m_config = config;
+            GuestPotential = new Potential();
+            GuestPotential.PropertyChanged += (s, e) => Reload();
             GrooveType = IdolCategory.Cute;
         }
 
         public Idol Guest
+        {
+            get;
+            set;
+        }
+
+        public Potential GuestPotential
         {
             get;
             set;
@@ -540,12 +548,20 @@ namespace Cindeck.Core
                 CalculateAppeal(AppealType.Visual, idol, isSupportMember, encore);
         }
 
+        private Idol CreateGuestWithPotential(IIdol guest)
+        {
+            return guest == null ? null : new Idol(guest.Label, guest.Name, guest.Rarity, guest.Category, guest.GetLifeWithPotential(GuestPotential), guest.GetDanceWithPotential(GuestPotential),
+                guest.GetVocalWithPotential(GuestPotential), guest.GetVisualWithPotential(GuestPotential), guest.ImplementationDate, guest.CenterEffect, guest.Skill);
+        }
+
         public void Reload()
         {
+            var guest = CreateGuestWithPotential(Guest);
             SupportMembers = SelectSupportMembers();
             SupportMemberAppeal = SupportMembers.Sum(x => CalculateAppeal(x, true, IsEncore));
-            TotalAppeal = SupportMemberAppeal + Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(x, false, IsEncore))) + CalculateAppeal(Guest, false, IsEncore);
-            Life = CalculateLife(Unit, Guest);
+            
+            TotalAppeal = SupportMemberAppeal + Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(x, false, IsEncore))) + CalculateAppeal(guest, false, IsEncore);
+            Life = CalculateLife(Unit, guest);
             ResultsUpToDate = false;
         }
 

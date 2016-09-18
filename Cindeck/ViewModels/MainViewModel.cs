@@ -3,7 +3,11 @@ using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,6 +36,26 @@ namespace Cindeck.ViewModels
             ImplementedIdol = new ImplementedIdolViewModel(m_config, OwnedIdol);
             Simulation = new SimulationViewModel(m_config);
             Potential = new PotentialViewModel(m_config);
+        }
+
+        private async Task CheckUpdate()
+        {
+            using (var client = new WebClient())
+            {
+                var serializer = new DataContractJsonSerializer(typeof(ReleaseInfo));
+                client.Headers["User-Agent"] = Title;
+                using (var data = new MemoryStream(await client.DownloadDataTaskAsync(new Uri("https://api.github.com/repos/noelex/Cindeck/releases/latest"))))
+                {
+                    var releaseInfo = serializer.ReadObject(data) as ReleaseInfo;
+                    if (Version.Parse(releaseInfo.tag_name.Substring(1)) > Version.Parse(m_config.Version.Substring(1)))
+                    {
+                        if (MessageBoxResult.Yes == MessageBox.Show("新しいバージョンがあります。今すぐダウンロードしますか？", "アップデート", MessageBoxButton.YesNo))
+                        {
+                            Process.Start(releaseInfo.html_url);
+                        }
+                    }
+                }
+            }
         }
 
         public OwnedIdolViewModel OwnedIdol
@@ -71,9 +95,16 @@ namespace Cindeck.ViewModels
             m_config.Save();
         }
 
-        public void OnActivate()
+        public async void OnActivate()
         {
-            
+            try
+            {
+                await CheckUpdate();
+            }
+            catch
+            {
+
+            }
         }
 
         public void OnDeactivate()

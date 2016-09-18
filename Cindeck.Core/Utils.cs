@@ -152,6 +152,8 @@ namespace Cindeck.Core
             { 10,new Dictionary<Rarity, int> { { Rarity.N,13 }, { Rarity.NPlus, 13 }, { Rarity.R, 14 }, { Rarity.RPlus, 14 }, { Rarity.SR, 20 }, { Rarity.SRPlus, 20 }, { Rarity.SSR, 22 }, { Rarity.SSRPlus, 22 } } },
         };
 
+        private static Dictionary<string, Potential> m_potentialDataCache = new Dictionary<string, Potential>();
+
         public static string ToLocalizedString(this SkillTriggerProbability pos)
         {
             return m_posNames[pos];
@@ -313,24 +315,33 @@ namespace Cindeck.Core
             return expectedTriggerCount * skill.EstimateDuration(skillLv) * notesPerSecond * rate;
         }
 
+        private static Potential GetPotential(string idolName)
+        {
+            if(m_potentialDataCache.ContainsKey(idolName))
+            {
+                return m_potentialDataCache[idolName];
+            }
+            return m_potentialDataCache[idolName] = AppConfig.Current.PotentialData.First(x => x.Name == idolName);
+        }
+
         public static int GetVocalWithPotential(this IIdol idol, Potential potential = null)
         {
-            return idol.Vocal + m_potentialAppealDelta[(potential ?? AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Vocal][idol.Rarity];
+            return idol.Vocal + m_potentialAppealDelta[(potential ?? GetPotential(idol.Name)).Vocal][idol.Rarity];
         }
 
         public static int GetDanceWithPotential(this IIdol idol, Potential potential = null)
         {
-            return idol.Dance + m_potentialAppealDelta[(potential ?? AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Dance][idol.Rarity];
+            return idol.Dance + m_potentialAppealDelta[(potential ?? GetPotential(idol.Name)).Dance][idol.Rarity];
         }
 
         public static int GetVisualWithPotential(this IIdol idol, Potential potential = null)
         {
-            return idol.Visual + m_potentialAppealDelta[(potential ?? AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Visual][idol.Rarity];
+            return idol.Visual + m_potentialAppealDelta[(potential ?? GetPotential(idol.Name)).Visual][idol.Rarity];
         }
 
         public static int GetLifeWithPotential(this IIdol idol, Potential potential = null)
         {
-            return idol.Life + m_potentialLifeDelta[(potential??AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Life][idol.Rarity];
+            return idol.Life + m_potentialLifeDelta[(potential?? GetPotential(idol.Name)).Life][idol.Rarity];
         }
     }
 }

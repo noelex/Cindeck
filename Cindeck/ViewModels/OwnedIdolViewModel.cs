@@ -26,7 +26,7 @@ namespace Cindeck.ViewModels
             m_config = config;
             m_uvm = uvm;
             Idols = new ListCollectionView(config.OwnedIdols);
-            Filter = new IdolFilter(config, Idols, false);
+            Filter = new IdolFilter(config, Idols, enableOwnedFilter: false);
             Filter.SetConfig(config.OwnedIdolFilterConfig);
 
             foreach (var option in config.OwnedIdolSortOptions)
@@ -125,7 +125,7 @@ namespace Cindeck.ViewModels
 
         public void OnActivate()
         {
-            
+            Idols.Refresh();
         }
 
         public void OnDeactivate()

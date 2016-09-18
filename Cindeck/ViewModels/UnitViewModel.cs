@@ -263,7 +263,8 @@ namespace Cindeck.ViewModels
 
         public void OnActivate()
         {
-            
+            Idols.Refresh();
+            TemporalUnit.Timestamp = DateTime.Now;
         }
 
         public void OnDeactivate()

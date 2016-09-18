@@ -122,6 +122,36 @@ namespace Cindeck.Core
             {SkillDuration.Instantaneous,2 },
         };
 
+        private static readonly Dictionary<int,Dictionary<Rarity,int>> m_potentialAppealDelta=new Dictionary<int, Dictionary<Rarity, int>>
+        {
+            { 0,new Dictionary<Rarity, int> { { Rarity.N,0 }, { Rarity.NPlus, 0 }, { Rarity.R, 0 }, { Rarity.RPlus, 0 }, { Rarity.SR, 0 }, { Rarity.SRPlus, 0 }, { Rarity.SSR, 0 }, { Rarity.SSRPlus, 0 } } },
+            { 1,new Dictionary<Rarity, int> { { Rarity.N,80 }, { Rarity.NPlus, 80 }, { Rarity.R, 60 }, { Rarity.RPlus, 60 }, { Rarity.SR, 60 }, { Rarity.SRPlus, 60 }, { Rarity.SSR, 40 }, { Rarity.SSRPlus, 40 } } },
+            { 2,new Dictionary<Rarity, int> { { Rarity.N,160 }, { Rarity.NPlus, 160 }, { Rarity.R, 120 }, { Rarity.RPlus, 120 }, { Rarity.SR, 120 }, { Rarity.SRPlus, 120 }, { Rarity.SSR, 80 }, { Rarity.SSRPlus, 80 } } },
+            { 3,new Dictionary<Rarity, int> { { Rarity.N,250 }, { Rarity.NPlus, 250 }, { Rarity.R, 180 }, { Rarity.RPlus, 180 }, { Rarity.SR, 180 }, { Rarity.SRPlus, 180 }, { Rarity.SSR, 120 }, { Rarity.SSRPlus, 120 } } },
+            { 4,new Dictionary<Rarity, int> { { Rarity.N,340 }, { Rarity.NPlus, 340 }, { Rarity.R, 255 }, { Rarity.RPlus, 255 }, { Rarity.SR, 250 }, { Rarity.SRPlus, 250 }, { Rarity.SSR, 170 }, { Rarity.SSRPlus, 170 } } },
+            { 5,new Dictionary<Rarity, int> { { Rarity.N,440 }, { Rarity.NPlus, 440 }, { Rarity.R, 330 }, { Rarity.RPlus, 330 }, { Rarity.SR, 320 }, { Rarity.SRPlus, 320 }, { Rarity.SSR, 220 }, { Rarity.SSRPlus, 220 } } },
+            { 6,new Dictionary<Rarity, int> { { Rarity.N,540 }, { Rarity.NPlus, 540 }, { Rarity.R, 405 }, { Rarity.RPlus, 405 }, { Rarity.SR, 390 }, { Rarity.SRPlus, 390 }, { Rarity.SSR, 270 }, { Rarity.SSRPlus, 270 } } },
+            { 7,new Dictionary<Rarity, int> { { Rarity.N,650 }, { Rarity.NPlus, 650 }, { Rarity.R, 480 }, { Rarity.RPlus, 480 }, { Rarity.SR, 460 }, { Rarity.SRPlus, 460 }, { Rarity.SSR, 320 }, { Rarity.SSRPlus, 320 } } },
+            { 8,new Dictionary<Rarity, int> { { Rarity.N,760 }, { Rarity.NPlus, 760 }, { Rarity.R, 570 }, { Rarity.RPlus, 570 }, { Rarity.SR, 540 }, { Rarity.SRPlus, 540 }, { Rarity.SSR, 380 }, { Rarity.SSRPlus, 380 } } },
+            { 9,new Dictionary<Rarity, int> { { Rarity.N,880 }, { Rarity.NPlus, 880 }, { Rarity.R, 660 }, { Rarity.RPlus, 660 }, { Rarity.SR, 620 }, { Rarity.SRPlus, 620 }, { Rarity.SSR, 440 }, { Rarity.SSRPlus, 440 } } },
+            { 10,new Dictionary<Rarity, int> { { Rarity.N,1000 }, { Rarity.NPlus, 1000 }, { Rarity.R, 750 }, { Rarity.RPlus, 750 }, { Rarity.SR, 700 }, { Rarity.SRPlus, 700 }, { Rarity.SSR, 500 }, { Rarity.SSRPlus, 500 } } },
+        };
+
+        private static readonly Dictionary<int, Dictionary<Rarity, int>> m_potentialLifeDelta = new Dictionary<int, Dictionary<Rarity, int>>
+        {
+            { 0,new Dictionary<Rarity, int> { { Rarity.N,0 }, { Rarity.NPlus, 0 }, { Rarity.R, 0 }, { Rarity.RPlus, 0 }, { Rarity.SR, 0 }, { Rarity.SRPlus, 0 }, { Rarity.SSR, 0 }, { Rarity.SSRPlus, 0 } } },
+            { 1,new Dictionary<Rarity, int> { { Rarity.N,1 }, { Rarity.NPlus, 1 }, { Rarity.R, 1 }, { Rarity.RPlus, 1 }, { Rarity.SR, 1 }, { Rarity.SRPlus, 1 }, { Rarity.SSR, 1 }, { Rarity.SSRPlus, 1 } } },
+            { 2,new Dictionary<Rarity, int> { { Rarity.N,2 }, { Rarity.NPlus, 2 }, { Rarity.R, 2 }, { Rarity.RPlus, 2 }, { Rarity.SR, 2 }, { Rarity.SRPlus, 2 }, { Rarity.SSR, 2 }, { Rarity.SSRPlus, 2 } } },
+            { 3,new Dictionary<Rarity, int> { { Rarity.N,3 }, { Rarity.NPlus, 3 }, { Rarity.R, 3 }, { Rarity.RPlus, 3 }, { Rarity.SR, 4 }, { Rarity.SRPlus, 4 }, { Rarity.SSR, 4 }, { Rarity.SSRPlus, 4 } } },
+            { 4,new Dictionary<Rarity, int> { { Rarity.N,4 }, { Rarity.NPlus, 4 }, { Rarity.R, 4 }, { Rarity.RPlus, 4 }, { Rarity.SR, 6 }, { Rarity.SRPlus, 6 }, { Rarity.SSR, 6 }, { Rarity.SSRPlus, 6 } } },
+            { 5,new Dictionary<Rarity, int> { { Rarity.N,5 }, { Rarity.NPlus, 5 }, { Rarity.R, 5 }, { Rarity.RPlus, 5 }, { Rarity.SR, 8 }, { Rarity.SRPlus, 8 }, { Rarity.SSR, 8 }, { Rarity.SSRPlus, 8 } } },
+            { 6,new Dictionary<Rarity, int> { { Rarity.N,6 }, { Rarity.NPlus, 6 }, { Rarity.R, 6 }, { Rarity.RPlus, 6 }, { Rarity.SR, 10 }, { Rarity.SRPlus, 10 }, { Rarity.SSR, 10 }, { Rarity.SSRPlus, 10 } } },
+            { 7,new Dictionary<Rarity, int> { { Rarity.N,7 }, { Rarity.NPlus, 7 }, { Rarity.R, 8 }, { Rarity.RPlus, 8 }, { Rarity.SR, 12 }, { Rarity.SRPlus, 12 }, { Rarity.SSR, 13 }, { Rarity.SSRPlus, 13 } } },
+            { 8,new Dictionary<Rarity, int> { { Rarity.N,9 }, { Rarity.NPlus, 9 }, { Rarity.R, 10 }, { Rarity.RPlus, 10 }, { Rarity.SR, 14 }, { Rarity.SRPlus, 14 }, { Rarity.SSR, 16 }, { Rarity.SSRPlus, 16 } } },
+            { 9,new Dictionary<Rarity, int> { { Rarity.N,11 }, { Rarity.NPlus, 11 }, { Rarity.R, 12 }, { Rarity.RPlus, 12 }, { Rarity.SR, 17 }, { Rarity.SRPlus, 17 }, { Rarity.SSR, 19 }, { Rarity.SSRPlus, 19 } } },
+            { 10,new Dictionary<Rarity, int> { { Rarity.N,13 }, { Rarity.NPlus, 13 }, { Rarity.R, 14 }, { Rarity.RPlus, 14 }, { Rarity.SR, 20 }, { Rarity.SRPlus, 20 }, { Rarity.SSR, 22 }, { Rarity.SSRPlus, 22 } } },
+        };
+
         public static string ToLocalizedString(this SkillTriggerProbability pos)
         {
             return m_posNames[pos];
@@ -281,6 +311,26 @@ namespace Cindeck.Core
             var triggerCount=playTime / skill.Interval;
             var expectedTriggerCount = (int)Math.Floor(skill.EstimateProbability(skillLv) * triggerCount);
             return expectedTriggerCount * skill.EstimateDuration(skillLv) * notesPerSecond * rate;
+        }
+
+        public static int GetVocalWithPotential(this IIdol idol, Potential potential = null)
+        {
+            return idol.Vocal + m_potentialAppealDelta[(potential ?? AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Vocal][idol.Rarity];
+        }
+
+        public static int GetDanceWithPotential(this IIdol idol, Potential potential = null)
+        {
+            return idol.Dance + m_potentialAppealDelta[(potential ?? AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Dance][idol.Rarity];
+        }
+
+        public static int GetVisualWithPotential(this IIdol idol, Potential potential = null)
+        {
+            return idol.Visual + m_potentialAppealDelta[(potential ?? AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Visual][idol.Rarity];
+        }
+
+        public static int GetLifeWithPotential(this IIdol idol, Potential potential = null)
+        {
+            return idol.Life + m_potentialLifeDelta[(potential??AppConfig.Current.PotentialData.First(x => x.Name == idol.Name)).Life][idol.Rarity];
         }
     }
 }

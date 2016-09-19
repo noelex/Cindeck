@@ -330,9 +330,12 @@ namespace Cindeck.Core
                             var sb = slot.Skill as Skill;
                             if (totalFrame % (sb.Interval * TimeScale) == 0)
                             {
+                                var propability= sb.EstimateProbability(slot.SkillLevel) * //素の確率
+                                                   (1 + (Song.Type.HasFlag(slot.Category) ? 0.3 : 0) +  //属性一致ボーナス
+                                                        (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0)); //センター効果
+
                                 if (SkillControl != SkillTriggerControl.NeverTrigger &&
-                                (SkillControl == SkillTriggerControl.AlwaysTrigger ||
-                                rng.NextDouble() < sb.EstimateProbability(slot.SkillLevel) + (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0)))
+                                    (SkillControl == SkillTriggerControl.AlwaysTrigger || rng.NextDouble() < propability))
                                 {
                                     var skill = new TriggeredSkill
                                     {
@@ -341,7 +344,7 @@ namespace Cindeck.Core
                                         Until = totalFrame + sb.EstimateDuration(slot.SkillLevel) * TimeScale
                                     };
 
-                                    switch(sb.GetType().Name)
+                                    switch (sb.GetType().Name)
                                     {
                                         case nameof(Skill.DamageGuard):
                                             damgeGuard.Add(skill);

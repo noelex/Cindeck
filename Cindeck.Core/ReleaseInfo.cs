@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -9,17 +8,17 @@ using System.Threading.Tasks;
 namespace Cindeck.Core
 {
     [DataContract]
-    public class SortOption
+    public class ReleaseInfo
     {
         [DataMember]
-        public string Column
+        public string html_url
         {
             get;
             set;
         }
 
         [DataMember]
-        public ListSortDirection Direction
+        public string tag_name
         {
             get;
             set;

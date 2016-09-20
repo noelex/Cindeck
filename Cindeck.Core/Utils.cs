@@ -108,8 +108,8 @@ namespace Cindeck.Core
 
         private static Dictionary<SkillTriggerProbability, double> ProbabilityInitialValues = new Dictionary<SkillTriggerProbability, double>
         {
-            {SkillTriggerProbability.High,0.50 },
-            {SkillTriggerProbability.Medium,0.40 },
+            {SkillTriggerProbability.High,0.40 },
+            {SkillTriggerProbability.Medium,0.35 },
             {SkillTriggerProbability.Low,0.30 },
         };
 
@@ -280,12 +280,12 @@ namespace Cindeck.Core
 
         public static double EstimateProbability(this ISkill skill, int skillLv)
         {
-            return ProbabilityInitialValues[skill.TriggerProbability] * Math.Pow(1.05, skillLv - 1);
+            return ProbabilityInitialValues[skill.TriggerProbability] * (1 + 0.054 * (skillLv - 1));
         }
 
         public static double EstimateDuration(this ISkill skill, int skillLv)
         {
-            return DurationInitialValues[skill.Duration] * Math.Pow(1.05, skillLv - 1);
+            return DurationInitialValues[skill.Duration] * (1 + 0.054 * (skillLv - 1));
         }
 
         public static double CalculateSkillScore(this ISkill skill, int skillLv=10)

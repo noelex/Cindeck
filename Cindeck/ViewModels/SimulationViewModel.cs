@@ -140,6 +140,18 @@ namespace Cindeck.ViewModels
             set;
         }
 
+        public Dictionary<int,double> ScoreDistribution
+        {
+            get;
+            set;
+        }
+
+        public double StandardDeviation
+        {
+            get;
+            set;
+        }
+
         public SimulationResult SelectedResult
         {
             get;
@@ -195,6 +207,10 @@ namespace Cindeck.ViewModels
 
             AverageScore = (int)results.Average(x => x.Score);
             AverageScorePerNote = (int)results.Average(x => x.ScorePerNote);
+
+            ScoreDistribution = results.GroupBy(x => (int)Math.Floor(x.Score / 10000.0)).OrderBy(x => x.Key).ToDictionary(x => x.Key, x => (double)x.Count() / results.Count);
+
+            StandardDeviation = Math.Round(Math.Sqrt(results.Sum(x => Math.Pow(x.Score - AverageScore, 2))) / results.Count);
 
             SimulationResults = results.OrderBy(x => x.Id).ToList();
             SelectedResult = SimulationResults[0];

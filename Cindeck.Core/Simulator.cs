@@ -472,7 +472,8 @@ namespace Cindeck.Core
                                     {
                                         Who = slot,
                                         Since = frame,
-                                        Until = frame + sb.EstimateDuration(slot.SkillLevel) * TimeScale
+                                        Until = frame + sb.EstimateDuration(slot.SkillLevel) * TimeScale,
+                                        ExpectedPropability = propability
                                     };
 
                                     switch (sb.GetType().Name)

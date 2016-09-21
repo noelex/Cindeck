@@ -117,7 +117,7 @@
                         <Label DockPanel.Dock="Top" Content="※結果はALL PERFECTの場合のスコアで、ノーツの密度の変化は計算に入れていません"/>
                         <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="スコア(平均)"  FontWeight="Bold" />
+                                <Label Content="平均"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock>
                         <Run Text="{Binding AverageScore}"></Run>
@@ -128,7 +128,7 @@
                                 </Label>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="スコア(最大)"  FontWeight="Bold" />
+                                <Label Content="最高"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock>
                         <Run Text="{Binding MaxScore}"></Run>
@@ -139,7 +139,7 @@
                                 </Label>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="スコア(最小)"  FontWeight="Bold" />
+                                <Label Content="最低"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock TextAlignment="Center">
                         <Run Text="{Binding MinScore}"></Run>
@@ -158,7 +158,7 @@
                                 </Label>
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top"  Margin="0,5,0,0">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                             <Label FontWeight="Bold" Content="スコア分布" VerticalContentAlignment="Center"/>
                             <ItemsControl ItemsSource="{Binding ScoreDistribution}" >
                                 <ItemsControl.ItemsPanel>
@@ -179,6 +179,40 @@
                                             </Label>
                                             <Label>
                                                 <TextBlock Text="{Binding Value, StringFormat={}{0:P0}}"/>
+                                            </Label>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Label FontWeight="Bold" Content="実発動率" VerticalContentAlignment="Center"/>
+                            <ItemsControl ItemsSource="{Binding OverallTriggerRatio}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.Template>
+                                    <ControlTemplate TargetType="ItemsControl">
+                                        <ItemsPresenter Margin="5" />
+                                    </ControlTemplate>
+                                </ItemsControl.Template>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label FontWeight="Bold">
+                                                <TextBlock Text="{Binding Key}"/>
+                                            </Label>
+                                            <Label>
+                                                <TextBlock >
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0:P1} ({1:P1})">
+                                                            <Binding Path="Value.Item1"/>
+                                                            <Binding Path="Value.Item2"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
                                             </Label>
                                         </StackPanel>
                                     </DataTemplate>

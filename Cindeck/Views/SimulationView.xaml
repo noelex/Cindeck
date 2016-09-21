@@ -115,9 +115,9 @@
                     <Button HorizontalAlignment="Left" Content="実行" Command="{Binding StartSimulationCommand}" Width="200"/>
                     <StackPanel  x:Name="ResultPanel"  Visibility="{Binding Simulator.ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Label DockPanel.Dock="Top" Content="※結果はALL PERFECTの場合のスコアで、ノーツの密度の変化は計算に入れていません"/>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
-                                <Label Content="スコア(平均)"  FontWeight="Bold" />
+                        <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="平均"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock>
                         <Run Text="{Binding AverageScore}"></Run>
@@ -127,8 +127,8 @@
                                     </TextBlock>
                                 </Label>
                             </StackPanel>
-                            <StackPanel  DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
-                                <Label Content="スコア(最大)"  FontWeight="Bold" />
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="最大"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock>
                         <Run Text="{Binding MaxScore}"></Run>
@@ -138,8 +138,8 @@
                                     </TextBlock>
                                 </Label>
                             </StackPanel>
-                            <StackPanel  DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
-                                <Label Content="スコア(最小)"  FontWeight="Bold" />
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="最小"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock TextAlignment="Center">
                         <Run Text="{Binding MinScore}"></Run>
@@ -149,8 +149,76 @@
                                     </TextBlock>
                                 </Label>
                             </StackPanel>
+                            <StackPanel   Orientation="Horizontal">
+                                <Label Content="標準偏差"  FontWeight="Bold" />
+                                <Label>
+                                    <TextBlock TextAlignment="Center">
+                        <Run Text="{Binding StandardDeviation}"></Run>
+                                    </TextBlock>
+                                </Label>
+                            </StackPanel>
                         </StackPanel>
-
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Label FontWeight="Bold" Content="スコア分布" VerticalContentAlignment="Center"/>
+                            <ItemsControl ItemsSource="{Binding ScoreDistribution}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.Template>
+                                    <ControlTemplate TargetType="ItemsControl">
+                                        <ItemsPresenter Margin="5" />
+                                    </ControlTemplate>
+                                </ItemsControl.Template>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label FontWeight="Bold">
+                                                <TextBlock Text="{Binding Key, StringFormat={}{0}万台}"/>
+                                            </Label>
+                                            <Label>
+                                                <TextBlock Text="{Binding Value, StringFormat={}{0:P0}}"/>
+                                            </Label>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Label FontWeight="Bold" Content="実発動率" VerticalContentAlignment="Center"/>
+                            <ItemsControl ItemsSource="{Binding OverallTriggerRatio}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.Template>
+                                    <ControlTemplate TargetType="ItemsControl">
+                                        <ItemsPresenter Margin="5" />
+                                    </ControlTemplate>
+                                </ItemsControl.Template>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label FontWeight="Bold">
+                                                <TextBlock Text="{Binding Key}"/>
+                                            </Label>
+                                            <Label>
+                                                <TextBlock >
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0:P1} ({1:P1})">
+                                                            <Binding Path="Value.Item1"/>
+                                                            <Binding Path="Value.Item2"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Label>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                         <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal"  Margin="0,5,0,0">
                             <Label Content="結果の詳細" Grid.Row="4" Grid.Column="0"/>
                             <ComboBox x:Name="SimulationResults" SelectedItem="{Binding SelectedResult, Mode=TwoWay}" ItemsSource="{Binding SimulationResults}" DisplayMemberPath="Name" Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
@@ -168,6 +236,7 @@
                             <Label Content="終了時のライフ"  FontWeight="Bold" />
                             <Label Content="{Binding SelectedItem.RemainingLife, ElementName=SimulationResults}"/>
                         </StackPanel>
+                        
                     </StackPanel>
                 </StackPanel>
                 <c:SkillTimeline Visibility="{Binding Visibility, ElementName=ResultPanel, Mode=OneWay}"

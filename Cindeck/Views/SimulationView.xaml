@@ -128,7 +128,7 @@
                                 </Label>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="最高"  FontWeight="Bold" />
+                                <Label Content="最大"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock>
                         <Run Text="{Binding MaxScore}"></Run>
@@ -139,7 +139,7 @@
                                 </Label>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="最低"  FontWeight="Bold" />
+                                <Label Content="最小"  FontWeight="Bold" />
                                 <Label>
                                     <TextBlock TextAlignment="Center">
                         <Run Text="{Binding MinScore}"></Run>

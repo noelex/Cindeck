@@ -38,6 +38,12 @@ namespace Cindeck.Core
             get;
             set;
         }
+
+        public double ExpectedPropability
+        {
+            get;
+            set;
+        }
     }
 
     public class SimulationResult
@@ -341,7 +347,8 @@ namespace Cindeck.Core
                                     {
                                         Who = slot,
                                         Since = totalFrame,
-                                        Until = totalFrame + sb.EstimateDuration(slot.SkillLevel) * TimeScale
+                                        Until = totalFrame + sb.EstimateDuration(slot.SkillLevel) * TimeScale,
+                                        ExpectedPropability = propability
                                     };
 
                                     switch (sb.GetType().Name)

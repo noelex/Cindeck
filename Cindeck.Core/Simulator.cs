@@ -244,7 +244,7 @@ namespace Cindeck.Core
             return lst;
         }
 
-        private void CheckSkillDueTime(int frame, params List<TriggeredSkill>[] skillLists)
+        private void CheckSkillDueTime(double frame, params List<TriggeredSkill>[] skillLists)
         {
             foreach(var skillList in skillLists)
             {
@@ -287,7 +287,7 @@ namespace Cindeck.Core
             return life;
         }
 
-        public SimulationResult StartSimulation(Random rng, int id)
+        private SimulationResult StartSimulation(Random rng, int id)
         {
             var result = new SimulationResult(id);
             if (SongData == null)
@@ -399,6 +399,138 @@ namespace Cindeck.Core
                     notes++;
                 }
             }
+            result.Score = totalScore;
+            result.TriggeredSkills.ForEach(x =>
+            {
+                x.Since = Math.Round(x.Since / TimeScale, 1);
+                x.Until = Math.Round(x.Until / TimeScale, 1);
+            });
+            result.Duration = SongData.Duration;
+            result.RemainingLife = totalLife;
+            result.ScorePerNote = (int)Math.Round((double)totalScore / SongData.Notes);
+            ResultsUpToDate = true;
+            return result;
+        }
+
+        public SimulationResult StartSimulation(Random rng, int id, Queue<Note> pattern=null)
+        {
+            if(pattern==null)
+            {
+                return StartSimulation(rng, id);
+            }
+
+            var result = new SimulationResult(id);
+            if (SongData == null)
+                return result;
+
+            int totalScore = 0;
+            double scorePerNote = (TotalAppeal * LevelCoefficients[SongData.Level]) / SongData.Notes;
+            int totalLife = Life, maxLife = Life;
+            CenterEffect.SkillTriggerProbabilityUp skillRateUp = null;
+
+            if (Unit.Center != null && Unit.Center.CenterEffect != null && Unit.Center.CenterEffect is CenterEffect.SkillTriggerProbabilityUp)
+            {
+                skillRateUp = Unit.Center.CenterEffect as CenterEffect.SkillTriggerProbabilityUp;
+            }
+
+            double comboRate = 1;
+
+            List<TriggeredSkill> scoreUp = new List<TriggeredSkill>(),
+                comboBonus = new List<TriggeredSkill>(), overload = new List<TriggeredSkill>(),
+                damgeGuard = new List<TriggeredSkill>(), revival = new List<TriggeredSkill>();
+
+            var currentTime = .0;
+            int frame = 0, notes=0;
+            while (currentTime<SongData.Duration)
+            {
+                frame = (int)Math.Round(currentTime * TimeScale);
+                CheckSkillDueTime(frame, scoreUp, comboBonus, overload, damgeGuard, revival);
+                if (currentTime < SongData.Duration)
+                {
+                    foreach (var slot in Unit.Slots)
+                    {
+                        if (slot != null && slot.Skill != null)
+                        {
+                            var sb = slot.Skill as Skill;
+                            if (frame % (sb.Interval * TimeScale) == 0)
+                            {
+                                var propability = sb.EstimateProbability(slot.SkillLevel) * //素の確率
+                                                   (1 + (Song.Type.HasFlag(slot.Category) ? 0.3 : 0) +  //属性一致ボーナス
+                                                        (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0)); //センター効果
+
+                                if (SkillControl != SkillTriggerControl.NeverTrigger &&
+                                    (SkillControl == SkillTriggerControl.AlwaysTrigger || rng.NextDouble() < propability))
+                                {
+                                    var skill = new TriggeredSkill
+                                    {
+                                        Who = slot,
+                                        Since = frame,
+                                        Until = frame + sb.EstimateDuration(slot.SkillLevel) * TimeScale
+                                    };
+
+                                    switch (sb.GetType().Name)
+                                    {
+                                        case nameof(Skill.DamageGuard):
+                                            damgeGuard.Add(skill);
+                                            break;
+                                        case nameof(Skill.Revival):
+                                            revival.Add(skill);
+                                            break;
+                                        case nameof(Skill.ScoreBonus):
+                                            scoreUp.Add(skill);
+                                            break;
+                                        case nameof(Skill.ComboBonus):
+                                            comboBonus.Add(skill);
+                                            break;
+                                        case nameof(Skill.Overload):
+                                            var o = sb as Skill.Overload;
+                                            if (totalLife - o.ConsumingLife > 0)
+                                            {
+                                                if (!damgeGuard.Any())
+                                                {
+                                                    totalLife -= o.ConsumingLife;
+                                                }
+                                                overload.Add(skill);
+                                            }
+                                            else
+                                            {
+                                                continue;
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    result.TriggeredSkills.Add(skill);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (pattern.Count>0 && pattern.Peek().Time <= currentTime)
+                {
+                    comboRate = CalculateComboRate(notes, SongData.Notes);
+
+                    totalLife += revival.Select(x => x.Who.Skill).Cast<Skill.Revival>().Select(x => x.Amount).DefaultIfEmpty(0).Max();
+                    if (totalLife > maxLife) totalLife = maxLife;
+
+                    var scoreUpRate = 1 + scoreUp.Select(x => x.Rate).Concat(overload.Select(x => x.Rate)).DefaultIfEmpty(0).Max();
+                    var comboUpRate = 1 + comboBonus.Select(x => x.Rate).DefaultIfEmpty(0).Max();
+                    totalScore += (int)Math.Round(scorePerNote * comboRate * scoreUpRate * comboUpRate);
+
+                    notes++;
+                    var note = pattern.Dequeue();
+
+                    if (pattern.Count>0 && note.Time == pattern.Peek().Time)
+                    {
+                        continue;
+                    }
+                }
+
+                currentTime += 0.01;
+            }
+
             result.Score = totalScore;
             result.TriggeredSkills.ForEach(x =>
             {

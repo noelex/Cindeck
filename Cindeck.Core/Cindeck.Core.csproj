@@ -70,6 +70,8 @@
     <Compile Include="IIdolSource.cs" />
     <Compile Include="ISkill.cs" />
     <Compile Include="NoteJudgement.cs" />
+    <Compile Include="Note.cs" />
+    <Compile Include="PatternProvider.cs" />
     <Compile Include="Potential.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomFactory.cs" />

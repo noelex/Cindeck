@@ -58,6 +58,8 @@ namespace Cindeck.ViewModels
 
             Simulator.Song = Songs.FirstOrDefault();
             Simulator.Unit = Units.FirstOrDefault();
+
+            UtilizeActualPattern = true;
         }
 
         public List<Tuple<AppealType?, string>> GrooveBursts
@@ -152,6 +154,12 @@ namespace Cindeck.ViewModels
             private set;
         }
 
+        public bool UtilizeActualPattern
+        {
+            get;
+            set;
+        }
+
         private async Task LoadSongs()
         {
             try
@@ -184,8 +192,24 @@ namespace Cindeck.ViewModels
                 return;
             }
 
+            Note[] pattern = null;
+            if (UtilizeActualPattern)
+            {
+                pattern = await new PatternProvider().GetPattern(Simulator.Song, Simulator.SongData.Difficulty);
+                if (pattern == null)
+                {
+                    MessageBox.Show($"{Simulator.Song}({Simulator.SongData.Difficulty})の譜面データが見つかりませんでした。");
+                    return;
+                }
+                if (pattern.Length != Simulator.SongData.Notes)
+                {
+                    MessageBox.Show($"譜面データのノーツ数が正しくありません。");
+                    return;
+                }
+            }
+
             var results = new ConcurrentBag<SimulationResult>();
-            await Task.Run(() => Parallel.For(1, 101, i => results.Add(Simulator.StartSimulation(RandomFactory.Create(), i))));
+            await Task.Run(() => Parallel.For(1, 101, i => results.Add(Simulator.StartSimulation(RandomFactory.Create(), i, pattern == null ? null : new Queue<Note>(pattern)))));
 
             MaxScore = results.Max(x=>x.Score);
             MaxScorePerNote = results.Max(x => x.ScorePerNote);

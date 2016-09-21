@@ -47,6 +47,14 @@
                         <Label Content="{Binding Simulator.SongData.Duration}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"  Margin="0,5,0,0">
+                        <CheckBox IsChecked="{Binding UtilizeActualPattern, Mode=TwoWay}">
+                            <CheckBox.Content>
+                                <TextBlock>実際の譜面データを使う(要インターネット接続)・提供元：<Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://deresute.info/" ToolTip="https://deresute.info/">Starlight Stage :: Patterns &amp; Information</Hyperlink></TextBlock>
+                                
+                            </CheckBox.Content>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"  Margin="0,5,0,0">
                         <Label Content="Groove Burst"  Grid.Row="4" Grid.Column="0"/>
                         <ComboBox ItemsSource="{Binding GrooveBursts}" SelectedValue="{Binding Simulator.GrooveBurst}" DisplayMemberPath="Item2" SelectedValuePath="Item1"  Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
                         <ComboBox Visibility="{Binding Simulator.GrooveBurst, Converter={StaticResource NullToCollapsedConverter}}" Margin="5,0,0,0" ItemsSource="{Binding GrooveTypes}" SelectedValue="{Binding Simulator.GrooveType}" DisplayMemberPath="Item2" SelectedValuePath="Item1"  Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
@@ -114,7 +122,7 @@
                     </StackPanel>
                     <Button HorizontalAlignment="Left" Content="実行" Command="{Binding StartSimulationCommand}" Width="200"/>
                     <StackPanel  x:Name="ResultPanel"  Visibility="{Binding Simulator.ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Label DockPanel.Dock="Top" Content="※結果はALL PERFECTの場合のスコアで、ノーツの密度の変化は計算に入れていません"/>
+                        <Label DockPanel.Dock="Top" Content="※結果はALL PERFECTの場合のスコアです。"/>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
                                 <Label Content="スコア(平均)"  FontWeight="Bold" />

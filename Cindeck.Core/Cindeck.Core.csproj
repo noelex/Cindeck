@@ -82,6 +82,7 @@
     <Compile Include="SkillDuration.cs" />
     <Compile Include="SkillTriggerPossibility.cs" />
     <Compile Include="Song.cs" />
+    <Compile Include="SongInfo.cs" />
     <Compile Include="SortOption.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="Utils.cs" />

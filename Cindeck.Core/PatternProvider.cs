@@ -12,48 +12,6 @@ namespace Cindeck.Core
 {
     public class PatternProvider
     {
-        private static readonly Dictionary<string, int> SongIdMap = new Dictionary<string, int> {
-            { "2nd SIDE",66 },{ "Absolute NIne",512 },
-            { "Angel Breeze",44 },{ "BEYOND THE STARLIGHT",523 },
-            { "Bright Blue",53 },{ "DOKIDOKIリズム",17 },
-            { "GOIN'!!!",21 },{ "Happy×2 Days",23 },
-            { "Hotel Moonside",63 },{ "-LEGNE- 仇なす剣 光の旋律",24 },
-            { "LET'S GO HAPPY!!",27 },{ "Love∞Destiny",520 },
-            { "M@GIC☆",36 },{ "Memories",25 },
-            { "Naked Romance",40 },{ "Nation Blue",502 },
-            { "Near to You",522 },{ "Never say never",10 },
-            { "Orange Sapphire",503 },{ "ØωØver!!",26 },
-            { "Rockin' Emotion",59 },{ "Romantic Now",33 },
-            { "S(mile)ING!",9 },{ "Shine!!",30 },
-            { "Snow Wings",509 },{ "Star!!",19 },
-            { "TOKIMEKIエスカレート",37 },{ "Trancing Pulse",35 },
-            { "Tulip",511 },{ "Twilight Sky",28 },
-            { "We're the friends!",3 },{ "You're stars shine on me",31 },
-            { "アタシポンコツアンドロイド",501 },{ "アップルパイ・プリンセス",51 },
-            { "あんずのうた",15 },{ "ヴィーナスシンドローム",32 },
-            { "エヴリデイドリーム",52 },{ "おねだり Shall We ～？",18 },
-            { "オルゴールの小箱",57 },{ "お願い！シンデレラ",1 },
-            { "お散歩カメラ",64 },{ "き・ま・ぐ・れ☆Café au lait！",68 },
-            { "きみにいっぱい☆",518 },{ "ゴキゲンParty Night",510 },
-            { "ゴキゲンParty Night cool version",47 },{ "ゴキゲンParty Night cute version",46 },
-            { "ゴキゲンParty Night passion version",48 },{ "サマカニ！！",521 },
-            { "ショコラ・ティアラ",34 },{ "ススメ☆オトメ ～jewel parade～",8 },
-            { "ススメ☆オトメ ～jewel parade～ cool version",6 },{ "ススメ☆オトメ ～jewel parade～ cute version",5 },
-            { "ススメ☆オトメ ～jewel parade～ passion version",7 },{ "つぼみ",0 },
-            { "できたてEvo! Revo! Generation!",22 },{ "とどけ！アイドル",29 },
-            { "ハイファイ☆デイズ",513 },{ "パステルピンクな恋",505 },
-            { "ましゅまろ☆キッス",14 },{ "ミツボシ☆☆★",11 },
-            { "メッセージ",4 },{ "メルヘンデビュー！",65 },
-            { "ラブレター",524 },{ "花簪 HANAKANZASHI",60 },
-            { "華蕾夢ミル狂詩曲～魂ノ導～",13 },{ "輝く世界の魔法",2 },
-            { "咲いてJewel",0 },{ "純情Midnight伝説",0 },
-            { "生存本能ヴァルキュリア",515 },{ "絶対特権主張しますっ！",507 },
-            { "毒茸伝説",70 },{ "熱血乙女A",67 },
-            { "薄荷 -ハッカ-",69 },{ "秘密のトワレ",71 },
-            { "風色メロディ",12 },{ "夢色ハーモニー",504 },
-            { "明日また会えるよね",516 },{ "夕映えプレゼント",20 },
-            { "流れ星キセキ",508 }
-        };
         private static readonly Dictionary<SongDifficulty, int> DifficultyIndex = new Dictionary<SongDifficulty, int> {
             {SongDifficulty.Debut,1 },
             {SongDifficulty.Regular,2 },
@@ -62,15 +20,91 @@ namespace Cindeck.Core
             {SongDifficulty.MasterPlus,5 },
         };
 
-        public async Task<Note[]> GetPattern(Song s, SongDifficulty d)
+        private string NormalizeTitle(string title)
         {
-            if (!SongIdMap.ContainsKey(s.Title))
+            return title.Replace(" ", "")
+                        .Replace("！", "!")
+                        .Replace("？", "?");
+        }
+
+        private Dictionary<string, int> ParseSongIdMap(Stream stream)
+        {
+            Dictionary<int, string> typeMap = new Dictionary<int, string>() {
+                {1," cute version" },
+                {2, " cool version" },
+                {3," passion version" }
+            };
+            var serializer = new DataContractJsonSerializer(typeof(SongInfo[]));
+            var list = new List<SongInfo>();
+            var source = ((SongInfo[])serializer.ReadObject(stream)).OrderByDescending(x => x.EventType);
+
+            foreach (var song in source)
+            {
+                if (!list.Any(x => x.Title == song.Title && x.Type == song.Type && x != song))
+                {
+                    list.Add(song);
+                }
+            }
+
+            foreach (var song in list.OrderBy(x=>x.Type))
+            {
+                if (list.Any(x => x.Title == song.Title && x != song && x.Type != song.Type && song.Type != 4))
+                {
+                    song.Title += typeMap[song.Type];
+                }
+                song.Title = NormalizeTitle(song.Title);
+            }
+
+            return list.ToDictionary(x => x.Title, x => x.Id);
+        }
+
+        private async Task<Dictionary<string, int>> GetSongIdMap(bool remote)
+        {
+            try
+            {
+                if (remote)
+                {
+                    using (var client = new WebClient())
+                    {
+                        var data = await client.DownloadDataTaskAsync(new Uri($"https://apiv2.deresute.info/data/live"));
+                        using (var stream = new MemoryStream(data))
+                        {
+                            Directory.CreateDirectory("data/patterns");
+                            File.WriteAllBytes($"data/patterns/index", data);
+                            return ParseSongIdMap(stream);
+                        }
+                    }
+                }
+                else
+                {
+                    using (var fs = File.OpenRead($"data/patterns/index"))
+                    {
+                        return ParseSongIdMap(fs);
+                    }
+                }
+            }
+            catch
             {
                 return null;
             }
+        }
+
+        public async Task<Note[]> GetPattern(Song s, SongDifficulty d)
+        {
+            var title = NormalizeTitle(s.Title);
+
+            var songIdMap = await GetSongIdMap(false);
+            if (songIdMap==null || !songIdMap.ContainsKey(title))
+            {
+                songIdMap = await GetSongIdMap(true);
+                if (songIdMap == null || !songIdMap.ContainsKey(title))
+                {
+                    return null;
+                }
+            }
 
             var serializer = new DataContractJsonSerializer(typeof(Note[]));
-            var id = $"{SongIdMap[s.Title]:d3}_{DifficultyIndex[d]}";
+            var id = $"{songIdMap[title]:d3}_{DifficultyIndex[d]}";
             string idHash;
 
             using (var hasher = SHA256.Create())
@@ -82,7 +116,7 @@ namespace Cindeck.Core
             {
                 using (var fs = File.OpenRead($"data/patterns/{idHash}"))
                 {
-                    return ((Note[])serializer.ReadObject(fs)).Where(x => x.Type != 91 && x.Type != 92 && x.Type != 100).ToArray();
+                    return ((Note[])serializer.ReadObject(fs)).Where(x => x.Type == 1 || x.Type == 2).ToArray();
                 }
             }
             catch
@@ -99,7 +133,7 @@ namespace Cindeck.Core
                     {
                         Directory.CreateDirectory("data/patterns");
                         File.WriteAllBytes($"data/patterns/{idHash}", data);
-                        return ((Note[])serializer.ReadObject(stream)).Where(x => x.Type != 91 && x.Type != 92 && x.Type != 100).ToArray();
+                        return ((Note[])serializer.ReadObject(stream)).Where(x => x.Type == 1 || x.Type == 2).ToArray();
                     }
                 }
             }

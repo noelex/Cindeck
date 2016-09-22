@@ -13,8 +13,18 @@ namespace Cindeck.Core
         [DataMember(Name = "id")]
         public int Id { get; set; }
 
+        public double Time
+        {
+            get;
+            set;
+        }
+
         [DataMember(Name = "sec")]
-        public double Time { get; set; }
+        private string TimeString
+        {
+            get { return Time.ToString(); }
+            set { Time = string.IsNullOrWhiteSpace(value) ? 0 : double.Parse(value); }
+        }
 
         [DataMember(Name = "type")]
         public int Type { get; set; }

@@ -190,7 +190,7 @@ namespace Cindeck.Controls
                     break;
                 }
 
-                notAvail = SimulationResult != null && !(m_triggeredSkills.ContainsKey(idol.Oid) && m_triggeredSkills[idol.Oid].Any(x => x.Since == i * interval));
+                notAvail = SimulationResult != null && !(m_triggeredSkills.ContainsKey(idol.Oid) && m_triggeredSkills[idol.Oid].Any(x => Math.Round(x.Since) == i * interval));
 
                 var rect = new Rectangle
                 {

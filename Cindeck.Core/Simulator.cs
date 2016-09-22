@@ -99,7 +99,7 @@ namespace Cindeck.Core
     [ImplementPropertyChanged]
     public class Simulator : INotifyPropertyChanged
     {
-        private const double TimeScale = 100;
+        private const int TimeScale = 100;
         private static readonly Dictionary<int, double> LevelCoefficients = new Dictionary<int, double>
     {
             // DEBUT
@@ -293,139 +293,8 @@ namespace Cindeck.Core
             return life;
         }
 
-        private SimulationResult StartSimulation(Random rng, int id)
-        {
-            var result = new SimulationResult(id);
-            if (SongData == null)
-                return result;
-
-            int totalScore = 0;
-            int notes = 1;
-            double scorePerNote = (TotalAppeal * LevelCoefficients[SongData.Level]) / SongData.Notes;
-            double notesPerFrame = SongData.Notes / (SongData.Duration * TimeScale);
-            int frame = 0;
-            int totalFrame = 0;
-            int totalLife = Life, maxLife=Life;
-            CenterEffect.SkillTriggerProbabilityUp skillRateUp = null;
-
-            if (Unit.Center != null && Unit.Center.CenterEffect != null && Unit.Center.CenterEffect is CenterEffect.SkillTriggerProbabilityUp)
-            {
-                skillRateUp = Unit.Center.CenterEffect as CenterEffect.SkillTriggerProbabilityUp;
-            }
-
-            double comboRate = 1;
-            
-            List<TriggeredSkill> scoreUp = new List<TriggeredSkill>(),
-                comboBonus = new List<TriggeredSkill>(), overload = new List<TriggeredSkill>(),
-                damgeGuard=new List<TriggeredSkill>(), revival=new List<TriggeredSkill>();
-
-            while (notes <= SongData.Notes)
-            {
-                frame++;
-                totalFrame++;
-
-                CheckSkillDueTime(totalFrame, scoreUp, comboBonus, overload, damgeGuard, revival);
-
-                if (totalFrame < SongData.Duration * TimeScale)
-                {
-
-                    foreach (var slot in Unit.Slots)
-                    {
-                        if (slot != null && slot.Skill != null)
-                        {
-                            var sb = slot.Skill as Skill;
-                            if (totalFrame % (sb.Interval * TimeScale) == 0)
-                            {
-                                var propability= sb.EstimateProbability(slot.SkillLevel) * //素の確率
-                                                   (1 + (Song.Type.HasFlag(slot.Category) ? 0.3 : 0) +  //属性一致ボーナス
-                                                        (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0)); //センター効果
-
-                                if (SkillControl != SkillTriggerControl.NeverTrigger &&
-                                    (SkillControl == SkillTriggerControl.AlwaysTrigger || rng.NextDouble() < propability))
-                                {
-                                    var skill = new TriggeredSkill
-                                    {
-                                        Who = slot,
-                                        Since = totalFrame,
-                                        Until = totalFrame + sb.EstimateDuration(slot.SkillLevel) * TimeScale,
-                                        ExpectedPropability = propability
-                                    };
-
-                                    switch (sb.GetType().Name)
-                                    {
-                                        case nameof(Skill.DamageGuard):
-                                            damgeGuard.Add(skill);
-                                            break;
-                                        case nameof(Skill.Revival):
-                                            revival.Add(skill);
-                                            break;
-                                        case nameof(Skill.ScoreBonus):
-                                            scoreUp.Add(skill);
-                                            break;
-                                        case nameof(Skill.ComboBonus):
-                                            comboBonus.Add(skill);
-                                            break;
-                                        case nameof(Skill.Overload):
-                                            var o = sb as Skill.Overload;
-                                            if (totalLife - o.ConsumingLife > 0)
-                                            {
-                                                if (!damgeGuard.Any())
-                                                {
-                                                    totalLife -= o.ConsumingLife;
-                                                }
-                                                overload.Add(skill);
-                                            }
-                                            else
-                                            {
-                                                continue;
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                    }
-
-                                    result.TriggeredSkills.Add(skill);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (notes <= SongData.Notes && (frame * notesPerFrame >= 1 || totalFrame > SongData.Duration * TimeScale))
-                {
-                    comboRate = CalculateComboRate(notes, SongData.Notes);
-
-                    totalLife += revival.Select(x => x.Who.Skill).Cast<Skill.Revival>().Select(x => x.Amount).DefaultIfEmpty(0).Max();
-                    if (totalLife > maxLife) totalLife = maxLife;
-
-                    var scoreUpRate = 1 + scoreUp.Select(x => x.Rate).Concat(overload.Select(x => x.Rate)).DefaultIfEmpty(0).Max();
-                    var comboUpRate = 1 + comboBonus.Select(x => x.Rate).DefaultIfEmpty(0).Max();
-                    totalScore += (int)Math.Round(scorePerNote * comboRate * scoreUpRate * comboUpRate);
-
-                    frame = 0;
-                    notes++;
-                }
-            }
-            result.Score = totalScore;
-            result.TriggeredSkills.ForEach(x =>
-            {
-                x.Since = Math.Round(x.Since / TimeScale, 1);
-                x.Until = Math.Round(x.Until / TimeScale, 1);
-            });
-            result.Duration = SongData.Duration;
-            result.RemainingLife = totalLife;
-            result.ScorePerNote = (int)Math.Round((double)totalScore / SongData.Notes);
-            ResultsUpToDate = true;
-            return result;
-        }
-
         public SimulationResult StartSimulation(Random rng, int id, Queue<Note> pattern=null)
         {
-            if(pattern==null)
-            {
-                return StartSimulation(rng, id);
-            }
-
             var result = new SimulationResult(id);
             if (SongData == null)
                 return result;
@@ -446,20 +315,27 @@ namespace Cindeck.Core
                 comboBonus = new List<TriggeredSkill>(), overload = new List<TriggeredSkill>(),
                 damgeGuard = new List<TriggeredSkill>(), revival = new List<TriggeredSkill>();
 
-            var currentTime = .0;
-            int frame = 0, notes=0;
-            while (currentTime<SongData.Duration)
+            if (pattern == null)
             {
-                frame = (int)Math.Round(currentTime * TimeScale);
-                CheckSkillDueTime(frame, scoreUp, comboBonus, overload, damgeGuard, revival);
-                if (currentTime < SongData.Duration)
+                var interval = (double)SongData.Duration / SongData.Notes;
+                pattern = new Queue<Note>(Enumerable.Range(1, SongData.Notes).Select(x => new Note { Id = x, Time = x * interval }));
+            }
+
+            double currentTime = .01;
+            int notes=0;
+            bool sync = false;
+            while (currentTime <= SongData.Duration)
+            {
+                CheckSkillDueTime(currentTime, scoreUp, comboBonus, overload, damgeGuard, revival);
+                if (currentTime < SongData.Duration && !sync)
                 {
+                    var f = (int)Math.Round(currentTime * TimeScale);
                     foreach (var slot in Unit.Slots)
                     {
                         if (slot != null && slot.Skill != null)
                         {
                             var sb = slot.Skill as Skill;
-                            if (frame % (sb.Interval * TimeScale) == 0)
+                            if (f % (sb.Interval*TimeScale) == 0)
                             {
                                 var propability = sb.EstimateProbability(slot.SkillLevel) * //素の確率
                                                    (1 + (Song.Type.HasFlag(slot.Category) ? 0.3 : 0) +  //属性一致ボーナス
@@ -471,8 +347,8 @@ namespace Cindeck.Core
                                     var skill = new TriggeredSkill
                                     {
                                         Who = slot,
-                                        Since = frame,
-                                        Until = frame + sb.EstimateDuration(slot.SkillLevel) * TimeScale,
+                                        Since = currentTime,
+                                        Until = currentTime + sb.EstimateDuration(slot.SkillLevel),
                                         ExpectedPropability = propability
                                     };
 
@@ -516,7 +392,7 @@ namespace Cindeck.Core
                     }
                 }
 
-                if (pattern.Count>0 && pattern.Peek().Time <= currentTime)
+                if (pattern.Count > 0 && pattern.Peek().Time <= currentTime)
                 {
                     comboRate = CalculateComboRate(notes, SongData.Notes);
 
@@ -530,21 +406,18 @@ namespace Cindeck.Core
                     notes++;
                     var note = pattern.Dequeue();
 
-                    if (pattern.Count>0 && note.Time == pattern.Peek().Time)
+                    if (pattern.Count > 0 && note.Time == pattern.Peek().Time)
                     {
+                        sync = true;
                         continue;
                     }
+                    sync = false;
                 }
 
                 currentTime += 0.01;
             }
 
             result.Score = totalScore;
-            result.TriggeredSkills.ForEach(x =>
-            {
-                x.Since = Math.Round(x.Since / TimeScale, 1);
-                x.Until = Math.Round(x.Until / TimeScale, 1);
-            });
             result.Duration = SongData.Duration;
             result.RemainingLife = totalLife;
             result.ScorePerNote = (int)Math.Round((double)totalScore / SongData.Notes);

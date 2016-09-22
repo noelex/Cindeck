@@ -245,7 +245,7 @@ namespace Cindeck.ViewModels
             var duration = results.First().Duration;
             var slotList = Simulator.Unit.Slots.ToList();
             OverallTriggerRatio = slotList.Where(x=>x!=null).ToDictionary(s => $"スロット{slotList.FindIndex(x=>x==s)+1}", 
-                s=> Tuple.Create(results.SelectMany(x => x.TriggeredSkills).Where(x => x.Who == s).Count()/(100 * Math.Floor((duration - 1.0) / s.Skill.Interval)),
+                s=> Tuple.Create(results.SelectMany(x => x.TriggeredSkills).Where(x => x.Who == s).Count()/(results.Count * Math.Floor((duration - 1.0) / s.Skill.Interval)),
                                  results.SelectMany(x=>x.TriggeredSkills).Where(x=>x.Who==s).Select(x=>x.ExpectedPropability).DefaultIfEmpty(0).First()));
 
             SimulationResults = results.OrderBy(x => x.Id).ToList();

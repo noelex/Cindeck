@@ -81,5 +81,10 @@ namespace Cindeck.Core
         {
             get; private set;
         }
+
+        public override string ToString()
+        {
+            return Title;
+        }
     }
 }

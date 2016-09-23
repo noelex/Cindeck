@@ -121,8 +121,6 @@ namespace Cindeck.Core
         public Simulator(AppConfig config)
         {
             m_config = config;
-            GuestPotential = new Potential { Category = IdolCategory.All };
-            GuestPotential.PropertyChanged += (s, e) => Reload();
             GrooveType = IdolCategory.Cute;
         }
 
@@ -631,6 +629,11 @@ namespace Cindeck.Core
                 propertyName == nameof(Song) || propertyName == nameof(SongData) || propertyName == nameof(EnableRoomEffect))
             {
                 Reload();
+            }
+
+            if (propertyName == nameof(GuestPotential) && after != null)
+            {
+                GuestPotential.PropertyChanged += (s, e) => Reload();
             }
 
             if (PropertyChanged != null)

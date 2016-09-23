@@ -111,6 +111,7 @@ namespace Cindeck
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) return null;
             var type = ((IdolCategory)value);
             switch(type)
             {
@@ -120,6 +121,11 @@ namespace Cindeck
                     return new SolidColorBrush(Colors.LightBlue);
                 case (IdolCategory.Passion):
                     return new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xC4, 0x69));
+                case IdolCategory.All:
+                    return new LinearGradientBrush(new GradientStopCollection {
+                        new GradientStop {  Color=Colors.Pink, Offset=0.0 } ,
+                       new GradientStop {  Color=Colors.LightBlue, Offset=0.5 },
+                       new GradientStop {  Color=Color.FromArgb(0xFF, 0xFF, 0xC4, 0x69), Offset=1.0 } }, new Point(0, 0), new Point(1, 1));
                 default:
                     throw new Exception("Invalid idol type.");
             }
@@ -210,5 +216,4 @@ namespace Cindeck
             throw new NotImplementedException();
         }
     }
-
 }

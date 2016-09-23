@@ -231,7 +231,8 @@ namespace Cindeck.Core
                     EnableGuest=true,
                     EnableRoomEffect=true,
                     EnableSupportMembers=true,
-                };
+                    GuestPotential = new Potential { Category = IdolCategory.All }
+            };
             }
 
             return m_current = config;

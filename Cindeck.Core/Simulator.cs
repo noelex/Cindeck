@@ -171,13 +171,41 @@ namespace Cindeck.Core
             private set;
         }
 
-        public int SupportMemberAppeal
+        public int SupportMemberAppeal => SupportMemberVocalAppeal + SupportMemberDanceAppeal + SupportMemberVisualAppeal;
+
+        public int SupportMemberVocalAppeal
         {
             get;
             private set;
         }
 
-        public int TotalAppeal
+        public int SupportMemberDanceAppeal
+        {
+            get;
+            private set;
+        }
+
+        public int SupportMemberVisualAppeal
+        {
+            get;
+            private set;
+        }
+
+        public int TotalAppeal => VocalAppeal + DanceAppeal + VisualAppeal;
+
+        public int VocalAppeal
+        {
+            get;
+            private set;
+        }
+
+        public int DanceAppeal
+        {
+            get;
+            private set;
+        }
+
+        public int VisualAppeal
         {
             get;
             private set;
@@ -573,10 +601,19 @@ namespace Cindeck.Core
         public void Reload()
         {
             var guest = CreateGuestWithPotential(Guest);
+
             SupportMembers = SelectSupportMembers();
-            SupportMemberAppeal = SupportMembers.Sum(x => CalculateAppeal(x, true, IsEncore));
-            
-            TotalAppeal = SupportMemberAppeal + Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(x, false, IsEncore))) + CalculateAppeal(guest, false, IsEncore);
+            SupportMemberVocalAppeal = SupportMembers.Sum(x => CalculateAppeal(AppealType.Vocal, x, true, IsEncore));
+            SupportMemberDanceAppeal = SupportMembers.Sum(x => CalculateAppeal(AppealType.Dance, x, true, IsEncore));
+            SupportMemberVisualAppeal = SupportMembers.Sum(x => CalculateAppeal(AppealType.Visual, x, true, IsEncore));
+
+            VocalAppeal = SupportMemberVocalAppeal + CalculateAppeal(AppealType.Vocal, guest, false, IsEncore) +
+                Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(AppealType.Vocal, x, false, IsEncore)));
+            DanceAppeal = SupportMemberDanceAppeal + CalculateAppeal(AppealType.Dance, guest, false, IsEncore) +
+                Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(AppealType.Dance, x, false, IsEncore)));
+            VisualAppeal = SupportMemberVisualAppeal + CalculateAppeal(AppealType.Visual, guest, false, IsEncore) +
+                Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(AppealType.Visual, x, false, IsEncore)));
+
             Life = CalculateLife(Unit, guest);
             ResultsUpToDate = false;
         }

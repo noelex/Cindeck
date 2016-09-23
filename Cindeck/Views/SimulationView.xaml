@@ -110,12 +110,8 @@
                             <Label Content="{Binding Simulator.SupportMemberAppeal}"/>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="合計アピール"  FontWeight="Bold" />
-                        <Label Content="{Binding Simulator.TotalAppeal}"/>
-                        <Label Content="ライフ"  FontWeight="Bold" />
-                        <Label Content="{Binding Simulator.Life}"/>
-                    </StackPanel>
+                    <c:UnitStatus Margin="0,5,0,0" Life="{Binding Simulator.Life}" Vocal="{Binding Simulator.VocalAppeal}" 
+                                           Dance="{Binding Simulator.DanceAppeal}" Visual="{Binding Simulator.VisualAppeal}" TotalAppeal="{Binding Simulator.TotalAppeal}"/>
                     <StackPanel  Margin="0,5,0,5" Orientation="Horizontal">
                         <Label Content="特技発動率"  Grid.Row="4" Grid.Column="0"/>
                         <ComboBox ItemsSource="{Binding SkillControls}" SelectedValue="{Binding Simulator.SkillControl}" DisplayMemberPath="Item2" SelectedValuePath="Item1" MinWidth="100" HorizontalAlignment="Left"/>

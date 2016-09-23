@@ -92,6 +92,7 @@ namespace Cindeck.ViewModels
             ImplementedIdol.Dispose();
             Units.Dispose();
             Potential.Dispose();
+            Simulation.Dispose();
             m_config.Save();
         }
 

@@ -121,7 +121,7 @@ namespace Cindeck.Core
         public Simulator(AppConfig config)
         {
             m_config = config;
-            GuestPotential = new Potential();
+            GuestPotential = new Potential { Category = IdolCategory.All };
             GuestPotential.PropertyChanged += (s, e) => Reload();
             GrooveType = IdolCategory.Cute;
         }
@@ -622,7 +622,7 @@ namespace Cindeck.Core
         {
             if (propertyName == nameof(Song))
             {
-                SongData = SongDataList.FirstOrDefault();
+                SongData = SongDataList.Where(x=>x.Difficulty!=SongDifficulty.MasterPlus).OrderByDescending(x=>x.Difficulty).FirstOrDefault();
             }
 
             if (propertyName == nameof(EnableSupportMembers) || propertyName == nameof(GrooveBurst) ||

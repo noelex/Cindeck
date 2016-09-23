@@ -78,6 +78,7 @@
     <Compile Include="Rarity.cs" />
     <Compile Include="ReleaseInfo.cs" />
     <Compile Include="Simulator.cs" />
+    <Compile Include="SimulatorConfig.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="SkillDuration.cs" />
     <Compile Include="SkillTriggerPossibility.cs" />

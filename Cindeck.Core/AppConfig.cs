@@ -142,6 +142,13 @@ namespace Cindeck.Core
             set;
         }
 
+        [DataMember(Order = 14)]
+        public SimulatorConfig SimulatorConfig
+        {
+            get;
+            set;
+        }
+
         public int GetNextLid()
         {
             return NextOid++;
@@ -214,6 +221,16 @@ namespace Cindeck.Core
                 config.PotentialSortOptions = new List<SortOption>()
                 {
                      new SortOption { Column=nameof(IIdol.Name), Direction=ListSortDirection.Ascending }
+                };
+            }
+
+            if(config.SimulatorConfig==null)
+            {
+                config.SimulatorConfig = new Core.SimulatorConfig
+                {
+                    EnableGuest=true,
+                    EnableRoomEffect=true,
+                    EnableSupportMembers=true,
                 };
             }
 

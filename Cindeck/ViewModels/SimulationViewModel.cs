@@ -22,7 +22,7 @@ namespace Cindeck.ViewModels
         {
             m_config = config;
 
-            if(config.Songs==null)
+            if (config.Songs == null)
             {
                 config.Songs = new List<Song>();
             }
@@ -56,8 +56,44 @@ namespace Cindeck.ViewModels
 
             StartSimulationCommand = new AwaitableDelegateCommand(StartSimulation);
 
-            Simulator.Song = Songs.FirstOrDefault();
-            Simulator.Unit = Units.FirstOrDefault();
+            EnableGuest = config.SimulatorConfig.EnableGuest;
+            Simulator.EnableRoomEffect = config.SimulatorConfig.EnableRoomEffect;
+            Simulator.EnableSupportMembers = config.SimulatorConfig.EnableSupportMembers;
+            Simulator.SkillControl = config.SimulatorConfig.SkillControl;
+
+            var song = Songs.FirstOrDefault(x => x.Title == config.SimulatorConfig.SongTitle);
+            if (song != null)
+            {
+                Simulator.Song = song;
+                var data = Simulator.SongDataList.FirstOrDefault(x => x.Difficulty == config.SimulatorConfig.SongDifficulty);
+                if (data != null)
+                {
+                    Simulator.SongData = data;
+                }
+            }
+            else
+            {
+                Simulator.Song = Songs.FirstOrDefault();
+            }
+
+            var unit = Units.FirstOrDefault(x => x.Name == config.SimulatorConfig.UnitName);
+            if (unit != null)
+            {
+                Simulator.Unit = unit;
+            }
+            else
+            {
+                Simulator.Unit = Units.FirstOrDefault();
+            }
+
+            Simulator.GrooveBurst = config.SimulatorConfig.GrooveBurst;
+            if(Simulator.GrooveBurst!=null)
+            {
+                Simulator.GrooveType = config.SimulatorConfig.GrooveType;
+            }
+
+            GuestIid = config.SimulatorConfig.GuestIid;
+            Simulator.GuestPotential = config.SimulatorConfig.GuestPotential;
 
             UtilizeActualPattern = true;
         }
@@ -273,7 +309,33 @@ namespace Cindeck.ViewModels
 
         public void Dispose()
         {
-            
+            m_config.SimulatorConfig.EnableGuest = EnableGuest;
+            m_config.SimulatorConfig.EnableRoomEffect = Simulator.EnableRoomEffect;
+            m_config.SimulatorConfig.EnableSupportMembers = Simulator.EnableSupportMembers;
+            m_config.SimulatorConfig.GuestIid = GuestIid;
+            m_config.SimulatorConfig.GuestPotential = Simulator.GuestPotential;
+            m_config.SimulatorConfig.SkillControl = Simulator.SkillControl;
+            m_config.SimulatorConfig.GrooveBurst = Simulator.GrooveBurst;
+            m_config.SimulatorConfig.GrooveType = Simulator.GrooveType;
+
+            if (Simulator.Song!=null)
+            {
+                m_config.SimulatorConfig.SongTitle = Simulator.Song.Title;
+                m_config.SimulatorConfig.SongDifficulty = Simulator.SongData.Difficulty;
+            }
+            else
+            {
+                m_config.SimulatorConfig.SongTitle = null;
+            }
+
+            if (Simulator.Unit != null)
+            {
+                m_config.SimulatorConfig.UnitName = Simulator.Unit.Name;
+            }
+            else
+            {
+                m_config.SimulatorConfig.UnitName = null;
+            }
         }
 
         public void OnActivate()

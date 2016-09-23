@@ -3,24 +3,31 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Cindeck.Core
 {
-    [ImplementPropertyChanged]
+    [ImplementPropertyChanged, DataContract]
     public class Potential:IIdol, INotifyPropertyChanged
     {
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public IdolCategory Category { get; set; }
 
+        [DataMember]
         public int Vocal { get; set; }
 
+        [DataMember]
         public int Dance { get; set; }
 
+        [DataMember]
         public int Visual { get; set; }
 
+        [DataMember]
         public int Life { get; set; }
 
         public ICenterEffect CenterEffect

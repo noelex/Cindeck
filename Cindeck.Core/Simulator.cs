@@ -254,26 +254,13 @@ namespace Cindeck.Core
 
         private List<OwnedIdol> SelectSupportMembers()
         {
-            var lst = new List<OwnedIdol>();
-
             if (Song == null || !EnableSupportMembers || Unit == null)
             {
-                return lst;
+                return new List<OwnedIdol>();
             }
 
-            foreach (var item in m_config.OwnedIdols.OrderByDescending(x => CalculateAppeal(x, true)))
-            {
-                if (lst.Count >= 10)
-                {
-                    break;
-                }
-                if (!Unit.OccupiedByUnit(item))
-                {
-                    lst.Add(item);
-                }
-            }
-
-            return lst;
+            return m_config.OwnedIdols.Where(x => !Unit.OccupiedByUnit(x))
+                .OrderByDescending(x => CalculateAppeal(x, true)).Take(10).ToList();
         }
 
         private void CheckSkillDueTime(double frame, params List<TriggeredSkill>[] skillLists)
@@ -314,7 +301,7 @@ namespace Cindeck.Core
                 {
                     rate += guestCenterEffect.Rate;
                 }
-                life += (int)Math.Ceiling(idol.Life * rate);
+                life += (int)Math.Ceiling(Math.Round(idol.Life * rate, 3));
             }
             return life;
         }
@@ -570,17 +557,7 @@ namespace Cindeck.Core
                 rate += 0.3;
             }
 
-            switch (targetAppeal)
-            {
-                case AppealType.Vocal:
-                    return (int)Math.Ceiling(idol.Vocal * rate * (isSupportMember ? 0.5 : 1));
-                case AppealType.Dance:
-                    return (int)Math.Ceiling(idol.Dance * rate * (isSupportMember ? 0.5 : 1));
-                case AppealType.Visual:
-                    return (int)Math.Ceiling(idol.Visual * rate * (isSupportMember ? 0.5 : 1));
-                default:
-                    throw new Exception();
-            }
+            return (int)Math.Ceiling(Math.Round((int)idol.GetType().GetProperty(targetAppeal.ToString()).GetValue(idol) * rate * (isSupportMember ? 0.5 : 1), 3));
         }
 
         private int CalculateAppeal(IIdol idol, bool isSupportMember = false, bool encore = false)

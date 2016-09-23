@@ -336,7 +336,11 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"  Margin="0,5,0,0">
                         <CheckBox IsChecked="{Binding UtilizeActualPattern, Mode=TwoWay}">
-                            <TextBlock><Run Text="実際の譜面データを使う(要インターネット接続)・提供元："/><Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://deresute.info/" ToolTip="https://deresute.info/"><Run Text="Starlight Stage :: Patterns &amp; Information"/></Hyperlink></TextBlock>
+                            <TextBlock>
+                                <Run Text="実際の譜面データを使う(提供元："/>
+                                <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://deresute.info/" ToolTip="https://deresute.info/"><Run Text="Starlight Stage :: Patterns &amp; Information"/></Hyperlink>
+                                <Run Text=")"/>
+                            </TextBlock>
 
                         </CheckBox>
                     </StackPanel>

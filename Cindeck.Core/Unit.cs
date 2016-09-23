@@ -109,7 +109,7 @@ namespace Cindeck.Core
             var effect = Center?.CenterEffect as CenterEffect.LifeUp;
             if (effect?.Targets.HasFlag(idol.Category) == true)
             {
-                return (int)Math.Ceiling(idol.Life + idol.Life * effect.Rate);
+                return (int)Math.Ceiling(Math.Round(idol.Life + idol.Life * effect.Rate, 3));
             }
             return idol.Life;
         }
@@ -145,7 +145,7 @@ namespace Cindeck.Core
                     var e = effect as CenterEffect.AppealUp;
                     if (e.Targets.HasFlag(idol.Category) == true && e.TargetAppeal.HasFlag(type) == true)
                     {
-                        return (int)Math.Ceiling(rawValue + rawValue * e.Rate);
+                        return (int)Math.Ceiling(Math.Round(rawValue + rawValue * e.Rate, 3));
                     }
                 }
                 else if(effect is CenterEffect.ConditionalAppealUp)
@@ -165,7 +165,7 @@ namespace Cindeck.Core
 
                     if (conditionFulfilled && e.Targets.HasFlag(idol.Category) == true && e.TargetAppeal.HasFlag(type) == true)
                     {
-                        return (int)Math.Ceiling(rawValue + rawValue * e.Rate);
+                        return (int)Math.Ceiling(Math.Round(rawValue + rawValue * e.Rate, 3));
                     }
                 }
             }

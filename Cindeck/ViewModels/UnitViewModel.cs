@@ -17,12 +17,14 @@ namespace Cindeck.ViewModels
     class UnitViewModel:IViewModel, INotifyPropertyChanged
     {
         private AppConfig m_config;
+        private MainViewModel m_mvm;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public UnitViewModel(AppConfig config)
+        public UnitViewModel(AppConfig config, MainViewModel mvm)
         {
             m_config = config;
+            m_mvm = mvm;
 
             SendToSlotCommand = new DelegateCommand<string>(SendToSlot, x => SelectedIdol != null);
             SaveCommand = new DelegateCommand(Save, () => !string.IsNullOrEmpty(UnitName));
@@ -31,6 +33,9 @@ namespace Cindeck.ViewModels
             ResetSlotCommand = new DelegateCommand<string>(ResetSlot, CanResetSlot);
             HighlightCommand = new DelegateCommand<string>(Highlight, CanHighlight);
             CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdol != null);
+            SetGuestCenterCommand = new DelegateCommand(SetGuestCenter, () => SelectedIdol != null);
+            CopyIidFromSlotCommand = new DelegateCommand<string>(CopyIidFromSlot);
+            SetGuestCenterFromSlotCommand = new DelegateCommand<string>(SetGuestCenterFromSlot);
 
             Idols = new ListCollectionView(m_config.OwnedIdols);
             Filter = new IdolFilter(config, Idols, false);
@@ -209,6 +214,45 @@ namespace Cindeck.ViewModels
             {
 
             }
+        }
+
+        public DelegateCommand SetGuestCenterCommand
+        {
+            get;
+            private set;
+        }
+
+        private void SetGuestCenter()
+        {
+            m_mvm.Simulation.GuestIid = SelectedIdol.Iid;
+        }
+
+        public DelegateCommand<string> CopyIidFromSlotCommand
+        {
+            get;
+        }
+
+        private void CopyIidFromSlot(string slot)
+        {
+            try
+            {
+                Clipboard.SetText(((IIdol)TemporalUnit.GetType().GetProperty(slot).GetValue(TemporalUnit)).Iid.ToString("x8"));
+            }
+            catch
+            {
+
+            }
+        }
+
+        public DelegateCommand<string> SetGuestCenterFromSlotCommand
+        {
+            get;
+            private set;
+        }
+
+        private void SetGuestCenterFromSlot(string slot)
+        {
+            m_mvm.Simulation.GuestIid = ((IIdol)TemporalUnit.GetType().GetProperty(slot).GetValue(TemporalUnit)).Iid;
         }
 
         public void OnPropertyChanged(string propertyName, object before, object after)

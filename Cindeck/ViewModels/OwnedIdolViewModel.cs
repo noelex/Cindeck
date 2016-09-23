@@ -17,14 +17,14 @@ namespace Cindeck.ViewModels
     class OwnedIdolViewModel:IViewModel,INotifyPropertyChanged
     {
         private AppConfig m_config;
-        private UnitViewModel m_uvm;
+        private MainViewModel m_mvm;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public OwnedIdolViewModel(AppConfig config, UnitViewModel uvm)
+        public OwnedIdolViewModel(AppConfig config, MainViewModel mvm)
         {
             m_config = config;
-            m_uvm = uvm;
+            m_mvm = mvm;
             Idols = new ListCollectionView(config.OwnedIdols);
             Filter = new IdolFilter(config, Idols, enableOwnedFilter: false);
             Filter.SetConfig(config.OwnedIdolFilterConfig);
@@ -36,6 +36,7 @@ namespace Cindeck.ViewModels
 
             DeleteCommand = new DelegateCommand(Delete, () => SelectedIdols.Count > 0);
             CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdols != null && SelectedIdols.Count == 1);
+            SetGuestCenterCommand = new DelegateCommand(SetGuestCenter, () => SelectedIdols != null && SelectedIdols.Count == 1);
         }
 
         public ICollectionView Idols
@@ -61,7 +62,7 @@ namespace Cindeck.ViewModels
 
         private void Delete()
         {
-            if(SelectedIdols.Cast<OwnedIdol>().Any(x=>m_uvm.IsIdolInUse(x)))
+            if(SelectedIdols.Cast<OwnedIdol>().Any(x=>m_mvm.Units.IsIdolInUse(x)))
             {
                 var result = MessageBox.Show("既にユニットに編成されているアイドルを削除しようとしています。アイドルをユニットから外して削除しますか？", "確認", MessageBoxButton.YesNo);
                if (MessageBoxResult.No== result)
@@ -93,6 +94,17 @@ namespace Cindeck.ViewModels
             }
         }
 
+        public DelegateCommand SetGuestCenterCommand
+        {
+            get;
+            private set;
+        }
+
+        private void SetGuestCenter()
+        {
+            m_mvm.Simulation.GuestIid = SelectedIdols.Cast<IIdol>().First().Iid;
+        }
+
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
             if (propertyName == nameof(SelectedIdols))
@@ -110,7 +122,7 @@ namespace Cindeck.ViewModels
         public void DeleteOwnedIdol(OwnedIdol idol)
         {
             m_config.OwnedIdols.Remove(idol);
-            m_uvm.RemoveIdolFromUnits(idol);
+            m_mvm.Units.RemoveIdolFromUnits(idol);
         }
 
         public void Dispose()

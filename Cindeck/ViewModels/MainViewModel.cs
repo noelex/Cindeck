@@ -31,9 +31,9 @@ namespace Cindeck.ViewModels
                 Application.Current.Shutdown();
             }
 
-            Units = new UnitViewModel(m_config);
-            OwnedIdol = new OwnedIdolViewModel(m_config,Units);
-            ImplementedIdol = new ImplementedIdolViewModel(m_config, OwnedIdol);
+            Units = new UnitViewModel(m_config, this);
+            OwnedIdol = new OwnedIdolViewModel(m_config, this);
+            ImplementedIdol = new ImplementedIdolViewModel(m_config, this);
             Simulation = new SimulationViewModel(m_config);
             Potential = new PotentialViewModel(m_config);
         }

@@ -327,6 +327,8 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="3" Visibility="{Binding Simulator.SongData, Converter={StaticResource NullToCollapsedConverter}}">
+                        <Label Content="タイプ" FontWeight="Bold"/>
+                        <Label Content="{Binding Simulator.Song.Type, Converter={StaticResource IdolCategoryToSongTypeConverter}}"/>
                         <Label Content="Lv"  FontWeight="Bold"/>
                         <Label Content="{Binding Simulator.SongData.Level}"/>
                         <Label Content="ノーツ数" FontWeight="Bold"/>
@@ -387,8 +389,14 @@
                             </ItemsControl.Template>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Tag="{Binding ., Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5" Background="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}">
-                                        <Label HorizontalAlignment="Left" Content="{Binding ., Converter={StaticResource UnitSlotConverter}, Mode=OneWay}" />
+                                    <Button Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:SimulationView}}}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5" Background="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}">
+                                        <Button.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="IIDをコピー" Command="{Binding PlacementTarget.Tag.CopyIidCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" CommandParameter="{Binding Iid}"  />
+                                                <MenuItem Header="ゲストセンター" Command="{Binding PlacementTarget.Tag.SetGuestCenterCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" CommandParameter="{Binding Iid}"/>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                        <Label HorizontalAlignment="Left" Content="{Binding ., Converter={StaticResource UnitSlotConverter}, Mode=OneWay}"/>
                                     </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

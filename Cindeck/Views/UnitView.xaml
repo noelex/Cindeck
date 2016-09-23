@@ -40,6 +40,9 @@
                                     <MenuItem Header="スロット5" Command="{Binding MoveToSlotCommand}" CommandParameter="Slot1,Slot5"  />
                                 </MenuItem>
                                 <MenuItem Command="{Binding ResetSlotCommand}" CommandParameter="Slot1" Header="リセット"></MenuItem>
+                                <Separator/>
+                                <MenuItem Header="IIDをコピー" Command="{Binding CopyIidFromSlotCommand}" CommandParameter="Slot1" />
+                                <MenuItem Header="ゲストセンター" Command="{Binding SetGuestCenterFromSlotCommand}"  CommandParameter="Slot1"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -53,6 +56,9 @@
                                     <MenuItem Header="スロット5" Command="{Binding MoveToSlotCommand}" CommandParameter="Slot2,Slot5"  />
                                 </MenuItem>
                                 <MenuItem Command="{Binding ResetSlotCommand}" CommandParameter="Slot2" Header="リセット"></MenuItem>
+                                <Separator/>
+                                <MenuItem Header="IIDをコピー" Command="{Binding CopyIidFromSlotCommand}" CommandParameter="Slot2" />
+                                <MenuItem Header="ゲストセンター" Command="{Binding SetGuestCenterFromSlotCommand}"  CommandParameter="Slot2"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -66,6 +72,9 @@
                                     <MenuItem Header="スロット5" Command="{Binding MoveToSlotCommand}" CommandParameter="Slot3,Slot5"  />
                                 </MenuItem>
                                 <MenuItem Command="{Binding ResetSlotCommand}" CommandParameter="Slot3" Header="リセット"></MenuItem>
+                                <Separator/>
+                                <MenuItem Header="IIDをコピー" Command="{Binding CopyIidFromSlotCommand}" CommandParameter="Slot3" />
+                                <MenuItem Header="ゲストセンター" Command="{Binding SetGuestCenterFromSlotCommand}"  CommandParameter="Slot3"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -79,6 +88,9 @@
                                     <MenuItem Header="スロット5" Command="{Binding MoveToSlotCommand}" CommandParameter="Slot4,Slot5"  />
                                 </MenuItem>
                                 <MenuItem Command="{Binding ResetSlotCommand}" CommandParameter="Slot4" Header="リセット"></MenuItem>
+                                <Separator/>
+                                <MenuItem Header="IIDをコピー" Command="{Binding CopyIidFromSlotCommand}" CommandParameter="Slot4" />
+                                <MenuItem Header="ゲストセンター" Command="{Binding SetGuestCenterFromSlotCommand}"  CommandParameter="Slot4"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -92,6 +104,9 @@
                                     <MenuItem Header="スロット4" Command="{Binding MoveToSlotCommand}" CommandParameter="Slot5,Slot4"  />
                                 </MenuItem>
                                 <MenuItem Command="{Binding ResetSlotCommand}" CommandParameter="Slot5" Header="リセット"></MenuItem>
+                                <Separator/>
+                                <MenuItem Header="IIDをコピー" Command="{Binding CopyIidFromSlotCommand}" CommandParameter="Slot5" />
+                                <MenuItem Header="ゲストセンター" Command="{Binding SetGuestCenterFromSlotCommand}"  CommandParameter="Slot5"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -127,6 +142,7 @@
                                 <MenuItem Header="スロット5" Command="{Binding SendToSlotCommand}" CommandParameter="Slot5"  />
                                 <Separator/>
                                 <MenuItem Header="IIDをコピー" Command="{Binding CopyIidCommand}"  />
+                                <MenuItem Header="ゲストセンター" Command="{Binding SetGuestCenterCommand}"  />
                             </ContextMenu>
                         </c:SelectedItemBindableDataGrid.ContextMenu>
                         <c:SelectedItemBindableDataGrid.Columns>

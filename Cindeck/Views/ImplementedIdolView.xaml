@@ -30,6 +30,7 @@
                     <MenuItem Header="所属に追加" Command="{Binding AddToOwnedCommand}"  />
                     <Separator/>
                     <MenuItem Header="IIDをコピー" Command="{Binding CopyIidCommand}"  />
+                    <MenuItem Header="ゲストセンター" Command="{Binding SetGuestCenterCommand}"  />
                 </ContextMenu>
             </c:SelectedItemBindableDataGrid.ContextMenu>
             <c:SelectedItemBindableDataGrid.Columns>

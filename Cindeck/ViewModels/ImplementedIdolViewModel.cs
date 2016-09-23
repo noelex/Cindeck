@@ -17,14 +17,14 @@ namespace Cindeck.ViewModels
     class ImplementedIdolViewModel:IViewModel, INotifyPropertyChanged
     {
         private AppConfig m_config;
-        private OwnedIdolViewModel m_ovm;
+        private MainViewModel m_mvm;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ImplementedIdolViewModel(AppConfig config, OwnedIdolViewModel ovm)
+        public ImplementedIdolViewModel(AppConfig config, MainViewModel mvm)
         {
             m_config = config;
-            m_ovm = ovm;
+            m_mvm = mvm;
 
             Idols = new ListCollectionView(m_config.ImplementedIdols);
             Filter = new IdolFilter(config, Idols, true);
@@ -38,6 +38,7 @@ namespace Cindeck.ViewModels
             ReloadDataCommand = new AwaitableDelegateCommand(ReloadData);
             AddToOwnedCommand = new DelegateCommand(AddToOwned, () => SelectedIdols!=null && SelectedIdols.Count > 0);
             CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdols != null && SelectedIdols.Count ==1);
+            SetGuestCenterCommand = new DelegateCommand(SetGuestCenter, () => SelectedIdols != null && SelectedIdols.Count == 1);
         }
 
         public ICollectionView Idols
@@ -93,7 +94,7 @@ namespace Cindeck.ViewModels
                 }
                 foreach(var item in idolsNotFound)
                 {
-                    m_ovm.DeleteOwnedIdol(item);
+                    m_mvm.OwnedIdol.DeleteOwnedIdol(item);
                 }
                 foreach (var item in m_config.OwnedIdols)
                 {
@@ -144,6 +145,17 @@ namespace Cindeck.ViewModels
             {
 
             }
+        }
+
+        public DelegateCommand SetGuestCenterCommand
+        {
+            get;
+            private set;
+        }
+
+        private void SetGuestCenter()
+        {
+            m_mvm.Simulation.GuestIid = SelectedIdols.Cast<IIdol>().First().Iid;
         }
 
         public void OnPropertyChanged(string propertyName, object before, object after)

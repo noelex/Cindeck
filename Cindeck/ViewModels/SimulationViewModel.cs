@@ -96,6 +96,9 @@ namespace Cindeck.ViewModels
             Simulator.GuestPotential = config.SimulatorConfig.GuestPotential;
 
             UtilizeActualPattern = true;
+
+            CopyIidCommand = new DelegateCommand<int?>(CopyIid);
+            SetGuestCenterCommand = new DelegateCommand<int?>(SetGuestCenter);
         }
 
         public List<Tuple<AppealType?, string>> GrooveBursts
@@ -212,6 +215,35 @@ namespace Cindeck.ViewModels
         {
             get;
             set;
+        }
+
+        public DelegateCommand<int?> CopyIidCommand
+        {
+            get;
+            private set;
+        }
+
+        private void CopyIid(int? iid)
+        {
+            try
+            {
+                Clipboard.SetText(iid.Value.ToString("x8"));
+            }
+            catch
+            {
+
+            }
+        }
+
+        public DelegateCommand<int?> SetGuestCenterCommand
+        {
+            get;
+            private set;
+        }
+
+        private void SetGuestCenter(int? iid)
+        {
+            GuestIid = iid;
         }
 
         private async Task LoadSongs()

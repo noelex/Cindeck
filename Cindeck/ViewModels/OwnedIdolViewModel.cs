@@ -34,7 +34,7 @@ namespace Cindeck.ViewModels
                 Idols.SortDescriptions.Add(option.ToSortDescription());
             }
 
-            DeleteCommand = new DelegateCommand(Delete, () => SelectedIdols.Count > 0);
+            DeleteCommand = new DelegateCommand(Delete, () => SelectedIdols != null && SelectedIdols.Count > 0);
             CopyIidCommand = new DelegateCommand(CopyIid, () => SelectedIdols != null && SelectedIdols.Count == 1);
             SetGuestCenterCommand = new DelegateCommand(SetGuestCenter, () => SelectedIdols != null && SelectedIdols.Count == 1);
         }

@@ -231,6 +231,7 @@ namespace Cindeck.Core
                     EnableGuest=true,
                     EnableRoomEffect=true,
                     EnableSupportMembers=true,
+                    GrooveType=IdolCategory.Cute,
                     GuestPotential = new Potential { Category = IdolCategory.All }
             };
             }

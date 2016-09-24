@@ -411,6 +411,32 @@
                     <StackPanel  Margin="0,5,0,5" Orientation="Horizontal">
                         <Label Content="特技発動率"  Grid.Row="4" Grid.Column="0"/>
                         <ComboBox ItemsSource="{Binding SkillControls}" SelectedValue="{Binding Simulator.SkillControl}" DisplayMemberPath="Item2" SelectedValuePath="Item1" MinWidth="100" HorizontalAlignment="Left"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding Simulator.ExpectedTriggerRatio}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.Template>
+                                    <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                        <ItemsPresenter />
+                                    </ControlTemplate>
+                                </ItemsControl.Template>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label FontWeight="Bold">
+                                                <TextBlock Text="{Binding Key}"/>
+                                            </Label>
+                                            <Label>
+                                                <TextBlock Text="{Binding Value, StringFormat=\{0:P1\}}"/>
+                                            </Label>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </StackPanel>
                     <Button HorizontalAlignment="Left" Content="実行" Command="{Binding StartSimulationCommand}" Width="200"/>
                     <StackPanel  x:Name="ResultPanel"  Visibility="{Binding Simulator.ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -451,7 +477,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.Template>
                                     <ControlTemplate TargetType="{x:Type ItemsControl}">
-                                        <ItemsPresenter Margin="5" />
+                                        <ItemsPresenter />
                                     </ControlTemplate>
                                 </ItemsControl.Template>
                                 <ItemsControl.ItemTemplate>
@@ -470,7 +496,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                             <Label FontWeight="Bold" Content="実発動率" VerticalContentAlignment="Center"/>
-                            <ItemsControl ItemsSource="{Binding OverallTriggerRatio}" >
+                            <ItemsControl ItemsSource="{Binding ActualTriggerRatio}" >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel Orientation="Horizontal" />
@@ -478,7 +504,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.Template>
                                     <ControlTemplate TargetType="{x:Type ItemsControl}">
-                                        <ItemsPresenter Margin="5" />
+                                        <ItemsPresenter />
                                     </ControlTemplate>
                                 </ItemsControl.Template>
                                 <ItemsControl.ItemTemplate>
@@ -488,14 +514,7 @@
                                                 <TextBlock Text="{Binding Key}"/>
                                             </Label>
                                             <Label>
-                                                <TextBlock >
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0:P1} ({1:P1})">
-                                                            <Binding Path="Value.Item1"/>
-                                                            <Binding Path="Value.Item2"/>
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
+                                                <TextBlock Text="{Binding Value, StringFormat=\{0:P1\}}"/>
                                             </Label>
                                         </StackPanel>
                                     </DataTemplate>

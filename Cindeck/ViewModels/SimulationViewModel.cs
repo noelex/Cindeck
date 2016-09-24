@@ -187,10 +187,10 @@ namespace Cindeck.ViewModels
             set;
         }
 
-        public Dictionary<string, Tuple<double,double>> OverallTriggerRatio
+        public Dictionary<string, double> ActualTriggerRatio
         {
             get;
-            set;
+            private set;
         }
 
         public double StandardDeviation
@@ -310,11 +310,10 @@ namespace Cindeck.ViewModels
 
             StandardDeviation = Math.Round(Math.Sqrt(results.Sum(x => Math.Pow(x.Score - AverageScore, 2))) / results.Count);
 
+            int idx = 1;
             var duration = results.First().Duration;
-            var slotList = Simulator.Unit.Slots.ToList();
-            OverallTriggerRatio = slotList.Where(x=>x!=null).ToDictionary(s => $"スロット{slotList.FindIndex(x=>x==s)+1}", 
-                s=> Tuple.Create(results.SelectMany(x => x.TriggeredSkills).Where(x => x.Who == s).Count()/(results.Count * Math.Floor((duration - 1.0) / s.Skill.Interval)),
-                                 results.SelectMany(x=>x.TriggeredSkills).Where(x=>x.Who==s).Select(x=>x.ExpectedPropability).DefaultIfEmpty(0).First()));
+            ActualTriggerRatio = Simulator.Unit.Slots.ToDictionary(s => $"スロット{idx++}",
+                s => s == null ? 0 : results.SelectMany(x => x.TriggeredSkills).Where(x => x.Who == s).Count() / (results.Count * Math.Floor((duration - 1.0) / s.Skill.Interval)));
 
             SimulationResults = results.OrderBy(x => x.Id).ToList();
             SelectedResult = SimulationResults[0];

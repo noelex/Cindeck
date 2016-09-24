@@ -252,6 +252,12 @@ namespace Cindeck.Core
             set;
         }
 
+        public Dictionary<string, double> ExpectedTriggerRatio
+        {
+            get;
+            private set;
+        }
+
         private List<OwnedIdol> SelectSupportMembers()
         {
             if (Song == null || !EnableSupportMembers || Unit == null)
@@ -588,6 +594,30 @@ namespace Cindeck.Core
                 Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(AppealType.Dance, x, false, IsEncore)));
             VisualAppeal = SupportMemberVisualAppeal + CalculateAppeal(AppealType.Visual, guest, false, IsEncore) +
                 Unit.GetValueOrDefault(u => u.Slots.Sum(x => CalculateAppeal(AppealType.Visual, x, false, IsEncore)));
+
+            if (Unit != null)
+            {
+                var skillUpRate = (Unit.Center?.CenterEffect as CenterEffect.SkillTriggerProbabilityUp)?.Rate;
+                var songType = Song?.Type;
+                int i = 1;
+                ExpectedTriggerRatio = Unit.Slots.ToDictionary(
+                    x => $"スロット{i++}",
+                    x =>
+                    {
+                        if (SkillControl == SkillTriggerControl.NeverTrigger || x == null || x.Skill == null)
+                        {
+                            return .0;
+                        }
+                        else if (SkillControl == SkillTriggerControl.AlwaysTrigger)
+                        {
+                            return 1.0;
+                        }
+                        else
+                        {
+                            return x.Skill.EstimateProbability(x.SkillLevel) * (1 + skillUpRate.GetValueOrDefault(0) + (songType != null && songType.Value.HasFlag(x.Category) ? 0.3 : 0));
+                        }
+                    });
+            }
 
             Life = CalculateLife(Unit, guest);
             ResultsUpToDate = false;

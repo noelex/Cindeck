@@ -36,6 +36,41 @@ namespace Cindeck.Core
             set;
         }
 
+        [DataMember(Name = "debut")]
+        public int Debut
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Name = "regular")]
+        public int Regular
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Name = "pro")]
+        public int Pro
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Name = "master")]
+        public int Master
+        {
+            get;
+            set;
+        }
+
+        [DataMember(Name = "masterPlus")]
+        public int MasterPlus
+        {
+            get;
+            set;
+        }
+
         public override string ToString()
         {
             return Title;

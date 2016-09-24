@@ -27,7 +27,7 @@ namespace Cindeck.Core
                         .Replace("？", "?");
         }
 
-        private Dictionary<string, int> ParseSongIdMap(Stream stream)
+        private Dictionary<string, SongInfo[]> ParseSongIdMap(Stream stream)
         {
             Dictionary<int, string> typeMap = new Dictionary<int, string>() {
                 {1," cute version" },
@@ -36,29 +36,22 @@ namespace Cindeck.Core
             };
             var serializer = new DataContractJsonSerializer(typeof(SongInfo[]));
             var list = new List<SongInfo>();
-            var source = ((SongInfo[])serializer.ReadObject(stream)).OrderByDescending(x => x.EventType);
+            var source = ((SongInfo[])serializer.ReadObject(stream));
 
-            foreach (var song in source)
-            {
-                if (!list.Any(x => x.Title == song.Title && x.Type == song.Type && x != song))
-                {
-                    list.Add(song);
-                }
-            }
-
-            foreach (var song in list.OrderBy(x=>x.Type))
+            foreach (var song in source.OrderBy(x => x.Type))
             {
                 if (list.Any(x => x.Title == song.Title && x != song && x.Type != song.Type && song.Type != 4))
                 {
                     song.Title += typeMap[song.Type];
                 }
                 song.Title = NormalizeTitle(song.Title);
+                list.Add(song);
             }
 
-            return list.ToDictionary(x => x.Title, x => x.Id);
+            return list.GroupBy(x => x.Title).ToDictionary(x => x.Key, x => x.ToArray());
         }
 
-        private async Task<Dictionary<string, int>> GetSongIdMap(bool remote)
+        private async Task<Dictionary<string, SongInfo[]>> GetSongIdMap(bool remote)
         {
             try
             {
@@ -94,7 +87,7 @@ namespace Cindeck.Core
             var title = NormalizeTitle(s.Title);
 
             var songIdMap = await GetSongIdMap(false);
-            if (songIdMap==null || !songIdMap.ContainsKey(title))
+            if (songIdMap == null || !songIdMap.ContainsKey(title))
             {
                 songIdMap = await GetSongIdMap(true);
                 if (songIdMap == null || !songIdMap.ContainsKey(title))
@@ -103,20 +96,42 @@ namespace Cindeck.Core
                 }
             }
 
-            var serializer = new DataContractJsonSerializer(typeof(Note[]));
-            var id = $"{songIdMap[title]:d3}_{DifficultyIndex[d]}";
+            foreach (var info in songIdMap[title])
+            {
+                if ((int)info.GetType().GetProperty(d.ToString()).GetValue(info) != 0)
+                {
+                    var id = $"{info.Id:d3}_{DifficultyIndex[d]}";
+                    var pattern = await GetPattern(id);
+                    if (pattern != null)
+                    {
+                        return pattern;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<Note[]> GetPattern(string id)
+        {
             string idHash;
+            var serializer = new DataContractJsonSerializer(typeof(Note[]));
 
             using (var hasher = SHA256.Create())
             {
                 idHash = string.Join("", hasher.ComputeHash(Encoding.UTF8.GetBytes(id)).Select(x => x.ToString("x2")));
             }
 
+            var patternFile = $"data/patterns/{idHash}";
+
             try
             {
-                using (var fs = File.OpenRead($"data/patterns/{idHash}"))
+                using (var fs = File.OpenRead(patternFile))
                 {
-                    return ((Note[])serializer.ReadObject(fs)).Where(x => x.Type == 1 || x.Type == 2).ToArray();
+                    if (fs.Length > 0)
+                    {
+                        return ((Note[])serializer.ReadObject(fs)).Where(x => x.Type == 1 || x.Type == 2).ToArray();
+                    }
                 }
             }
             catch
@@ -129,10 +144,14 @@ namespace Cindeck.Core
                 using (var client = new WebClient())
                 {
                     var data = await client.DownloadDataTaskAsync(new Uri($"https://apiv2.deresute.info/pattern/{id}"));
+
                     using (var stream = new MemoryStream(data))
                     {
-                        Directory.CreateDirectory("data/patterns");
-                        File.WriteAllBytes($"data/patterns/{idHash}", data);
+                        if (data.Length > 0)
+                        {
+                            Directory.CreateDirectory("data/patterns");
+                            File.WriteAllBytes(patternFile, data);
+                        }
                         return ((Note[])serializer.ReadObject(stream)).Where(x => x.Type == 1 || x.Type == 2).ToArray();
                     }
                 }

@@ -281,15 +281,10 @@ namespace Cindeck.ViewModels
             Note[] pattern = null;
             if (UtilizeActualPattern)
             {
-                pattern = await new PatternProvider().GetPattern(Simulator.Song, Simulator.SongData.Difficulty);
+                pattern = await new PatternProvider().GetPattern(Simulator.Song, Simulator.SongData.Difficulty, Simulator.SongData.Notes);
                 if (pattern == null)
                 {
                     MessageBox.Show($"{Simulator.Song.Title}({Simulator.SongData.Difficulty})の譜面データが見つかりませんでした。");
-                    return;
-                }
-                if (pattern.Length != Simulator.SongData.Notes)
-                {
-                    MessageBox.Show($"譜面データのノーツ数が正しくありません。");
                     return;
                 }
             }

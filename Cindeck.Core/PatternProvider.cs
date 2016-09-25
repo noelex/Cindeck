@@ -38,9 +38,9 @@ namespace Cindeck.Core
             var list = new List<SongInfo>();
             var source = ((SongInfo[])serializer.ReadObject(stream));
 
-            foreach (var song in source.OrderBy(x => x.Type))
+            foreach (var song in source.OrderByDescending(x => x.Type))
             {
-                if (list.Any(x => x.Title == song.Title && x != song && x.Type != song.Type && song.Type != 4))
+                if (list.Any(x => x.Title == NormalizeTitle(song.Title) && x != song && x.Type != song.Type && song.Type != 4))
                 {
                     song.Title += typeMap[song.Type];
                 }
@@ -82,7 +82,7 @@ namespace Cindeck.Core
             }
         }
 
-        public async Task<Note[]> GetPattern(Song s, SongDifficulty d)
+        public async Task<Note[]> GetPattern(Song s, SongDifficulty d, int expectedNotes)
         {
             var title = NormalizeTitle(s.Title);
 
@@ -102,7 +102,7 @@ namespace Cindeck.Core
                 {
                     var id = $"{info.Id:d3}_{DifficultyIndex[d]}";
                     var pattern = await GetPattern(id);
-                    if (pattern != null)
+                    if (pattern != null && expectedNotes == pattern.Length)
                     {
                         return pattern;
                     }

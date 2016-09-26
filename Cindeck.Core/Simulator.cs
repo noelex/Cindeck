@@ -356,10 +356,10 @@ namespace Cindeck.Core
                             var sb = slot.Skill as Skill;
                             if (f % (sb.Interval*TimeScale) == 0)
                             {
-                                var propability = sb.EstimateProbability(slot.SkillLevel) * //素の確率
-                                                   (1 + (Song.Type.HasFlag(slot.Category) ? 0.3 : 0) +  //属性一致ボーナス
-                                                        (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0)); //センター効果
-
+                                //var propability = sb.EstimateProbability(slot.SkillLevel) * //素の確率
+                                //                   (1 + (Song.Type.HasFlag(slot.Category) ? 0.3 : 0) +  //属性一致ボーナス
+                                //                        (skillRateUp != null && skillRateUp.Targets.HasFlag(slot.Category) ? skillRateUp.Rate : 0)); //センター効果
+                                var propability = GetSkillTriggerProbability(slot, Unit.Center, Guest, Song);
                                 if (SkillControl != SkillTriggerControl.NeverTrigger &&
                                     (SkillControl == SkillTriggerControl.AlwaysTrigger || rng.NextDouble() < propability))
                                 {
@@ -520,6 +520,30 @@ namespace Cindeck.Core
             return 0;
         }
 
+        private double GetSkillTriggerProbability(OwnedIdol idol, IIdol center, IIdol guestCenter, Song song)
+        {
+            if (idol == null || idol.Skill == null)
+            {
+                return 0;
+            }
+            var rate = idol.Skill.EstimateProbability(idol.SkillLevel);
+            if (center != null && center.CenterEffect is CenterEffect.SkillTriggerProbabilityUp)
+            {
+                var e = center.CenterEffect as CenterEffect.SkillTriggerProbabilityUp;
+                rate *= 1+(e.Targets.HasFlag(idol.Category) ? e.Rate : 0);
+            }
+            if (guestCenter != null && guestCenter.CenterEffect is CenterEffect.SkillTriggerProbabilityUp)
+            {
+                var e = guestCenter.CenterEffect as CenterEffect.SkillTriggerProbabilityUp;
+                rate *= 1+(e.Targets.HasFlag(idol.Category) ? e.Rate : 0);
+            }
+            if (song != null && song.Type.HasFlag(idol.Category))
+            {
+                rate *= 1.3;
+            }
+            return Math.Min(rate, 1.0);
+        }
+
         private int CalculateAppeal(AppealType targetAppeal, IIdol idol, bool isSupportMember, bool encore = false)
         {
             if (idol == null)
@@ -597,8 +621,6 @@ namespace Cindeck.Core
 
             if (Unit != null)
             {
-                var skillUpRate = (Unit.Center?.CenterEffect as CenterEffect.SkillTriggerProbabilityUp)?.Rate;
-                var songType = Song?.Type;
                 int i = 1;
                 ExpectedTriggerRatio = Unit.Slots.ToDictionary(
                     x => $"スロット{i++}",
@@ -614,7 +636,8 @@ namespace Cindeck.Core
                         }
                         else
                         {
-                            return x.Skill.EstimateProbability(x.SkillLevel) * (1 + skillUpRate.GetValueOrDefault(0) + (songType != null && songType.Value.HasFlag(x.Category) ? 0.3 : 0));
+                            return GetSkillTriggerProbability(x, Unit.Center, Guest, Song);
+                            //return x.Skill.EstimateProbability(x.SkillLevel) * (1 + skillUpRate.GetValueOrDefault(0) + (songType != null && songType.Value.HasFlag(x.Category) ? 0.3 : 0));
                         }
                     });
             }

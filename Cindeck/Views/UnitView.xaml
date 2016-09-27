@@ -16,7 +16,7 @@
     </UserControl.Resources>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <DockPanel Margin="5" LastChildFill="True">
+            <DockPanel Margin="5,5,5,0" LastChildFill="True">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                     <ComboBox x:Name="comboBox" IsEditable="True" Text="{Binding UnitName}" ItemsSource="{Binding Units}" SelectedItem="{Binding SelectedUnit,Mode=TwoWay}" DisplayMemberPath="Name" Width="200" HorizontalAlignment="Left"/>
                     <Button Width="100" Margin="5,0,0,0" Command="{Binding SaveCommand}" Content="保存"></Button>
@@ -126,8 +126,13 @@
                 <c:SkillTimeline DataContext="{Binding TemporalUnit}" DockPanel.Dock="Top"/>
 
                 <DockPanel LastChildFill="True">
-                    <c:IdolFilterPanel Margin="0,5,0,0" DockPanel.Dock="Top" DataContext="{Binding Filter}"/>
-                    <c:SelectedItemBindableDataGrid MaxHeight="468"  x:Name="IdolGrid" ItemsSource="{Binding Path=Idols, IsAsync=True}" DockPanel.Dock="Top" SelectionMode="Single" SelectedItem="{Binding SelectedIdol, Mode=TwoWay}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Grid.Row="1" Margin="0,5,0,0">
+                    <c:IdolFilterPanel Margin="0,5,0,5" DockPanel.Dock="Top" DataContext="{Binding Filter}"/>
+                    <StackPanel Margin="0,5" DockPanel.Dock="Bottom">
+                        <TextBlock>
+                            <Run Text="{Binding Idols.SourceCollection.Count, Mode=OneWay}"/>件中<Run Text="{Binding Idols.Count, Mode=OneWay}"/>件の結果を表示中
+                        </TextBlock>
+                    </StackPanel>
+                    <c:SelectedItemBindableDataGrid MaxHeight="468"  x:Name="IdolGrid" ItemsSource="{Binding Path=Idols, IsAsync=True}" DockPanel.Dock="Top" SelectionMode="Single" SelectedItem="{Binding SelectedIdol, Mode=TwoWay}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Grid.Row="1">
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Setter Property="Background" Value="{Binding Category, Converter={StaticResource IdolTypeToColorConverter}}"/>

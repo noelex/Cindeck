@@ -15,6 +15,11 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
         <c:IdolFilterPanel Margin="0,5,0,5" DockPanel.Dock="Top" DataContext="{Binding Filter}"/>
+        <StackPanel Margin="0,5" DockPanel.Dock="Bottom">
+            <TextBlock>
+                <Run Text="{Binding Idols.SourceCollection.Count, Mode=OneWay}"/>件中<Run Text="{Binding Idols.Count, Mode=OneWay}"/>件の結果を表示中
+            </TextBlock>
+        </StackPanel>
         <c:SelectedItemBindableDataGrid ItemsSource="{Binding Path=Idols, IsAsync=True}" SelectedItemsList="{Binding SelectedIdols, Mode=OneWayToSource}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">

@@ -343,5 +343,10 @@ namespace Cindeck.Core
         {
             return idol.Life + m_potentialLifeDelta[(potential?? GetPotential(idol.Name)).Life][idol.Rarity];
         }
+
+        public static Potential GetPotential(this IIdol idol)
+        {
+            return GetPotential(idol.Name);
+        }
     }
 }

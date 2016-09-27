@@ -15,6 +15,7 @@
     <local:IidConverter x:Key="IidConverter"/>
     <local:NullToCollapsedConverter x:Key="NullToCollapsedConverter"/>
     <local:IdolCategoryToSongTypeConverter x:Key="IdolCategoryToSongTypeConverter"/>
+    <local:ZeroToCollapsedConverter x:Key="ZeroToCollapsedConverter"/>
     
     <SolidColorBrush Color="#FFC469" x:Key="PassionImageColor"/>
     <SolidColorBrush Color="Pink" x:Key="CuteImageColor"/>

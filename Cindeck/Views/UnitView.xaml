@@ -153,11 +153,47 @@
                             <DataGridTextColumn IsReadOnly="True" Header="タイプ" Binding="{Binding Path=Category, Converter={StaticResource IdolCategoryConverter}}"/>
                             <DataGridComboBoxColumn Header="特技Lv" ItemsSource="{StaticResource SkillLevels}" SelectedItemBinding="{Binding Path=SkillLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="特技効果値" Binding="{Binding Path=SkillScore, StringFormat=F2}"/>
-                            <DataGridTextColumn IsReadOnly="True" Header="ライフ" Binding="{Binding Path=Life}"/>
+                            <DataGridTemplateColumn IsReadOnly="True" Header="ライフ" SortMemberPath="Life">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Life}"/>
+                                            <TextBlock Margin="2,0,0,0" TextAlignment="Center" Width="20" Text="{Binding Potential.Life}" Background="#FF10AE00" Foreground="White"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn IsReadOnly="True" Header="合計アピール" Binding="{Binding Path=TotalAppeal}"/>
-                            <DataGridTextColumn IsReadOnly="True" Header="ボーカルアピール" Binding="{Binding Path=Vocal}"/>
-                            <DataGridTextColumn IsReadOnly="True" Header="ダンスアピール" Binding="{Binding Path=Dance}"/>
-                            <DataGridTextColumn IsReadOnly="True" Header="ビジュアルアピール" Binding="{Binding Path=Visual}"/>
+                            <DataGridTemplateColumn IsReadOnly="True" Header="ボーカルアピール" SortMemberPath="Vocal">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Vocal}"/>
+                                            <TextBlock Margin="2,0,0,0" TextAlignment="Center" Width="20" Text="{Binding Potential.Vocal}" Background="#FFFF005D" Foreground="White"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn IsReadOnly="True" Header="ダンスアピール" SortMemberPath="Dance">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Dance}"/>
+                                            <TextBlock Margin="2,0,0,0" TextAlignment="Center" Width="20" Text="{Binding Potential.Dance}" Background="#FF0074FF" Foreground="White"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn IsReadOnly="True" Header="ビジュアルアピール" SortMemberPath="Visual">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Visual}"/>
+                                            <TextBlock Margin="2,0,0,0" TextAlignment="Center" Width="20" Text="{Binding Potential.Visual}" Background="#FFFFAE00" Foreground="White"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn IsReadOnly="True" Header="センター効果" Binding="{Binding Path=CenterEffect, Converter={StaticResource CenterEffectConverter}}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="特技" Binding="{Binding Path=Skill, Converter={StaticResource SkillConverter}}"/>
                             <DataGridTextColumn IsReadOnly="True" Header="実装" Binding="{Binding Path=ImplementationDate, StringFormat=yyyy/MM/dd}"/>

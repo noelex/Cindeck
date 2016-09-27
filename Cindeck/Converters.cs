@@ -216,4 +216,18 @@ namespace Cindeck
             throw new NotImplementedException();
         }
     }
+
+    class ZeroToCollapsedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = value as int?;
+            return val.GetValueOrDefault()!=0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

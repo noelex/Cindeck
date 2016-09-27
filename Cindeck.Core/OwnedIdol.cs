@@ -73,6 +73,9 @@ namespace Cindeck.Core
         [DependsOn(nameof(Timestamp))]
         public int Life => Idol.GetLifeWithPotential();
 
+        [DependsOn(nameof(Timestamp))]
+        public Potential Potential => Idol.GetPotential();
+
         public DateTime Timestamp { get; set; }
 
         public void UpdateReference(Idol idol)

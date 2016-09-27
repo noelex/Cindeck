@@ -86,5 +86,12 @@ namespace Cindeck.Core
             get;
             set;
         }
+
+        [DataMember]
+        public bool? UtilizeActualPattern
+        {
+            get;
+            set;
+        }
     }
 }

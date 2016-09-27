@@ -95,7 +95,7 @@ namespace Cindeck.ViewModels
             GuestIid = config.SimulatorConfig.GuestIid;
             Simulator.GuestPotential = config.SimulatorConfig.GuestPotential;
 
-            UtilizeActualPattern = true;
+            UtilizeActualPattern = config.SimulatorConfig.UtilizeActualPattern.GetValueOrDefault(true);
 
             CopyIidCommand = new DelegateCommand<int?>(CopyIid);
             SetGuestCenterCommand = new DelegateCommand<int?>(SetGuestCenter);
@@ -343,6 +343,7 @@ namespace Cindeck.ViewModels
             m_config.SimulatorConfig.SkillControl = Simulator.SkillControl;
             m_config.SimulatorConfig.GrooveBurst = Simulator.GrooveBurst;
             m_config.SimulatorConfig.GrooveType = Simulator.GrooveType;
+            m_config.SimulatorConfig.UtilizeActualPattern = UtilizeActualPattern;
 
             if (Simulator.Song!=null)
             {

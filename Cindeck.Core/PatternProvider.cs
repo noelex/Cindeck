@@ -24,7 +24,8 @@ namespace Cindeck.Core
         {
             return title.Replace(" ", "")
                         .Replace("！", "!")
-                        .Replace("？", "?");
+                        .Replace("？", "?")
+                        .Replace("’", "'");
         }
 
         private Dictionary<string, SongInfo[]> ParseSongIdMap(Stream stream)

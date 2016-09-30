@@ -142,7 +142,7 @@ namespace Cindeck.Core
             set;
         }
 
-        [DataMember(Order = 14)]
+        [DataMember(Order = 15)]
         public SimulatorConfig SimulatorConfig
         {
             get;

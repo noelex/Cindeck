@@ -31,9 +31,9 @@ namespace Cindeck.Core
         private Dictionary<string, SongInfo[]> ParseSongIdMap(Stream stream)
         {
             Dictionary<int, string> typeMap = new Dictionary<int, string>() {
-                {1," cute version" },
-                {2, " cool version" },
-                {3," passion version" }
+                {1,"(Cute)" },
+                {2, "(Cool)" },
+                {3,"(Passion)" }
             };
             var serializer = new DataContractJsonSerializer(typeof(SongInfo[]));
             var list = new List<SongInfo>();

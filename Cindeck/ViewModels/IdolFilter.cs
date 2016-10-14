@@ -16,7 +16,8 @@ namespace Cindeck.ViewModels
         private ICollectionView m_target;
 
         public IdolFilter(AppConfig config, ICollectionView target, bool enableOwnedFilter=true,
-            bool enableCategoryFilter=true, bool enableNameFilter=true, bool enableRarityFilter = true, bool enableCenterEffectFilter = true, bool enableSkillFilter = true)
+            bool enableCategoryFilter=true, bool enableNameFilter=true, bool enableRarityFilter = true, 
+            bool enableCenterEffectFilter = true, bool enableSkillFilter = true, bool enableOwnedOnlyFilter=false)
         {
             m_config = config;
             m_target = target;
@@ -27,6 +28,7 @@ namespace Cindeck.ViewModels
             EnableSkillFilter = enableSkillFilter;
             EnableCategoryFilter = enableCategoryFilter;
             EnableNameFilter = enableNameFilter;
+            EnableOwnedOnlyFilter = enableOwnedOnlyFilter;
 
             IdolTypes = new List<Tuple<IdolCategory, string>>
             {
@@ -119,6 +121,12 @@ namespace Cindeck.ViewModels
             set;
         }
 
+        public bool ShowOwnedOnly
+        {
+            get;
+            set;
+        }
+
         public bool EnableCategoryFilter
         {
             get;
@@ -150,6 +158,12 @@ namespace Cindeck.ViewModels
         }
 
         public bool EnableSkillFilter
+        {
+            get;
+            set;
+        }
+
+        public bool EnableOwnedOnlyFilter
         {
             get;
             set;
@@ -215,13 +229,19 @@ namespace Cindeck.ViewModels
             {
                 ok &= idol.Skill != null && idol.Skill.GetType() == SkillFilter;
             }
+
+            if(ShowOwnedOnly)
+            {
+                ok &= m_config.OwnedIdols.Any(x => x.Name == idol.Name);
+            }
             return ok;
         }
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
             if (propertyName == nameof(FilterOwned) || propertyName == nameof(NameFilter) || propertyName == nameof(RarityFilter) ||
-                propertyName == nameof(TypeFilter) || propertyName == nameof(CenterEffectFilter) || propertyName == nameof(SkillFilter))
+                propertyName == nameof(TypeFilter) || propertyName == nameof(CenterEffectFilter) || propertyName == nameof(SkillFilter) || 
+                propertyName == nameof(ShowOwnedOnly))
             {
                 m_target.Refresh();
             }

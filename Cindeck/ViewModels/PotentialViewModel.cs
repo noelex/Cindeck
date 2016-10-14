@@ -20,7 +20,13 @@ namespace Cindeck.ViewModels
         {
             m_config = config;
             PotentialData = new ListCollectionView(config.PotentialData);
-            Filter = new IdolFilter(config, PotentialData, enableCenterEffectFilter: false, enableOwnedFilter: false, enableRarityFilter: false, enableSkillFilter: false);
+            Filter = new IdolFilter(config, PotentialData,
+                enableCenterEffectFilter: false,
+                enableOwnedFilter: false,
+                enableRarityFilter: false,
+                enableSkillFilter: false,
+                enableOwnedOnlyFilter: true
+            );
             Filter.SetConfig(config.PotentialFilterConfig);
 
             foreach (var option in config.PotentialSortOptions)

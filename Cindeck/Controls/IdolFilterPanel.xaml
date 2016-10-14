@@ -40,5 +40,6 @@
         </StackPanel>
 
         <CheckBox Visibility="{Binding EnableOwnedFilter, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="5,0,0,0" VerticalAlignment="Center" IsChecked="{Binding FilterOwned, Mode=TwoWay}"  Content="所有済みのアイドルを表示しない"/>
+        <CheckBox Visibility="{Binding EnableOwnedOnlyFilter, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="5,0,0,0" VerticalAlignment="Center" IsChecked="{Binding ShowOwnedOnly, Mode=TwoWay}"  Content="所有済みのアイドルのみ表示"/>
     </WrapPanel>
 </UserControl>

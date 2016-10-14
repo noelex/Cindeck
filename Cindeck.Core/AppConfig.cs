@@ -24,24 +24,21 @@ namespace Cindeck.Core
             Units = new ObservableCollection<Unit>();
 
             ImplementedIdolSortOptions = new List<SortOption>() {
-                new SortOption { Column=nameof(IIdol.Rarity), Direction=ListSortDirection.Descending },
-                new SortOption { Column=nameof(IIdol.ImplementationDate), Direction=ListSortDirection.Descending }
+                new SortOption { Column=nameof(IIdol.Rarity), Direction=ListSortDirection.Descending }
             };
             OwnedIdolSortOptions = new List<SortOption>()
             {
-                 new SortOption { Column=nameof(IIdol.Rarity), Direction=ListSortDirection.Descending },
-                new SortOption { Column=nameof(IIdol.ImplementationDate), Direction=ListSortDirection.Descending }
+                 new SortOption { Column=nameof(IIdol.Rarity), Direction=ListSortDirection.Descending }
             };
             UnitIdolSortOptions = new List<SortOption>()
             {
-                 new SortOption { Column=nameof(IIdol.Rarity), Direction=ListSortDirection.Descending },
-                new SortOption { Column=nameof(IIdol.ImplementationDate), Direction=ListSortDirection.Descending }
+                 new SortOption { Column=nameof(IIdol.Rarity), Direction=ListSortDirection.Descending }
             };
 
             NextOid = 1;
         }
 
-        public string Version => "v1.9.4";
+        public string Version => "v1.9.5";
 
         [DataMember(Order = 1)]
         private int NextOid

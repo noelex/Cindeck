@@ -22,7 +22,7 @@ namespace Cindeck.Core
             var raw = await m_doc.Load();
             var hdoc = new HtmlDocument();
             hdoc.LoadHtml(raw);
-            var rows = hdoc.DocumentNode.SelectNodes("//article/section/table/tbody/tr");
+            var rows = hdoc.DocumentNode.SelectNodes("//article/section/div/table/tbody/tr");
             var songs = new Dictionary<string, Song>();
             int failed = 0;
             foreach(var row in rows)

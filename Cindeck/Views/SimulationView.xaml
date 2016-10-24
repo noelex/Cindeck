@@ -7,7 +7,7 @@
              xmlns:c="clr-namespace:Cindeck.Controls"
              x:Class="Cindeck.Views.SimulationView"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="500">
+             d:DesignHeight="600" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -60,7 +60,6 @@
                                 <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://deresute.info/" ToolTip="https://deresute.info/"><Run Text="Starlight Stage :: Patterns &amp; Information"/></Hyperlink>
                                 <Run Text=")"/>
                             </TextBlock>
-
                         </CheckBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"  Margin="0,5,0,0">
@@ -155,8 +154,24 @@
                             </ItemsControl>
                         </StackPanel>
                     </StackPanel>
-                    <Button HorizontalAlignment="Left" Content="実行" Command="{Binding StartSimulationCommand}" Width="200"/>
-                    <StackPanel  x:Name="ResultPanel"  Visibility="{Binding Simulator.ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="試行回数"/>
+                        <ComboBox MinWidth="80" IsEditable="True" VerticalContentAlignment="Center" Text="{Binding Runs}">
+                            <ComboBoxItem Content="100"/>
+                            <ComboBoxItem Content="500"/>
+                            <ComboBoxItem Content="1000"/>
+                            <ComboBoxItem Content="5000"/>
+                            <ComboBoxItem Content="10000"/>
+                            <ComboBoxItem Content="50000"/>
+                            <ComboBoxItem Content="100000"/>
+                            <ComboBoxItem Content="500000"/>
+                            <ComboBoxItem Content="1000000"/>
+                        </ComboBox>
+                        <Button Margin="5,0,0,0" HorizontalAlignment="Left" Content="計算" Command="{Binding StartSimulationCommand}" Width="100"/>
+                        <Label DockPanel.Dock="Top" Content="※試行回数を大きく設定すると、計算に時間がかかる場合があります"/>
+                    </StackPanel>
+                    
+                    <StackPanel  x:Name="ResultPanel"  Visibility="{Binding ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Label DockPanel.Dock="Top" Content="※結果はALL PERFECTの場合のスコアです。"/>
                         <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                             <StackPanel  Orientation="Horizontal">
@@ -241,6 +256,7 @@
                         <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal"  Margin="0,5,0,0">
                             <Label Content="結果の詳細" Grid.Row="4" Grid.Column="0"/>
                             <ComboBox x:Name="SimulationResults" SelectedItem="{Binding SelectedResult, Mode=TwoWay}" ItemsSource="{Binding SimulationResults}" DisplayMemberPath="Name" Grid.Row="4" Grid.Column="1" MinWidth="100" HorizontalAlignment="Left"/>
+                            <Label Content="※100回目まで結果のみ表示されます"/>
                         </StackPanel>
                         <StackPanel  DockPanel.Dock="Top" Margin="0,5,0,0" Orientation="Horizontal">
                             <Label Content="スコア"  FontWeight="Bold" />

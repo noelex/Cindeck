@@ -93,5 +93,12 @@ namespace Cindeck.Core
             get;
             set;
         }
+
+        [DataMember]
+        public int Runs
+        {
+            get;
+            set;
+        }
     }
 }

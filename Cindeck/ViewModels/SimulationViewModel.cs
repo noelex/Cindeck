@@ -56,6 +56,7 @@ namespace Cindeck.ViewModels
 
             StartSimulationCommand = new AwaitableDelegateCommand(StartSimulation);
 
+            Runs = config.SimulatorConfig.Runs;
             EnableGuest = config.SimulatorConfig.EnableGuest;
             Simulator.EnableRoomEffect = config.SimulatorConfig.EnableRoomEffect;
             Simulator.EnableSupportMembers = config.SimulatorConfig.EnableSupportMembers;
@@ -217,6 +218,20 @@ namespace Cindeck.ViewModels
             set;
         }
 
+        public int Runs
+        {
+            get;
+            set;
+        }
+
+        public bool ResultsUpToDate => Simulator.ResultsUpToDate && SimulationCompleted;
+
+        public bool SimulationCompleted
+        {
+            get;
+            set;
+        }
+
         public DelegateCommand<int?> CopyIidCommand
         {
             get;
@@ -277,6 +292,11 @@ namespace Cindeck.ViewModels
                 MessageBox.Show("ユニットを選んでください");
                 return;
             }
+            if (Runs < 1 || Runs > 1000000)
+            {
+                MessageBox.Show("試行回数は1から1,000,000までである必要があります");
+                return;
+            }
 
             Note[] pattern = null;
             if (UtilizeActualPattern)
@@ -289,8 +309,10 @@ namespace Cindeck.ViewModels
                 }
             }
 
+            SimulationCompleted = false;
+
             var results = new ConcurrentBag<SimulationResult>();
-            await Task.Run(() => Parallel.For(1, 101, i => results.Add(Simulator.StartSimulation(RandomFactory.Create(), i, pattern == null ? null : new Queue<Note>(pattern)))));
+            await Task.Run(() => Parallel.For(1, Runs+1, i => results.Add(Simulator.StartSimulation(RandomFactory.Create(), i, pattern == null ? null : new Queue<Note>(pattern)))));
 
             MaxScore = results.Max(x=>x.Score);
             MaxScorePerNote = results.Max(x => x.ScorePerNote);
@@ -310,8 +332,10 @@ namespace Cindeck.ViewModels
             ActualTriggerRatio = Simulator.Unit.Slots.ToDictionary(s => $"スロット{idx++}",
                 s => s == null ? 0 : results.SelectMany(x => x.TriggeredSkills).Where(x => x.Who == s).Count() / (results.Count * Math.Floor((duration - 1.0) / s.Skill.Interval)));
 
-            SimulationResults = results.OrderBy(x => x.Id).ToList();
+            SimulationResults = results.OrderBy(x => x.Id).Take(100).ToList();
             SelectedResult = SimulationResults[0];
+
+            SimulationCompleted = true;
         }
 
         public int? GuestIid
@@ -344,6 +368,7 @@ namespace Cindeck.ViewModels
             m_config.SimulatorConfig.GrooveBurst = Simulator.GrooveBurst;
             m_config.SimulatorConfig.GrooveType = Simulator.GrooveType;
             m_config.SimulatorConfig.UtilizeActualPattern = UtilizeActualPattern;
+            m_config.SimulatorConfig.Runs = Runs;
 
             if (Simulator.Song!=null)
             {

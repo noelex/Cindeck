@@ -230,8 +230,14 @@ namespace Cindeck.Core
                     EnableSupportMembers=true,
                     GrooveType=IdolCategory.Cute,
                     UtilizeActualPattern=true,
-                    GuestPotential = new Potential { Category = IdolCategory.All }
-            };
+                    GuestPotential = new Potential { Category = IdolCategory.All },
+                    Runs=100
+                };
+            }
+
+            if(config.SimulatorConfig.Runs<=0)
+            {
+                config.SimulatorConfig.Runs = 100;
             }
 
             return m_current = config;

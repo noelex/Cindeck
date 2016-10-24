@@ -168,7 +168,7 @@
                             <ComboBoxItem Content="1000000"/>
                         </ComboBox>
                         <Button Margin="5,0,0,0" HorizontalAlignment="Left" Content="計算" Command="{Binding StartSimulationCommand}" Width="100"/>
-                        <Label DockPanel.Dock="Top" Content="※試行回数を大きく設定すると、計算に時間がかかる場合があります"/>
+                        <Label DockPanel.Dock="Top" Content="※試行回数によって計算に時間がかかる場合があります"/>
                     </StackPanel>
                     
                     <StackPanel  x:Name="ResultPanel"  Visibility="{Binding ResultsUpToDate, Converter={StaticResource BooleanToVisibilityConverter}}">

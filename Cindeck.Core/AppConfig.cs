@@ -231,13 +231,13 @@ namespace Cindeck.Core
                     GrooveType=IdolCategory.Cute,
                     UtilizeActualPattern=true,
                     GuestPotential = new Potential { Category = IdolCategory.All },
-                    Runs=100
+                    Runs=1000
                 };
             }
 
             if(config.SimulatorConfig.Runs<=0)
             {
-                config.SimulatorConfig.Runs = 100;
+                config.SimulatorConfig.Runs = 1000;
             }
 
             return m_current = config;

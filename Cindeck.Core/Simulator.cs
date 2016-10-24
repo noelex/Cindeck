@@ -38,12 +38,6 @@ namespace Cindeck.Core
             get;
             set;
         }
-
-        public double ExpectedPropability
-        {
-            get;
-            set;
-        }
     }
 
     public class SimulationResult
@@ -367,8 +361,7 @@ namespace Cindeck.Core
                                     {
                                         Who = slot,
                                         Since = currentTime,
-                                        Until = currentTime + sb.EstimateDuration(slot.SkillLevel),
-                                        ExpectedPropability = propability
+                                        Until = currentTime + sb.EstimateDuration(slot.SkillLevel)
                                     };
 
                                     switch (sb.GetType().Name)

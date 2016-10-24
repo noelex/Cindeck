@@ -219,7 +219,7 @@
                                                 <TextBlock Text="{Binding Key, StringFormat=\{0\}万台}"/>
                                             </Label>
                                             <Label>
-                                                <TextBlock Text="{Binding Value, StringFormat=\{0:P0\}}"/>
+                                                <TextBlock Text="{Binding Value, StringFormat=\{0:P\}}"/>
                                             </Label>
                                         </StackPanel>
                                     </DataTemplate>

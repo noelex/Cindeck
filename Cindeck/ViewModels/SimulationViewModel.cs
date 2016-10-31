@@ -267,7 +267,7 @@ namespace Cindeck.ViewModels
             {
                 LoadSongsCommand.RaiseCanExecuteChanged();
                 var result= await new GamerChWikiSongSource(
-                    new WebDocumentSource("http://imascg-slstage-wiki.gamerch.com/%E6%A5%BD%E6%9B%B2%E6%83%85%E5%A0%B1%E4%B8%80%E8%A6%A7")).GetSongs();
+                    new WebDocumentSource("https://imascg-slstage-wiki.gamerch.com/%E6%A5%BD%E6%9B%B2%E8%A9%B3%E7%B4%B0%E4%B8%80%E8%A6%A7")).GetSongs();
                 Songs = m_config.Songs = result.Item1;
                 m_config.Save();
                 Simulator.Song = Songs.FirstOrDefault();

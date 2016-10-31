@@ -93,17 +93,17 @@ namespace Cindeck.Core
         private static readonly Dictionary<AppealUpCondition, string> m_appealUpConditionToString = new Dictionary<AppealUpCondition, string> { { AppealUpCondition.UnitContainsAllTypes, "3タイプ全てのアイドル編成時" } };
 
         private static readonly Dictionary<string, IdolCategory> m_stringToSongType = new Dictionary<string, IdolCategory> {
-            { "All", IdolCategory.All},
-            { "Co", IdolCategory.Cool},
-            { "Cu", IdolCategory.Cute},
-            { "Pa", IdolCategory.Passion }};
+            { "全タイプ", IdolCategory.All},
+            { "クール", IdolCategory.Cool},
+            { "キュート", IdolCategory.Cute},
+            { "パッション", IdolCategory.Passion }};
 
         private static readonly Dictionary<string, SongDifficulty> m_stringToDifficulty = new Dictionary<string, SongDifficulty> {
-            { "DEB", SongDifficulty.Debut},
-            { "REG", SongDifficulty.Regular},
+            { "DEBUT", SongDifficulty.Debut},
+            { "REGULAR", SongDifficulty.Regular},
             { "PRO", SongDifficulty.Pro},
-            { "MAS", SongDifficulty.Master },
-            { "MAS+", SongDifficulty.MasterPlus }
+            { "MASTER", SongDifficulty.Master },
+            { "MASTER+", SongDifficulty.MasterPlus }
         };
 
         private static Dictionary<SkillTriggerProbability, double> ProbabilityInitialValues = new Dictionary<SkillTriggerProbability, double>

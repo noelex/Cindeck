@@ -25,6 +25,8 @@ namespace Cindeck.Core
             return title.Replace(" ", "")
                         .Replace("！", "!")
                         .Replace("？", "?")
+                        .Replace("（","(")
+                        .Replace("）", ")")
                         .Replace("’", "'");
         }
 

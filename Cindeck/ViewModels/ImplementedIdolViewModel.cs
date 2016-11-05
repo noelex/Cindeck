@@ -70,7 +70,7 @@ namespace Cindeck.ViewModels
             try
             {
                 ReloadDataCommand.RaiseCanExecuteChanged();
-                var result = await new GamerChWikiIdolSource(new WebDocumentSource("http://imascg-slstage-wiki.gamerch.com/%E3%82%AB%E3%83%BC%E3%83%89%E5%85%A8%E3%82%AB%E3%83%A9%E3%83%A0%E4%B8%80%E8%A6%A7")).GetIdols();
+                var result = await new GamerChWikiIdolSource(new WebDocumentSource("https://imascg-slstage-wiki.gamerch.com/%E3%82%A8%E3%83%94%E3%82%BD%E3%83%BC%E3%83%89%E4%B8%80%E8%A6%A7%EF%BC%88%E5%85%A8%E3%82%AB%E3%83%A9%E3%83%A0%EF%BC%89")).GetIdols();
                 var idolsNotFound = new List<OwnedIdol>();
                 foreach(var item in m_config.OwnedIdols)
                 {

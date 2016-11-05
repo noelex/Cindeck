@@ -11,8 +11,6 @@ namespace Cindeck.Core
 {
     public class GamerChWikiIdolSource : IIdolSource
     {
-        private const string IdolIndex = "https://imascg-slstage-wiki.gamerch.com/%E3%82%AB%E3%83%BC%E3%83%89%E5%85%A8%E3%82%AB%E3%83%A9%E3%83%A0%E4%B8%80%E8%A6%A7";
-
         private const int LabelColumn=2, RarityColumn = 3, CategoryColumn = 4, NameColumn = 5, 
             LifeColumn = 12, VocalColumn = 13, DanceColumn = 14, VisualColumn = 15, 
             CenterEffectColumn = 17, CenterEffectDetailsColumn = 18, SkillColumn = 19, SkillDetailsColumn = 20, ImplementationDateColumn=31;

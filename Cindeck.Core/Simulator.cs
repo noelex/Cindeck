@@ -474,7 +474,7 @@ namespace Cindeck.Core
             }
         }
 
-        private double GetAppealUpRate(IIdol idol, IIdol center, AppealType targetAppeal)
+        private double GetAppealUpRate(IIdol idol, IIdol center, Idol guest, AppealType targetAppeal)
         {
             var effect = center?.CenterEffect;
 
@@ -495,9 +495,9 @@ namespace Cindeck.Core
                     switch (e.Condition)
                     {
                         case AppealUpCondition.UnitContainsAllTypes:
-                            conditionFulfilled = Unit.Slots.Any(x => x.Category == IdolCategory.Cool) &&
-                                Unit.Slots.Any(x => x.Category == IdolCategory.Cute) &&
-                                Unit.Slots.Any(x => x.Category == IdolCategory.Passion);
+                            conditionFulfilled = (Unit.Slots.Any(x => x.Category == IdolCategory.Cool) || (Guest?.Category == IdolCategory.Cool)) &&
+                                (Unit.Slots.Any(x => x.Category == IdolCategory.Cute) || (Guest?.Category == IdolCategory.Cute)) &&
+                                (Unit.Slots.Any(x => x.Category == IdolCategory.Passion) || (Guest?.Category == IdolCategory.Passion));
                             break;
                         default:
                             break;
@@ -552,8 +552,8 @@ namespace Cindeck.Core
                     rate += 0.1;
                 }
 
-                rate += GetAppealUpRate(idol, Unit?.Center, targetAppeal);
-                rate += GetAppealUpRate(idol, Guest, targetAppeal);
+                rate += GetAppealUpRate(idol, Unit?.Center, Guest, targetAppeal);
+                rate += GetAppealUpRate(idol, Guest, Guest, targetAppeal);
             }
 
             if (GrooveBurst != null)
